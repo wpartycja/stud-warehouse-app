@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="edu.pw.pap21z.z15.ManagerController">
-    <Label text="Manager"/>
-</VBox>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ManagerController">
+    <Text text="Zawartość magazynu" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <TreeView fx:id="warehouseTree" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <Text text="Zamówienia wchodzące" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <TreeView GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Text text="Zamówienia wchodzące" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+    <TreeView GridPane.columnIndex="2" GridPane.rowIndex="1" />
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>
