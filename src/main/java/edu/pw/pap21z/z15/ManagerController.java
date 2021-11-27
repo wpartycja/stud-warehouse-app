@@ -1,77 +1,72 @@
 package edu.pw.pap21z.z15;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
+import java.util.Random;
+
 public class ManagerController {
 
-    WarehouseNode rootNode = new WarehouseNode("Magazyn",
-            new WarehouseNode("Alejka 1",
-                    new WarehouseNode("Regał 1",
-                            new WarehouseNode("Półka 1"),
-                            new WarehouseNode("Półka 2")),
-                    new WarehouseNode("Regał 2",
-                            new WarehouseNode("Półka 1"),
-                            new WarehouseNode("Półka 2"))),
-            new WarehouseNode("Alejka 2",
-                    new WarehouseNode("Regał 1",
-                            new WarehouseNode("Półka 1"),
-                            new WarehouseNode("Półka 2")),
-                    new WarehouseNode("Regał 2",
-                            new WarehouseNode("Półka 1"),
-                            new WarehouseNode("Półka 2"))));
+    @FXML
+    private ListView<String> queueList;
 
     @FXML
-    private TreeView<WarehouseNode> warehouseTree;
+    private ListView<String> workersList;
+
+    @FXML
+    private TreeView<String> contentsTree;
+
+    private static TreeItem<String> buildContentsTree() {
+        var rng = new Random();
+        var rootItem = new TreeItem<String>();
+
+        var warehouseItem = new TreeItem<>("Warehouse");
+        for (int k = 0; k < 4; k++) {
+            var aisleItem = new TreeItem<>("Aisle " + (char) ('A' + k));
+            for (int j = 0; j < 4; j++) {
+                var rackItem = new TreeItem<>("Rack " + j);
+                for (int i = 0; i < 4; i++) {
+                    var shelfItem = new TreeItem<String>();
+                    if (rng.nextBoolean()) {
+                        shelfItem.setValue(String.format("Shelf %d", i));
+                        shelfItem.setExpanded(true);
+                        shelfItem.getChildren().add(new TreeItem<>(String.format("Pallet #%d", rng.nextInt(1000))));
+                    } else {
+                        shelfItem.setValue(String.format("Shelf %d (empty)", i));
+                    }
+                    rackItem.getChildren().add(shelfItem);
+                }
+                aisleItem.getChildren().add(rackItem);
+            }
+            warehouseItem.getChildren().add(aisleItem);
+        }
+
+        rootItem.getChildren().add(warehouseItem);
+        rootItem.getChildren().add(buildRampsItem(rng, "Unloading ramps", 4));
+        rootItem.getChildren().add(buildRampsItem(rng, "Loading ramps", 2));
+
+        return rootItem;
+    }
+
+    private static TreeItem<String> buildRampsItem(Random rng, String name, int ramps) {
+        var outRampsItem = new TreeItem<>(name);
+        for (int i = 0; i < ramps; i++) {
+            var rampItem = new TreeItem<>("Ramp " + i);
+            for (int j = 0; j < 4; j++) {
+                rampItem.getChildren().add(new TreeItem<>(String.format("Pallet #%d", rng.nextInt(1000))));
+            }
+            outRampsItem.getChildren().add(rampItem);
+        }
+        return outRampsItem;
+    }
+
 
     @FXML
     private void initialize() {
-
-        var rootItem = new WarehouseTreeItem(rootNode);
-        warehouseTree.setShowRoot(false);
-        warehouseTree.setRoot(rootItem);
-
+        contentsTree.setRoot(buildContentsTree());
+        contentsTree.setShowRoot(false);
     }
 
-    static class WarehouseNode {
-        String name;
-        WarehouseNode[] children;
-
-        public WarehouseNode(String name, WarehouseNode... children) {
-            this.name = name;
-            this.children = children;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
-    static class WarehouseTreeItem extends TreeItem<WarehouseNode> {
-        boolean loaded = false;
-
-        public WarehouseTreeItem(WarehouseNode warehouseNode) {
-            super(warehouseNode);
-        }
-
-        @Override
-        public ObservableList<TreeItem<WarehouseNode>> getChildren() {
-            if (!loaded) {
-                System.out.println("Loading node " + getValue().name);
-                for (var node : getValue().children) {
-                    super.getChildren().add(new WarehouseTreeItem(node));
-                }
-                loaded = true;
-            }
-            return super.getChildren();
-        }
-
-        @Override
-        public boolean isLeaf() {
-            return getValue().children.length == 0;
-        }
-    }
 }
