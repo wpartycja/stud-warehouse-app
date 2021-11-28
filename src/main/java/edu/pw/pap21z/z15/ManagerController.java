@@ -1,13 +1,19 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.Item;
+import edu.pw.pap21z.z15.db.MockDb;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 
 public class ManagerController {
@@ -21,49 +27,31 @@ public class ManagerController {
     @FXML
     private TreeView<String> contentsTree;
 
-    private static final Random rng = new Random();
+    private final MockDb db = MockDb.getInstance();
 
-    private static TreeItem<String> buildContentsTree() {
-        var rootItem = new TreeItem<String>();
+    private TreeItem<String> getOrCreateChild(TreeItem<String> node, String childValue) {
+        var existingNode = node.getChildren().stream()
+                .filter(i -> Objects.equals(i.getValue(), childValue))
+                .findAny();
+        if (existingNode.isPresent()) return existingNode.get();
 
-        var warehouseItem = new TreeItem<>("Warehouse");
-        for (int k = 0; k < 4; k++) {
-            var aisleItem = new TreeItem<>("Aisle " + (char) ('A' + k));
-            for (int j = 0; j < 4; j++) {
-                var rackItem = new TreeItem<>("Rack " + j);
-                for (int i = 0; i < 4; i++) {
-                    var shelfItem = new TreeItem<String>();
-                    if (rng.nextBoolean()) {
-                        shelfItem.setValue(String.format("Shelf %d", i));
-                        shelfItem.setExpanded(true);
-                        shelfItem.getChildren().add(new TreeItem<>(String.format("Item #%d", rng.nextInt(1000))));
-                    } else {
-                        shelfItem.setValue(String.format("Shelf %d (empty)", i));
-                    }
-                    rackItem.getChildren().add(shelfItem);
-                }
-                aisleItem.getChildren().add(rackItem);
-            }
-            warehouseItem.getChildren().add(aisleItem);
-        }
-
-        rootItem.getChildren().add(warehouseItem);
-        rootItem.getChildren().add(buildRampsItem("Unloading ramps", 4));
-        rootItem.getChildren().add(buildRampsItem("Loading ramps", 2));
-
-        return rootItem;
+        var childItem = new TreeItem<>(childValue);
+        node.getChildren().add(childItem);
+        return childItem;
     }
 
-    private static TreeItem<String> buildRampsItem(String name, int ramps) {
-        var outRampsItem = new TreeItem<>(name);
-        for (int i = 0; i < ramps; i++) {
-            var rampItem = new TreeItem<>("Ramp " + i);
-            for (int j = 0; j < 4; j++) {
-                rampItem.getChildren().add(new TreeItem<>(String.format("Item #%d", rng.nextInt(1000))));
+    private TreeItem<String> buildContentsTree() {
+        TreeItem<String> rootItem = new TreeItem<>();
+        var locations = db.getLocations();
+        for (var location : locations) {
+            var node = rootItem;
+            var path = location.getPath().split("/");
+            for (String s : path) node = getOrCreateChild(node, s);
+            for (Item i : db.getItemsForLocation(location.getLocationId())) {
+                node.getChildren().add(new TreeItem<>(i.getDescription()));
             }
-            outRampsItem.getChildren().add(rampItem);
         }
-        return outRampsItem;
+        return rootItem;
     }
 
     @SuppressWarnings("unused")
