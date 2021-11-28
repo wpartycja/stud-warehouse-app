@@ -1,8 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="edu.pw.pap21z.z15.ClientController">
-    <Label text="Client"/>
-</VBox>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1237.0" prefWidth="1444.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="1237.0" prefWidth="1444.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Session">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Logout" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Account">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Information" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox>
+               <children>
+                   <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER" blendMode="SRC_ATOP" prefHeight="45.0" prefWidth="715.0" text="Order menu" textAlignment="CENTER" />
+                        <ListView fx:id="orderItemList" prefHeight="1151.0" prefWidth="639.0" />
+                     </children>
+                  </VBox>
+                   <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER" mouseTransparent="true" prefHeight="45.0" prefWidth="715.0" text="Item menu" />
+                        <HBox>
+                           <children>
+                              <Button fx:id="addNewItem" mnemonicParsing="false" prefHeight="45.0" prefWidth="100.0" text="Add" />
+                              <ChoiceBox fx:id="chooseNewItem" prefHeight="45.0" prefWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="itemAttributeList" prefHeight="1108.0" prefWidth="715.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
