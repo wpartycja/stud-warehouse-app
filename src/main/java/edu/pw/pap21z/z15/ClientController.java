@@ -5,7 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 import javax.print.AttributeException;
 import java.util.*;
@@ -22,6 +23,10 @@ public class ClientController {
 
         public Item() {
             this.attributeList = new ArrayList<ItemAttribute>();
+        }
+
+        public List<ItemAttribute> getAttributeList() {
+            return attributeList;
         }
 
         public void addAttribute(ItemAttribute attribute) {
@@ -84,10 +89,10 @@ public class ClientController {
         }
 
         public SimpleStringProperty nameProperty() {
-            return new SimpleStringProperty(this.name);
+            return new SimpleStringProperty(name);
         }
         public SimpleStringProperty valueProperty() {
-            return new SimpleStringProperty(this.value);
+            return new SimpleStringProperty(value);
         }
     }
 
@@ -101,6 +106,10 @@ public class ClientController {
 
         public Order() {
             this.itemList = new ArrayList<>();
+        }
+
+        public List<Item> getItemList() {
+            return itemList;
         }
 
         public void addItem(Item attribute) {
@@ -119,18 +128,7 @@ public class ClientController {
     @FXML
     private TableView<Item> orderItemTable;
 
-
-    @FXML
-    private TableView<ItemAttribute> itemAttributeTable;
-
-    @FXML
-    private void initialize() {
-        ObservableList<Item> orderItems = FXCollections.observableArrayList(
-                new Item(Arrays.asList(new ItemAttribute("NAME", "testName"),
-                                       new ItemAttribute("QUANTITY", "testQuantity"),
-                                       new ItemAttribute("SIZE", "testSize")))
-        );
-
+    private void initializeOrderItemTable() {
         TableColumn itemNameColumn = new TableColumn<Item, String>("Item Name");
         itemNameColumn.setMinWidth(100);
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -138,25 +136,72 @@ public class ClientController {
         TableColumn ItemQuantityColumn = new TableColumn("Item Quantity");
         ItemQuantityColumn.setMinWidth(100);
         ItemQuantityColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("quantity"));
-
-        orderItemTable.setItems(orderItems);
         orderItemTable.getColumns().addAll(itemNameColumn, ItemQuantityColumn);
 
-        ObservableList<ItemAttribute> itemAttributes = FXCollections.observableArrayList(
-                        new ItemAttribute("NAME", "testName"),
-                        new ItemAttribute("QUANTITY", "testQuantity"),
-                        new ItemAttribute("SIZE", "testSize"));
+        MenuItem mi1 = new MenuItem("Show");
+        mi1.setOnAction((ActionEvent event) -> {
+            Item item = orderItemTable.getSelectionModel().getSelectedItem();
+//             update item attribute table on click
+            updateItemAttributeTable(item);
+        });
 
-        TableColumn attributeNameColumn = new TableColumn<Item, String>("Attribute Name");
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().add(mi1);
+        orderItemTable.setContextMenu(menu);
+
+    }
+
+    private void updateOrderItemTable(Order order) {
+        orderItemTable.setItems(FXCollections.observableArrayList(order.getItemList()));
+    }
+
+    @FXML
+    private TableView<ItemAttribute> itemAttributeTable;
+
+    private void initializeItemAttributeTable() {
+        TableColumn attributeNameColumn = new TableColumn<ItemAttribute, String>("Attribute Name");
         attributeNameColumn.setMinWidth(100);
         attributeNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         TableColumn attributeValueColumn = new TableColumn("Attribute Value");
         attributeValueColumn.setMinWidth(100);
-        attributeValueColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("value"));
-
-        itemAttributeTable.setItems(itemAttributes);
+        attributeValueColumn.setCellValueFactory(new PropertyValueFactory<ItemAttribute, String>("value"));
         itemAttributeTable.getColumns().addAll(attributeNameColumn, attributeValueColumn);
+        itemAttributeTable.setEditable(true);
+        attributeValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+    }
+
+    private void updateItemAttributeTable(Item item) {
+        itemAttributeTable.setItems(FXCollections.observableArrayList(item.getAttributeList()));
+    }
+
+    @FXML
+    private void initialize() {
+
+        Order order = new Order();
+        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName1"),
+                new ItemAttribute("QUANTITY", "testQuantity1"),
+                new ItemAttribute("SIZE", "testSize1"))));
+        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName2"),
+                new ItemAttribute("QUANTITY", "testQuantity2"),
+                new ItemAttribute("SIZE", "testSize2"),
+                new ItemAttribute("WEIGHT", "testWeight2"),
+                new ItemAttribute("COLOR", "testColor2"))));
+        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName3"),
+                new ItemAttribute("QUANTITY", "testQuantity3"),
+                new ItemAttribute("SIZE", "testSize3"),
+                new ItemAttribute("WEIGHT", "testWeight3"))));
+
+        initializeOrderItemTable();
+        updateOrderItemTable(order);
+
+        Item item = new Item(Arrays.asList(new ItemAttribute("NAME", "testName"),
+                new ItemAttribute("QUANTITY", "testQuantity"),
+                new ItemAttribute("SIZE", "testSize")));
+
+        initializeItemAttributeTable();
+        updateItemAttributeTable(item);
+
     }
 
 }
