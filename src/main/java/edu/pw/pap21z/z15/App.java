@@ -11,18 +11,25 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
+    private static Stage stage;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage primary) throws IOException {
         // set starting scene
         scene = new Scene(loadFXML("login"), 640, 480);
-        stage.setScene(scene);
-
         // configure stage
+        stage = primary;
+        stage.setScene(scene);
         stage.setTitle("PAP21Z-Z15");
+
+        // confirmation of X button
+        stage.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram();
+        });
+
         stage.show();
     }
-
 
     /**
      * Change fxml root of current scene
@@ -31,6 +38,17 @@ public class App extends Application {
      */
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
+    }
+
+    /**
+     * Close program with confirmation box [yes/no]
+     */
+    public static void closeProgram() {
+        boolean answer = LoginController.confirmExit();
+        if (answer) {
+            System.out.println("The program is closing");
+            stage.close();
+        }
     }
 
     /**
