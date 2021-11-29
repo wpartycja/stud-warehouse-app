@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="fullScreenTaskInfo" prefHeight="415.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
+   <children>
+      <Label layoutX="194.0" layoutY="122.0" text="whatever">
+         <font>
+            <Font size="43.0" />
+         </font>
+      </Label>
+      <Button fx:id="endTaskButton" layoutX="239.0" layoutY="332.0" mnemonicParsing="false" onAction="#switchToWorkerScene" prefHeight="56.0" prefWidth="127.0" text="End">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

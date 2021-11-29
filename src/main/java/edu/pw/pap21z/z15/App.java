@@ -15,13 +15,13 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // set starting scene
-        scene = new Scene(loadFXML("login"), 640, 480);
-        stage.setScene(scene);
-
+        Parent root = FXMLLoader.load(getClass().getResource("worker.fxml"));
+        stage.setScene(new Scene(root));
         // configure stage
         stage.setTitle("PAP21Z-Z15");
         stage.show();
     }
+
 
 
     /**
