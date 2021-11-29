@@ -8,10 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -39,13 +36,13 @@ public class WorkerController{
     protected class Task{
 
         private final String name;
-        private ArrayList<String>  itemList;
+        private int itemId;
         private String startLocation;
         private String finalLocation;
 
-        Task(String name, ArrayList<String> itemList, String startLocation, String finalLocation){
+        Task(String name, int itemId, String startLocation, String finalLocation){
             this.name = name;
-            this.itemList = itemList;
+            this.itemId = itemId;
             this.startLocation = startLocation;
             this.finalLocation = finalLocation;
         }
@@ -54,8 +51,8 @@ public class WorkerController{
             return name;
         }
 
-        public ArrayList<String> getItemList() {
-            return itemList;
+        public int getItemId() {
+            return itemId;
         }
 
         public String getStartLocation() {
@@ -71,13 +68,6 @@ public class WorkerController{
                 return "Aisle: " + locList[0] + "\nRack: " + locList[1] + "\nShelf: " + locList[2] + "\n";
         }
 
-        public String showItems(){
-            String items = "Items:\n";
-            for (var item: itemList){
-                items += "*" + item + "\n";
-            }
-            return items;
-        }
 
         public String showInfo(){
             String start_loc = "\nFrom:\n" + showLocation(this.startLocation);
@@ -94,24 +84,7 @@ public class WorkerController{
         stage.show();
     }
 
-
-
-    public void initialize(){
-        //initializing everything
-        ArrayList<String> itemList1 = new ArrayList<String>(Arrays.asList("Spinka", "Garnek", "Patelnia"));
-        ArrayList<String> itemList2 = new ArrayList<String>(Arrays.asList("Suszarka", "lokówka", "lodówka"));
-        ArrayList<String> itemList3 = new ArrayList<String>(Arrays.asList("Sok", "Myszka", "Siekiera"));
-
-        Task task1 = new Task("task1", itemList1, "0/7/5", "2/3/7");
-        Task task2 = new Task("task2", itemList2, "7/9/5", "5/3/1");
-        Task task3 = new Task("task3", itemList2, "5/9/11", "2/3/1");
-
-        ArrayList<String> taskNameList = new ArrayList<String>(Arrays.asList(task1.name, task2.name, task3.name));
-        ArrayList<Task> taskList = new ArrayList<Task>(Arrays.asList(task1, task2, task3));
-
-
-        // displaying details about task
-        tasksListView.getItems().addAll(taskNameList);
+    public void displayInfo(){
         tasksListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -123,10 +96,21 @@ public class WorkerController{
                         break;
                     }
                 }
-
                 taskInfo.setText(currentTask.showInfo());
             }
         });
+    }
 
+    Task task1 = new Task("task1", 1, "0/7/5", "2/3/7");
+    Task task2 = new Task("task2", 2, "7/9/5", "5/3/1");
+    Task task3 = new Task("task3", 3, "5/9/11", "2/3/1");
+
+    ArrayList<String> taskNameList = new ArrayList<String>(Arrays.asList(task1.name, task2.name, task3.name));
+    ArrayList<Task> taskList = new ArrayList<Task>(Arrays.asList(task1, task2, task3));
+
+    public void initialize(){
+        // displaying details about task
+        tasksListView.getItems().addAll(taskNameList);
+        displayInfo();
     }
 }

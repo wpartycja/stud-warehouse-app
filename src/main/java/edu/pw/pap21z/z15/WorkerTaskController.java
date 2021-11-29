@@ -21,5 +21,4 @@ public class WorkerTaskController extends WorkerController{
 
     @Override
     public void initialize(){}
-
 }
