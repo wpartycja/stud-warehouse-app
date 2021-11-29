@@ -23,24 +23,20 @@ import java.util.Arrays;
 public class WorkerController{
 
     @FXML
-    private ListView<String> tasksListView;
+    protected ListView<String> tasksListView;
 
     @FXML
-    private CheckBox taskCheckBox;
-
-    @FXML
-    private Text taskInfo;
-
+    protected Text taskInfo;
 
     String currentTaskName;
     Task currentTask;
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    protected Stage stage;
+    protected Scene scene;
+    protected Parent root;
 
 
-    private class Task{
+    protected class Task{
 
         private final String name;
         private ArrayList<String>  itemList;
@@ -90,14 +86,6 @@ public class WorkerController{
         }
     }
 
-    public void switchToWorkerScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("worker.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     public void switchToWorkerTaskScene(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("workerTask.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -137,7 +125,6 @@ public class WorkerController{
                 }
 
                 taskInfo.setText(currentTask.showInfo());
-
             }
         });
 
