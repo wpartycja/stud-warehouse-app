@@ -7,7 +7,7 @@
 
 <AnchorPane fx:id="fullScreenTaskInfo" prefHeight="415.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerTaskController">
    <children>
-      <Label layoutX="194.0" layoutY="122.0" text="whatever">
+      <Label layoutX="97.0" layoutY="144.0" text="Content coming soon:))">
          <font>
             <Font size="43.0" />
          </font>
