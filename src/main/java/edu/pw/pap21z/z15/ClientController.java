@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 import javax.print.AttributeException;
+import java.io.IOException;
 import java.util.*;
 
 public class ClientController {
@@ -55,6 +56,7 @@ public class ClientController {
         public SimpleStringProperty nameProperty() {
             return getAttributeValueProperty("NAME");
         }
+
         public SimpleStringProperty quantityProperty() {
             return getAttributeValueProperty("QUANTITY");
         }
@@ -91,6 +93,7 @@ public class ClientController {
         public SimpleStringProperty nameProperty() {
             return new SimpleStringProperty(name);
         }
+
         public SimpleStringProperty valueProperty() {
             return new SimpleStringProperty(value);
         }
@@ -204,4 +207,8 @@ public class ClientController {
 
     }
 
+    @FXML
+    private void logOut() throws IOException {
+        App.setRoot("login");
+    }
 }
