@@ -1,8 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="edu.pw.pap21z.z15.ClientController">
-    <Label text="Client"/>
-</VBox>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ClientController">
+   <children>
+      <VBox prefHeight="1237.0" prefWidth="1444.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Session">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#logOut" text="Logout" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Account">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Information" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox VBox.vgrow="ALWAYS">
+               <children>
+                   <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER" blendMode="SRC_ATOP" text="Order Menu" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
+                        <TableView fx:id="orderItemTable" VBox.vgrow="ALWAYS">
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                   <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" mouseTransparent="true" text="Item Menu" VBox.vgrow="ALWAYS" />
+                        <TableView fx:id="itemAttributeTable" VBox.vgrow="ALWAYS">
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button fx:id="addNewItem" mnemonicParsing="false" text="Add" HBox.hgrow="ALWAYS" />
+                              <ChoiceBox fx:id="chooseNewItem" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox spacing="10.0">
+                     <children>
+                        <Label text="Warehouse contents" />
+                        <ListView fx:id="warehouseContentsList" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
