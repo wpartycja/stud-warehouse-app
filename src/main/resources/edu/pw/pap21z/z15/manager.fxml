@@ -4,38 +4,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ManagerController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0"
+            xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.pw.pap21z.z15.ManagerController">
     <top>
         <HBox spacing="10.0" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
-            <Region maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Label maxHeight="1.7976931348623157E308" text="Logged in as Manager 1" />
-            <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+            <Region maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+            <Label maxHeight="1.7976931348623157E308" text="Logged in as Manager 1"/>
+            <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#logOut" text="Log out"/>
         </HBox>
     </top>
     <center>
         <VBox spacing="10.0" BorderPane.alignment="CENTER">
-            <Label text="Warehouse contents" />
-            <TreeView fx:id="contentsTree" VBox.vgrow="ALWAYS" />
+            <Label text="Warehouse contents"/>
+            <TreeView fx:id="contentsTree" VBox.vgrow="ALWAYS"/>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
         </VBox>
     </center>
     <right>
         <VBox prefWidth="400.0" spacing="10.0" BorderPane.alignment="CENTER">
-            <Label text="Job queue" />
-            <TableView fx:id="queueList" VBox.vgrow="ALWAYS" />
-            <Label text="Workers" />
-            <TableView fx:id="workersList" VBox.vgrow="ALWAYS" />
+            <Label text="Job queue"/>
+            <TreeTableView fx:id="ordersList" VBox.vgrow="ALWAYS"/>
+            <Label text="Workers"/>
+            <TableView fx:id="workersList" VBox.vgrow="ALWAYS"/>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
         </VBox>
     </right>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
 </BorderPane>

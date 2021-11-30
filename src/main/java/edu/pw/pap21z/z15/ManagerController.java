@@ -6,20 +6,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Random;
 
 public class ManagerController {
 
     @FXML
-    private TableView<JobEntry> queueList;
+    private TreeTableView<JobEntry> ordersList;
 
     @FXML
     private TableView<WorkerEntry> workersList;
@@ -105,11 +102,6 @@ public class ManagerController {
             new WorkerEntry("Rahim", "Moving item #10")
     );
 
-    ObservableList<JobEntry> jobs = FXCollections.observableArrayList(
-            new JobEntry("Item #332", "Loading ramp 3", "Shelf A/1/3"),
-            new JobEntry("Item #23", "Shelf A/2/1", "Unloading ramp 1"),
-            new JobEntry("Item #929", "Shelf C/4/4", "Shelf A/1/1")
-    );
 
     @FXML
     private void initialize() {
@@ -125,17 +117,29 @@ public class ManagerController {
 
         workersList.setItems(workers);
 
-        var itemCol = new TableColumn<JobEntry, String>("Item");
-        itemCol.setCellValueFactory(new PropertyValueFactory<>("item"));
-        queueList.getColumns().add(itemCol);
-        var fromCol = new TableColumn<JobEntry, String>("From");
-        fromCol.setCellValueFactory(new PropertyValueFactory<>("from"));
-        queueList.getColumns().add(fromCol);
-        var toCol = new TableColumn<JobEntry, String>("To");
-        toCol.setCellValueFactory(new PropertyValueFactory<>("to"));
-        queueList.getColumns().add(toCol);
+        var itemCol = new TreeTableColumn<JobEntry, String>("Item");
+        itemCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("item"));
+        ordersList.getColumns().add(itemCol);
+        var fromCol = new TreeTableColumn<JobEntry, String>("From");
+        fromCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("from"));
+        ordersList.getColumns().add(fromCol);
+        var toCol = new TreeTableColumn<JobEntry, String>("To");
+        toCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("to"));
+        ordersList.getColumns().add(toCol);
 
-        queueList.setItems(jobs);
+        var ordersRoot = new TreeItem<JobEntry>();
+        var orderItem1 = new TreeItem<>(new JobEntry("Order #323", "", ""));
+        orderItem1.getChildren().add(new TreeItem<>(new JobEntry("Item #332", "Loading ramp 3", "Shelf A/1/3")));
+        orderItem1.getChildren().add(new TreeItem<>(new JobEntry("Item #123", "Loading ramp 3", "Shelf A/1/4")));
+        orderItem1.getChildren().add(new TreeItem<>(new JobEntry("Item #22", "Loading ramp 3", "Shelf A/1/5")));
+        ordersRoot.getChildren().add(orderItem1);
+        var orderItem2 = new TreeItem<>(new JobEntry("Order #111", "", ""));
+        orderItem2.getChildren().add(new TreeItem<>(new JobEntry("Item #002", "Shelf B/5/4", "Unloading ramp 2")));
+        orderItem2.getChildren().add(new TreeItem<>(new JobEntry("Item #004", "Shelf B/5/6", "Unloading ramp 2")));
+        orderItem2.getChildren().add(new TreeItem<>(new JobEntry("Item #005", "Shelf B/5/9", "Unloading ramp 2")));
+        ordersRoot.getChildren().add(orderItem2);
+        ordersList.setShowRoot(false);
+        ordersList.setRoot(ordersRoot);
 
     }
 
