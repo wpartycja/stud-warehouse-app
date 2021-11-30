@@ -49,6 +49,12 @@
                         </TableView>
                      </children>
                   </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Warehouse contents" />
+                        <ListView fx:id="warehouseContentsList" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
                </children>
             </HBox>
          </children>

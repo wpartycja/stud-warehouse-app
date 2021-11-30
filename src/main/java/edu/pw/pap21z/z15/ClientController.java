@@ -131,6 +131,9 @@ public class ClientController {
     @FXML
     private TableView<Item> orderItemTable;
 
+    @FXML
+    private ListView<String> warehouseContentsList;
+
     private void initializeOrderItemTable() {
         TableColumn itemNameColumn = new TableColumn<Item, String>("Item Name");
         itemNameColumn.setMinWidth(100);
@@ -205,6 +208,13 @@ public class ClientController {
         initializeItemAttributeTable();
         updateItemAttributeTable(item);
 
+        var contents = FXCollections.observableArrayList(
+                "Cupboards x4",
+                "Desk x2",
+                "Doors x93",
+                "Plates x33",
+                "Forks x900");
+        warehouseContentsList.setItems(contents);
     }
 
     @FXML
