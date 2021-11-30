@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class WorkerController{
+public class WorkerController {
 
     @FXML
     protected ListView<String> tasksListView;
@@ -33,14 +33,14 @@ public class WorkerController{
     protected Parent root;
 
 
-    protected class Task{
+    protected class Task {
 
         private final String name;
         private int itemId;
         private String startLocation;
         private String finalLocation;
 
-        Task(String name, int itemId, String startLocation, String finalLocation){
+        Task(String name, int itemId, String startLocation, String finalLocation) {
             this.name = name;
             this.itemId = itemId;
             this.startLocation = startLocation;
@@ -63,35 +63,35 @@ public class WorkerController{
             return finalLocation;
         }
 
-        public String showLocation(String loc){
-                String[] locList = loc.split("/");
-                return "Aisle: " + locList[0] + "\nRack: " + locList[1] + "\nShelf: " + locList[2] + "\n";
+        public String showLocation(String loc) {
+            String[] locList = loc.split("/");
+            return "Aisle: " + locList[0] + "\nRack: " + locList[1] + "\nShelf: " + locList[2] + "\n";
         }
 
 
-        public String showInfo(){
+        public String showInfo() {
             String start_loc = "\nFrom:\n" + showLocation(this.startLocation);
             String final_loc = "\nTo:\n" + showLocation(finalLocation);
-            return this.name + "\n" +  start_loc + final_loc;
+            return this.name + "\n" + start_loc + final_loc;
         }
     }
 
-    public void switchToWorkerTaskScene(ActionEvent event) throws IOException{
+    public void switchToWorkerTaskScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("workerTask.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
-    public void displayInfo(){
+    public void displayInfo() {
         tasksListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 currentTaskName = tasksListView.getSelectionModel().getSelectedItem();
 
-                for (Task task : taskList){
-                    if (task.name == currentTaskName){
+                for (Task task : taskList) {
+                    if (task.name == currentTaskName) {
                         currentTask = task;
                         break;
                     }
@@ -108,9 +108,14 @@ public class WorkerController{
     ArrayList<String> taskNameList = new ArrayList<String>(Arrays.asList(task1.name, task2.name, task3.name));
     ArrayList<Task> taskList = new ArrayList<Task>(Arrays.asList(task1, task2, task3));
 
-    public void initialize(){
+    public void initialize() {
         // displaying details about task
         tasksListView.getItems().addAll(taskNameList);
         displayInfo();
+    }
+
+    @FXML
+    private void logOut() throws IOException {
+        App.setRoot("login");
     }
 }
