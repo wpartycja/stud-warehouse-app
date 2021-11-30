@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
    <children>
       <ListView fx:id="tasksListView" layoutX="21.0" layoutY="69.0" prefHeight="386.0" prefWidth="477.0" />
-      <Label fx:id="taskLable" layoutX="167.0" layoutY="14.0" prefHeight="39.0" prefWidth="181.0" text="Current Tasks" textAlignment="CENTER">
+      <Label fx:id="taskLable" layoutX="167.0" layoutY="14.0" prefHeight="39.0" text="Current Tasks" textAlignment="CENTER">
          <font>
             <Font size="27.0" />
          </font>
@@ -25,5 +22,6 @@
             <Font size="16.0" />
          </font>
       </Text>
+      <Button layoutX="21.0" layoutY="21.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
    </children>
 </AnchorPane>
