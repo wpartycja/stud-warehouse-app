@@ -6,7 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
-
 @Entity
 @Table(name="JOB")
 public class Job {
@@ -19,7 +18,6 @@ public class Job {
 
     @Column(name = "DEST")
     private int locationId;
-
 
     public Job(){}
 
