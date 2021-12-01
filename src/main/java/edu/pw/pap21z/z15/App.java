@@ -1,12 +1,17 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.Dept;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
+import java.util.List;
 
 public class App extends Application {
 
@@ -15,6 +20,17 @@ public class App extends Application {
 
     @Override
     public void start(Stage primary) throws IOException {
+
+        EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("oracledb");
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        List<Dept> depts = entityManager.createQuery("from Dept", Dept.class).getResultList();
+        for (Dept dept : depts) {
+            System.out.printf("%s, %s, %s%n", dept.getDeptNo(), dept.getName(), dept.getLocation());
+        }
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
         // set starting scene
         scene = new Scene(loadFXML("login"), 640, 480);
         // configure stage
