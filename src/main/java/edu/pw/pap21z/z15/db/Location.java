@@ -23,7 +23,7 @@ public class Location {
 
     public Location() {}
 
-    public int geLocationId() {
+    public int getLocationId() {
         return locationId;
     }
 

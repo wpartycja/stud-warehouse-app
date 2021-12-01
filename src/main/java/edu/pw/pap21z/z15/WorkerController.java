@@ -61,7 +61,7 @@ public class WorkerController {
                 }
 
                 for (Location loc : dbClient.getLocationData()) {
-                    if (loc.geLocationId() == currentJob.getDestinationLocationId()) {
+                    if (loc.getLocationId() == currentJob.getDestinationLocationId()) {
                         String path = loc.getPath();
                         jobInfo.setText(path);
                     }
