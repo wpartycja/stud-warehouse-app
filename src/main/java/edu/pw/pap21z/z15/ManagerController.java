@@ -107,13 +107,14 @@ public class ManagerController {
         }
         return FXCollections.observableArrayList(workers);
     }
-//    public ObservableList<JobEntry> getJobList() {
-//        ArrayList<WorkerEntry> workers = new ArrayList<WorkerEntry>();
-//        for (Job job: dbClient.getJobData()) {
-//            workers.add(new WorkerEntry(job.getName(), job.getJob()));
-//        }
-//        return FXCollections.observableArrayList(workers);
-//    }
+    public void getJobs() {
+        var ordersRoot = new TreeItem<JobEntry>();
+        for (Job job: dbClient.getJobData()) {
+            ordersRoot.getChildren().add(new TreeItem<>(new JobEntry(job.getJobName(), "test", "test")));
+        }
+        ordersList.setShowRoot(false);
+        ordersList.setRoot(ordersRoot);
+    }
 
     @FXML
     private void initialize() {
@@ -140,19 +141,7 @@ public class ManagerController {
         toCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("to"));
         ordersList.getColumns().add(toCol);
 
-        var ordersRoot = new TreeItem<JobEntry>();
-        var orderItem1 = new TreeItem<>(new JobEntry("Order #323", "", ""));
-        orderItem1.getChildren().add(new TreeItem<>(new JobEntry("Item #332", "Loading ramp 3", "Shelf A/1/3")));
-        orderItem1.getChildren().add(new TreeItem<>(new JobEntry("Item #123", "Loading ramp 3", "Shelf A/1/4")));
-        orderItem1.getChildren().add(new TreeItem<>(new JobEntry("Item #22", "Loading ramp 3", "Shelf A/1/5")));
-        ordersRoot.getChildren().add(orderItem1);
-        var orderItem2 = new TreeItem<>(new JobEntry("Order #111", "", ""));
-        orderItem2.getChildren().add(new TreeItem<>(new JobEntry("Item #002", "Shelf B/5/4", "Unloading ramp 2")));
-        orderItem2.getChildren().add(new TreeItem<>(new JobEntry("Item #004", "Shelf B/5/6", "Unloading ramp 2")));
-        orderItem2.getChildren().add(new TreeItem<>(new JobEntry("Item #005", "Shelf B/5/9", "Unloading ramp 2")));
-        ordersRoot.getChildren().add(orderItem2);
-        ordersList.setShowRoot(false);
-        ordersList.setRoot(ordersRoot);
+        getJobs();
 
     }
 

@@ -1,5 +1,6 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.DataBaseClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class ClientController {
+
+    private final DataBaseClient dbClient =  new DataBaseClient();
 
     public class Item {
 

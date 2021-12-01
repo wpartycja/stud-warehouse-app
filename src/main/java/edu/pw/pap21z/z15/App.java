@@ -19,17 +19,6 @@ public class App extends Application {
     @Override
     public void start(Stage primary) throws IOException {
 
-//        DataBaseClient db = new DataBaseClient();
-//        db.startSession();
-//        for (Location loc: db.getLocationData()) {
-//            System.out.println(loc.getPath());
-//        }
-//        for (Item i: db.getItemData()) {
-//            System.out.println(i.getLocationId());
-//        }
-//        db.endSession();
-
-
         // set starting scene
         scene = new Scene(loadFXML("login"), 640, 480);
         // configure stage
