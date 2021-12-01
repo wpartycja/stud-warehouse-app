@@ -1,6 +1,7 @@
 package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.DataBaseClient;
+import edu.pw.pap21z.z15.db.Item;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,13 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-import javax.print.AttributeException;
 import java.io.IOException;
 import java.util.*;
 
 public class ClientController {
 
-    private final DataBaseClient dbClient =  new DataBaseClient();
+    private final DataBaseClient dbClient = new DataBaseClient();
 
     public class Item {
 
@@ -211,12 +211,11 @@ public class ClientController {
         initializeItemAttributeTable();
         updateItemAttributeTable(item);
 
-        var contents = FXCollections.observableArrayList(
-                "Cupboards x4",
-                "Desk x2",
-                "Doors x93",
-                "Plates x33",
-                "Forks x900");
+        List<String> items = new ArrayList<>();
+        for (edu.pw.pap21z.z15.db.Item i : dbClient.getItemData()) {
+            items.add(i.getDescription());
+        }
+        var contents = FXCollections.observableArrayList(items);
         warehouseContentsList.setItems(contents);
     }
 
