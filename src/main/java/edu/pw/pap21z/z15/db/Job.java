@@ -16,11 +16,11 @@ public class Job {
     @Column(name = "ITEM_ID")
     private int itemId;
 
-    @Column(name = "SOURCE")
-    private int sourceLocationId;
-
     @Column(name = "DEST")
     private int destinationLocationId;
+
+    @Column(name="JOBNAME")
+    private String jobName;
 
     public Job(){}
 
@@ -30,9 +30,8 @@ public class Job {
 
     public int getItemId() {return itemId;}
 
-    public int getSourceLocationId() {
-        return sourceLocationId;
-    }
+    public String getJobName() {return  jobName;}
+
 
     public int getDestinationLocationId() {return destinationLocationId;}
 
