@@ -17,19 +17,14 @@ public class Location {
 
     @Column(name = "TYPE")
     private String temporaryType;
-    private LocationType type;
 
     @Column(name = "PATH")
     private String path;
 
-    public Location() {type = LocationType.valueOf(temporaryType);}
+    public Location() {}
 
     public int geLocationId() {
         return locationId;
-    }
-
-    public LocationType getType() {
-        return type;
     }
 
     public String getPath() {

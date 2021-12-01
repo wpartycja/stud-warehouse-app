@@ -1,5 +1,8 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.DataBaseClient;
+import edu.pw.pap21z.z15.db.Job;
+import edu.pw.pap21z.z15.db.Location;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -16,65 +19,26 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WorkerController {
 
     @FXML
-    protected ListView<String> tasksListView;
+    protected ListView<String> jobsListView;
 
     @FXML
-    protected Text taskInfo;
+    protected Text jobInfo;
 
-    String currentTaskName;
-    Task currentTask;
+    String currentJobName;
+    Job currentJob;
 
     protected Stage stage;
     protected Scene scene;
     protected Parent root;
 
-
-    protected class Task {
-
-        private final String name;
-        private int itemId;
-        private String startLocation;
-        private String finalLocation;
-
-        Task(String name, int itemId, String startLocation, String finalLocation) {
-            this.name = name;
-            this.itemId = itemId;
-            this.startLocation = startLocation;
-            this.finalLocation = finalLocation;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getItemId() {
-            return itemId;
-        }
-
-        public String getStartLocation() {
-            return startLocation;
-        }
-
-        public String getFinalLocation() {
-            return finalLocation;
-        }
-
-        public String showLocation(String loc) {
-            String[] locList = loc.split("/");
-            return "Aisle: " + locList[0] + "\nRack: " + locList[1] + "\nShelf: " + locList[2] + "\n";
-        }
+    private DataBaseClient dbClient = new DataBaseClient();
 
 
-        public String showInfo() {
-            String start_loc = "\nFrom:\n" + showLocation(this.startLocation);
-            String final_loc = "\nTo:\n" + showLocation(finalLocation);
-            return this.name + "\n" + start_loc + final_loc;
-        }
-    }
 
     public void switchToWorkerTaskScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("workerTask.fxml"));
@@ -85,33 +49,40 @@ public class WorkerController {
     }
 
     public void displayInfo() {
-        tasksListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        jobsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                currentTaskName = tasksListView.getSelectionModel().getSelectedItem();
-
-                for (Task task : taskList) {
-                    if (task.name == currentTaskName) {
-                        currentTask = task;
+                currentJobName = jobsListView.getSelectionModel().getSelectedItem();
+                for (Job job : dbClient.getJobData()) {
+                    if (job.getJobName() == currentJobName) {
+                        currentJob = job;
                         break;
                     }
                 }
-                taskInfo.setText(currentTask.showInfo());
+
+                for (Location loc : dbClient.getLocationData()) {
+                    if (loc.geLocationId() == currentJob.getDestinationLocationId()) {
+                        String path = loc.getPath();
+                        jobInfo.setText(path);
+                    }
+                }
             }
         });
     }
 
-    Task task1 = new Task("task1", 1, "0/7/5", "2/3/7");
-    Task task2 = new Task("task2", 2, "7/9/5", "5/3/1");
-    Task task3 = new Task("task3", 3, "5/9/11", "2/3/1");
+    public ArrayList<String> getJobNameList (){
+        List<Job> JobList = dbClient.getJobData();
+        ArrayList<String> jobNameList = new ArrayList<String>();
+        for (var job : JobList){
+            jobNameList.add(job.getJobName());
+        }
+        return jobNameList;
+    }
 
-    ArrayList<String> taskNameList = new ArrayList<String>(Arrays.asList(task1.name, task2.name, task3.name));
-    ArrayList<Task> taskList = new ArrayList<Task>(Arrays.asList(task1, task2, task3));
 
     public void initialize() {
-        // displaying details about task
-        tasksListView.getItems().addAll(taskNameList);
-        displayInfo();
+        jobsListView.getItems().addAll(this.getJobNameList());
+        this.displayInfo();
     }
 
     @FXML
