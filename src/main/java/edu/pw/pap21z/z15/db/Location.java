@@ -23,13 +23,9 @@ public class Location {
 
     public Location() {}
 
-    public int getLocationId() {
+    public int geLocationId() {
         return locationId;
     }
-
-//    public LocationType getType() {
-//        return type;
-//    }
 
     public String getPath() {
         return path;
