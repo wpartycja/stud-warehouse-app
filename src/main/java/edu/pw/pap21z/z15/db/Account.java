@@ -11,8 +11,14 @@ import java.util.Objects;
 public class Account {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID_ACCOUNT")
     private int id;
+
+    @Column(name = "NAME")
+    private String name;
+
+    @Column(name = "SURNAME")
+    private String surname;
 
     @Column(name = "LOGIN")
     private String login;
@@ -25,15 +31,15 @@ public class Account {
 
     public int getId() {return id;}
 
+    public String getName() {return name;}
+
+    public String getSurname() {return surname;}
+
     public String getLogin() {return login;}
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() {return password;}
 
-    public String getType() {
-        return type;
-    }
+    public String getType() {return type;}
 
 
     @Override

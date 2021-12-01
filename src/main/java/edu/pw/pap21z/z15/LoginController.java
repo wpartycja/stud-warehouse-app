@@ -1,5 +1,7 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.Account;
+import edu.pw.pap21z.z15.db.DataBaseClient;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import java.io.IOException;
+import java.util.List;
 
 public class LoginController {
 
@@ -24,6 +27,16 @@ public class LoginController {
     static String[] passList = {"Manager1", "Client1", "Worker1"};
     static String[] typeList = {"manager", "client", "worker"};
     static boolean answer;
+
+    static  List<Account> accList;
+    private final DataBaseClient dbClient = new DataBaseClient();
+
+    private void getAccounts() {
+//        dbClient.startSession();
+        accList = dbClient.getAccountData();
+//        dbClient.endSession();
+        System.out.println(accList.get(1).getLogin());
+    }
 
     private static void checkData(String name, String pass) throws IOException {
         if (checkUsername(name)) {
@@ -39,24 +52,31 @@ public class LoginController {
     }
     private static boolean checkUsername(String name) {
         for (int num=0; num < 3; num++){
-            if (name.equals(nameList[num])) {return true;}
-        }
+            if (name.equals(nameList[num])) {return true;} }
+//        for (Account acc: accList) {
+//            if (acc.getLogin().equals(name)) {return true;}
+//        }
         return false;
     }
     private static boolean checkPassword(String name, String pass) {
         for (int num=0; num < 3; num++){
             if (name.equals(nameList[num]) && pass.equals(passList[num])) {return true;}
         }
+//        for (Account acc: accList) {
+//            if (acc.getLogin().equals(name) && acc.getPassword().equals(pass)) {return true;}
+//        }
         return false;
     }
     private static String getAccountType(String name) {
         for (int num=0; num < 3; num++){
             if (name.equals(nameList[num])) {
-                return typeList[num];
-            }
-        }
+                return typeList[num]; }}
+//        for (Account acc: accList) {
+//            if (acc.getLogin().equals(name)) {return acc.getType();}
+//        }
         return "login";
     }
+
     private static void changeRoot(String type) throws IOException {
         App.setRoot(type);
     }
@@ -119,7 +139,9 @@ public class LoginController {
     }
 
     @FXML
-    private void initialize() { }
+    private void initialize() {
+//        getAccounts();
+    }
 
     @FXML
     private void logIn() throws IOException {
