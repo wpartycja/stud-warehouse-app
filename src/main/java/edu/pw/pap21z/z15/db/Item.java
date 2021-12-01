@@ -1,29 +1,32 @@
 package edu.pw.pap21z.z15.db;
 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "ITEM")
 public class Item {
-    int itemId;
-    int locationId;
-    String description;
+    @Id
+    @Column(name = "ITEM_ID")
+    private int itemId;
 
-    public Item(int itemId, int locationId, String description) {
-        this.itemId = itemId;
-        this.locationId = locationId;
-        this.description = description;
-    }
+    @Column(name="LOC")
+    private int locationId;
 
-    public int getItemId() {
-        return itemId;
-    }
+    @Column(name="DESCRIPTION")
+    private String description;
 
-    public int getLocationId() {
-        return locationId;
-    }
+    public Item(){}
 
-    public String getDescription() {
-        return description;
-    }
+    public int getItemId() { return itemId; }
+
+    public int getLocationId() {return locationId;}
+
+    public String getDescription() {return description;}
 
     @Override
     public boolean equals(Object o) {

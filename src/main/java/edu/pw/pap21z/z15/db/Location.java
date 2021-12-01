@@ -1,19 +1,27 @@
 package edu.pw.pap21z.z15.db;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "LOCATION")
 public class Location {
     enum LocationType {IN_RAMP, OUT_RAMP, SHELF}
 
-    int locationId;
-    LocationType type;
-    String path;
+    @Id
+    @Column(name = "LOCATION_ID")
+    private int locationId;
 
-    public Location(int locationId, LocationType type, String path) {
-        this.locationId = locationId;
-        this.type = type;
-        this.path = path;
-    }
+    @Column(name = "TYPE")
+    private LocationType type;
+
+    @Column(name = "PATH")
+    private String path;
+
+    public Location() {}
 
     public int getLocationId() {
         return locationId;
