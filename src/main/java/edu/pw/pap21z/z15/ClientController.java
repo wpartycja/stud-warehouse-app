@@ -187,29 +187,29 @@ public class ClientController {
     @FXML
     private void initialize() {
 
-        Order order = new Order();
-        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName1"),
-                new ItemAttribute("QUANTITY", "testQuantity1"),
-                new ItemAttribute("SIZE", "testSize1"))));
-        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName2"),
-                new ItemAttribute("QUANTITY", "testQuantity2"),
-                new ItemAttribute("SIZE", "testSize2"),
-                new ItemAttribute("WEIGHT", "testWeight2"),
-                new ItemAttribute("COLOR", "testColor2"))));
-        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName3"),
-                new ItemAttribute("QUANTITY", "testQuantity3"),
-                new ItemAttribute("SIZE", "testSize3"),
-                new ItemAttribute("WEIGHT", "testWeight3"))));
-
-        initializeOrderItemTable();
-        updateOrderItemTable(order);
-
-        Item item = new Item(Arrays.asList(new ItemAttribute("NAME", "testName"),
-                new ItemAttribute("QUANTITY", "testQuantity"),
-                new ItemAttribute("SIZE", "testSize")));
-
-        initializeItemAttributeTable();
-        updateItemAttributeTable(item);
+//        Order order = new Order();
+//        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName1"),
+//                new ItemAttribute("QUANTITY", "testQuantity1"),
+//                new ItemAttribute("SIZE", "testSize1"))));
+//        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName2"),
+//                new ItemAttribute("QUANTITY", "testQuantity2"),
+//                new ItemAttribute("SIZE", "testSize2"),
+//                new ItemAttribute("WEIGHT", "testWeight2"),
+//                new ItemAttribute("COLOR", "testColor2"))));
+//        order.addItem(new Item(Arrays.asList(new ItemAttribute("NAME", "testName3"),
+//                new ItemAttribute("QUANTITY", "testQuantity3"),
+//                new ItemAttribute("SIZE", "testSize3"),
+//                new ItemAttribute("WEIGHT", "testWeight3"))));
+//
+//        initializeOrderItemTable();
+//        updateOrderItemTable(order);
+//
+//        Item item = new Item(Arrays.asList(new ItemAttribute("NAME", "testName"),
+//                new ItemAttribute("QUANTITY", "testQuantity"),
+//                new ItemAttribute("SIZE", "testSize")));
+//
+//        initializeItemAttributeTable();
+//        updateItemAttributeTable(item);
 
         List<String> items = new ArrayList<>();
         for (edu.pw.pap21z.z15.db.Item i : dbClient.getItemData()) {
