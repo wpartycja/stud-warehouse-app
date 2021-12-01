@@ -1,7 +1,6 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.Item;
-import edu.pw.pap21z.z15.db.MockDb;
+import edu.pw.pap21z.z15.db.DataBaseClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +23,8 @@ public class ManagerController {
     @FXML
     private TreeView<String> contentsTree;
 
-    private final MockDb db = MockDb.getInstance();
+//    private final MockDb db = MockDb.getInstance();
+    private final DataBaseClient dbClient =  new DataBaseClient();
 
     private TreeItem<String> getOrCreateChild(TreeItem<String> node, String childValue) {
         var existingNode = node.getChildren().stream()
@@ -37,19 +37,19 @@ public class ManagerController {
         return childItem;
     }
 
-    private TreeItem<String> buildContentsTree() {
-        TreeItem<String> rootItem = new TreeItem<>();
-        var locations = db.getLocations();
-        for (var location : locations) {
-            var node = rootItem;
-            var path = location.getPath().split("/");
-            for (String s : path) node = getOrCreateChild(node, s);
-            for (Item i : db.getItemsForLocation(location.getLocationId())) {
-                node.getChildren().add(new TreeItem<>(i.getDescription()));
-            }
-        }
-        return rootItem;
-    }
+//    private TreeItem<String> buildContentsTree() {
+//        TreeItem<String> rootItem = new TreeItem<>();
+//        var locations = db.getLocations();
+//        for (var location : locations) {
+//            var node = rootItem;
+//            var path = location.getPath().split("/");
+//            for (String s : path) node = getOrCreateChild(node, s);
+////            for (Item i : db.getItemsForLocation(location.getLocationId())) {
+////                node.getChildren().add(new TreeItem<>(i.getDescription()));
+////            }
+//        }
+//        return rootItem;
+//    }
 
     @SuppressWarnings("unused")
     public static class WorkerEntry {
@@ -106,7 +106,7 @@ public class ManagerController {
     @FXML
     private void initialize() {
         contentsTree.setShowRoot(false);
-        contentsTree.setRoot(buildContentsTree());
+//        contentsTree.setRoot(buildContentsTree());
 
         var nameCol = new TableColumn<WorkerEntry, String>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));

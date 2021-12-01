@@ -16,22 +16,25 @@ public class Job {
     @Column(name = "ITEM_ID")
     private int itemId;
 
+    @Column(name = "SOURCE")
+    private int sourceLocationId;
+
     @Column(name = "DEST")
-    private int locationId;
+    private int destinationLocationId;
 
     public Job(){}
 
-    public int getJobId() {
+    public int getId() {
         return jobId;
     }
 
-    public int getItemId() {
-        return itemId;
+    public int getItemId() {return itemId;}
+
+    public int getSourceLocationId() {
+        return sourceLocationId;
     }
 
-    public int getLocationId() {
-        return locationId;
-    }
+    public int getDestinationLocationId() {return destinationLocationId;}
 
     @Override
     public boolean equals(Object o) {
