@@ -23,22 +23,15 @@ public class LoginController {
     @FXML
     private TextField password;
 
-    static String[] nameList = {"manager", "client", "worker"};
-    static String[] passList = {"Manager1", "Client1", "Worker1"};
-    static String[] typeList = {"manager", "client", "worker"};
+//    static String[] nameList = {"manager", "client", "worker"};
+//    static String[] passList = {"Manager1", "Client1", "Worker1"};
+//    static String[] typeList = {"manager", "client", "worker"};
     static boolean answer;
 
-    static  List<Account> accList;
+    static List<Account> accList;
     private final DataBaseClient dbClient = new DataBaseClient();
 
-    private void getAccounts() {
-//        dbClient.startSession();
-        accList = dbClient.getAccountData();
-//        dbClient.endSession();
-        System.out.println(accList.get(1).getLogin());
-    }
-
-    private static void checkData(String name, String pass) throws IOException {
+    private void checkData(String name, String pass) throws IOException {
         if (checkUsername(name)) {
             if (checkPassword(name, pass)) {
                 okBox("Login Status","You have logged in as: " + name);
@@ -50,30 +43,28 @@ public class LoginController {
             okBox("Login Error","Wrong username!");
         }
     }
-    private static boolean checkUsername(String name) {
-        for (int num=0; num < 3; num++){
-            if (name.equals(nameList[num])) {return true;} }
-//        for (Account acc: accList) {
-//            if (acc.getLogin().equals(name)) {return true;}
-//        }
-        return false;
-    }
-    private static boolean checkPassword(String name, String pass) {
-        for (int num=0; num < 3; num++){
-            if (name.equals(nameList[num]) && pass.equals(passList[num])) {return true;}
+    private boolean checkUsername(String name) {
+        for (Account acc: dbClient.getAccountData()) {
+            if (acc.getLogin().equals(name)) {return true;}
         }
-//        for (Account acc: accList) {
-//            if (acc.getLogin().equals(name) && acc.getPassword().equals(pass)) {return true;}
-//        }
         return false;
     }
-    private static String getAccountType(String name) {
-        for (int num=0; num < 3; num++){
-            if (name.equals(nameList[num])) {
-                return typeList[num]; }}
-//        for (Account acc: accList) {
-//            if (acc.getLogin().equals(name)) {return acc.getType();}
+    private boolean checkPassword(String name, String pass) {
+//        for (int num=0; num < 3; num++){
+//            if (name.equals(nameList[num]) && pass.equals(passList[num])) {return true;}
 //        }
+        for (Account acc: dbClient.getAccountData()) {
+            if (acc.getLogin().equals(name) && acc.getPassword().equals(pass)) {return true;}
+        }
+        return false;
+    }
+    private String getAccountType(String name) {
+//        for (int num=0; num < 3; num++){
+//            if (name.equals(nameList[num])) {
+//                return typeList[num]; }}
+        for (Account acc: dbClient.getAccountData()) {
+            if (acc.getLogin().equals(name)) {return acc.getType();}
+        }
         return "login";
     }
 
@@ -139,9 +130,7 @@ public class LoginController {
     }
 
     @FXML
-    private void initialize() {
-//        getAccounts();
-    }
+    private void initialize() { }
 
     @FXML
     private void logIn() throws IOException {
