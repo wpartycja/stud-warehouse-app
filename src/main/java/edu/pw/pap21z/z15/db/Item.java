@@ -14,7 +14,7 @@ public class Item {
     @Column(name = "ITEM_ID")
     private int itemId;
 
-    @Column(name="LOC")
+    @Column(name="LOCATION")
     private int locationId;
 
     @Column(name="DESCRIPTION")

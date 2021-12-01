@@ -13,7 +13,7 @@ public class Job {
     @Column(name = "JOB_ID")
     private int jobId;
 
-    @Column(name = "ITEM_ID")
+//    @Column(name = "ITEM_ID")
     private int itemId;
 
     @Column(name = "SOURCE")

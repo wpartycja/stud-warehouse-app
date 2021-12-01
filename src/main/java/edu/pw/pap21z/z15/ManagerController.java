@@ -1,6 +1,9 @@
 package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.DataBaseClient;
+import edu.pw.pap21z.z15.db.Item;
+import edu.pw.pap21z.z15.db.Employee;
+import edu.pw.pap21z.z15.db.Job;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ManagerController {
@@ -23,7 +27,6 @@ public class ManagerController {
     @FXML
     private TreeView<String> contentsTree;
 
-//    private final MockDb db = MockDb.getInstance();
     private final DataBaseClient dbClient =  new DataBaseClient();
 
     private TreeItem<String> getOrCreateChild(TreeItem<String> node, String childValue) {
@@ -37,19 +40,20 @@ public class ManagerController {
         return childItem;
     }
 
-//    private TreeItem<String> buildContentsTree() {
-//        TreeItem<String> rootItem = new TreeItem<>();
-//        var locations = db.getLocations();
-//        for (var location : locations) {
-//            var node = rootItem;
-//            var path = location.getPath().split("/");
-//            for (String s : path) node = getOrCreateChild(node, s);
-////            for (Item i : db.getItemsForLocation(location.getLocationId())) {
-////                node.getChildren().add(new TreeItem<>(i.getDescription()));
-////            }
-//        }
-//        return rootItem;
-//    }
+    private TreeItem<String> buildContentsTree() {
+        TreeItem<String> rootItem = new TreeItem<>();
+        var locations = dbClient.getLocationData();
+        for (var location : locations) {
+            var node = rootItem;
+            var path = location.getPath().split("/");
+            for (String s : path) node = getOrCreateChild(node, s);
+            for (Item i : dbClient.getItemData()) {
+                if (i.getLocationId() == location.getLocationId())
+                node.getChildren().add(new TreeItem<>(i.getDescription()));
+            }
+        }
+        return rootItem;
+    }
 
     @SuppressWarnings("unused")
     public static class WorkerEntry {
@@ -96,26 +100,35 @@ public class ManagerController {
         }
     }
 
-    ObservableList<WorkerEntry> workers = FXCollections.observableArrayList(
-            new WorkerEntry("Steve", "Idle"),
-            new WorkerEntry("Andrzej", "Moving item #443"),
-            new WorkerEntry("Rahim", "Moving item #10")
-    );
-
+    public ObservableList<WorkerEntry> getWorkersList() {
+        ArrayList<WorkerEntry> workers = new ArrayList<WorkerEntry>();
+        for (Employee emp: dbClient.getEmployeeData()) {
+            workers.add(new WorkerEntry(emp.getName(), emp.getJob()));
+        }
+        return FXCollections.observableArrayList(workers);
+    }
+//    public ObservableList<JobEntry> getJobList() {
+//        ArrayList<WorkerEntry> workers = new ArrayList<WorkerEntry>();
+//        for (Job job: dbClient.getJobData()) {
+//            workers.add(new WorkerEntry(job.getName(), job.getJob()));
+//        }
+//        return FXCollections.observableArrayList(workers);
+//    }
 
     @FXML
     private void initialize() {
         contentsTree.setShowRoot(false);
-//        contentsTree.setRoot(buildContentsTree());
+        contentsTree.setRoot(buildContentsTree());
+
 
         var nameCol = new TableColumn<WorkerEntry, String>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         workersList.getColumns().add(nameCol);
-        var statusCol = new TableColumn<WorkerEntry, String>("Status");
+        var statusCol = new TableColumn<WorkerEntry, String>("Job");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         workersList.getColumns().add(statusCol);
 
-        workersList.setItems(workers);
+        workersList.setItems(getWorkersList());
 
         var itemCol = new TreeTableColumn<JobEntry, String>("Item");
         itemCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("item"));
