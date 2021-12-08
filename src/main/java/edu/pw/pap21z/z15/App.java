@@ -1,8 +1,5 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.DataBaseClient;
-import edu.pw.pap21z.z15.db.Item;
-import edu.pw.pap21z.z15.db.Location;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

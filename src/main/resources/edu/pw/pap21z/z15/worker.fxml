@@ -4,24 +4,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
-   <children>
-      <ListView fx:id="jobsListView" layoutX="21.0" layoutY="69.0" prefHeight="386.0" prefWidth="477.0" />
-      <Label fx:id="taskLable" layoutX="167.0" layoutY="14.0" prefHeight="39.0" text="Current Tasks" textAlignment="CENTER">
-         <font>
-            <Font size="27.0" />
-         </font>
-      </Label>
-      <Button fx:id="doButton" layoutX="544.0" layoutY="402.0" mnemonicParsing="false" onAction="#switchToWorkerTaskScene" prefHeight="61.0" prefWidth="155.0" text="Do" textAlignment="CENTER">
-         <font>
-            <Font size="27.0" />
-         </font>
-      </Button>
-      <Text fx:id="jobInfo" layoutX="516.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click on job to see its details" wrappingWidth="210.93658447265625">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Text>
-      <Button layoutX="21.0" layoutY="21.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0"
+            prefWidth="749.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.pw.pap21z.z15.WorkerController">
+    <ListView fx:id="jobsListView" layoutX="21.0" layoutY="69.0" prefHeight="386.0" prefWidth="477.0"/>
+    <Label layoutX="167.0" layoutY="14.0" prefHeight="39.0" text="Current Tasks" textAlignment="CENTER">
+        <font>
+            <Font size="27.0"/>
+        </font>
+    </Label>
+    <Button layoutX="544.0" layoutY="402.0" mnemonicParsing="false" onAction="#switchToWorkerTaskScene"
+            prefHeight="61.0"
+            prefWidth="155.0" text="Do" textAlignment="CENTER">
+        <font>
+            <Font size="27.0"/>
+        </font>
+    </Button>
+    <Text fx:id="jobInfo" layoutX="516.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0"
+          text="Click on job to see its details" wrappingWidth="210.93658447265625">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Text>
+    <Button layoutX="21.0" layoutY="21.0" mnemonicParsing="false" onAction="#logOut" text="Log out"/>
 </AnchorPane>

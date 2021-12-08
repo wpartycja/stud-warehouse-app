@@ -5,6 +5,7 @@ import edu.pw.pap21z.z15.db.DataBaseClient;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -12,9 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
+
 import java.io.IOException;
-import java.util.List;
 
 public class LoginController {
 
@@ -23,47 +23,46 @@ public class LoginController {
     @FXML
     private TextField password;
 
-//    static String[] nameList = {"manager", "client", "worker"};
-//    static String[] passList = {"Manager1", "Client1", "Worker1"};
-//    static String[] typeList = {"manager", "client", "worker"};
     static boolean answer;
 
-    static List<Account> accList;
     private final DataBaseClient dbClient = new DataBaseClient();
 
     private void checkData(String name, String pass) throws IOException {
         if (checkUsername(name)) {
             if (checkPassword(name, pass)) {
-                okBox("Login Status","You have logged in as: " + name);
+                okBox("Login Status", "You have logged in as: " + name);
                 changeRoot(getAccountType(name));
             } else {
-                okBox("Login Error","Wrong password for username: " + name);
+                okBox("Login Error", "Wrong password for username: " + name);
             }
         } else {
-            okBox("Login Error","Wrong username!");
+            okBox("Login Error", "Wrong username!");
         }
     }
+
     private boolean checkUsername(String name) {
-        for (Account acc: dbClient.getAccountData()) {
-            if (acc.getLogin().equals(name)) {return true;}
+        for (Account acc : dbClient.getAccountData()) {
+            if (acc.getLogin().equals(name)) {
+                return true;
+            }
         }
         return false;
     }
+
     private boolean checkPassword(String name, String pass) {
-//        for (int num=0; num < 3; num++){
-//            if (name.equals(nameList[num]) && pass.equals(passList[num])) {return true;}
-//        }
-        for (Account acc: dbClient.getAccountData()) {
-            if (acc.getLogin().equals(name) && acc.getPassword().equals(pass)) {return true;}
+        for (Account acc : dbClient.getAccountData()) {
+            if (acc.getLogin().equals(name) && acc.getPassword().equals(pass)) {
+                return true;
+            }
         }
         return false;
     }
+
     private String getAccountType(String name) {
-//        for (int num=0; num < 3; num++){
-//            if (name.equals(nameList[num])) {
-//                return typeList[num]; }}
-        for (Account acc: dbClient.getAccountData()) {
-            if (acc.getLogin().equals(name)) {return acc.getType();}
+        for (Account acc : dbClient.getAccountData()) {
+            if (acc.getLogin().equals(name)) {
+                return acc.getType();
+            }
         }
         return "login";
     }
@@ -83,7 +82,7 @@ public class LoginController {
 
         ok.setOnAction(e -> stage.close());
 
-        VBox layout = new VBox( 20);
+        VBox layout = new VBox(20);
         layout.getChildren().addAll(label, ok);
         layout.setAlignment(Pos.CENTER);
 
@@ -91,6 +90,7 @@ public class LoginController {
         stage.setScene(scene);
         stage.showAndWait();
     }
+
     public static boolean confirmExit() {
 
         Stage stage = new Stage();
@@ -100,7 +100,7 @@ public class LoginController {
         Label label = new Label("Sure you want to exit?");
 
         Button yes = new Button("yes");
-        Button no= new Button("no");
+        Button no = new Button("no");
 
         yes.setOnAction(e -> {
             answer = true;
@@ -130,16 +130,15 @@ public class LoginController {
     }
 
     @FXML
-    private void initialize() { }
-
-    @FXML
     private void logIn() throws IOException {
         checkData(username.getText(), password.getText());
     }
+
     @FXML
     private void create() {
         System.out.println("TODO");
     }
+
     @FXML
     private void quit() {
         App.closeProgram();

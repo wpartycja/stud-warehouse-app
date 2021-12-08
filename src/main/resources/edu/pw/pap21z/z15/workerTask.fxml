@@ -5,17 +5,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="fullScreenJobInfo" prefHeight="415.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerTaskController">
-   <children>
-      <Label layoutX="97.0" layoutY="144.0" text="Content coming soon">
-         <font>
-            <Font size="43.0" />
-         </font>
-      </Label>
-      <Button fx:id="endTaskButton" layoutX="239.0" layoutY="332.0" mnemonicParsing="false" onAction="#switchToWorkerScene" prefHeight="56.0" prefWidth="127.0" text="End">
-         <font>
-            <Font size="27.0" />
-         </font>
-      </Button>
-   </children>
+<AnchorPane prefHeight="415.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.pw.pap21z.z15.WorkerTaskController">
+    <Label layoutX="97.0" layoutY="144.0" text="Content coming soon">
+        <font>
+            <Font size="43.0"/>
+        </font>
+    </Label>
+    <Button layoutX="239.0" layoutY="332.0" mnemonicParsing="false" onAction="#switchToWorkerScene"
+            prefHeight="56.0" prefWidth="127.0" text="End">
+        <font>
+            <Font size="27.0"/>
+        </font>
+    </Button>
 </AnchorPane>

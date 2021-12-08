@@ -1,8 +1,8 @@
 package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.DataBaseClient;
-import edu.pw.pap21z.z15.db.Item;
 import edu.pw.pap21z.z15.db.Employee;
+import edu.pw.pap21z.z15.db.Item;
 import edu.pw.pap21z.z15.db.Job;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -101,7 +101,7 @@ public class ManagerController {
     }
 
     public ObservableList<WorkerEntry> getWorkersList() {
-        ArrayList<WorkerEntry> workers = new ArrayList<WorkerEntry>();
+        ArrayList<WorkerEntry> workers = new ArrayList<>();
         for (Employee emp: dbClient.getEmployeeData()) {
             workers.add(new WorkerEntry(emp.getName(), emp.getJob()));
         }
