@@ -1,6 +1,6 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.DataBaseClient;
+import edu.pw.pap21z.z15.db.model.Pallet;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -11,19 +11,17 @@ import java.util.List;
 
 public class ClientController {
 
-    private final DataBaseClient dbClient = new DataBaseClient();
-
     @FXML
     private ListView<String> warehouseContentsList;
 
     @FXML
     private void initialize() {
 
-        List<String> items = new ArrayList<>();
-        for (edu.pw.pap21z.z15.db.Item i : dbClient.getItemData()) {
-            items.add(i.getDescription());
+        List<String> palletItems = new ArrayList<>();
+        for (Pallet pallet : App.db.getPallets()) {
+            palletItems.add(pallet.getDescription());
         }
-        var contents = FXCollections.observableArrayList(items);
+        var contents = FXCollections.observableArrayList(palletItems);
         warehouseContentsList.setItems(contents);
     }
 

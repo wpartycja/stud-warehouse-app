@@ -1,9 +1,8 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.DataBaseClient;
-import edu.pw.pap21z.z15.db.Employee;
-import edu.pw.pap21z.z15.db.Item;
-import edu.pw.pap21z.z15.db.Job;
+import edu.pw.pap21z.z15.db.model.Account;
+import edu.pw.pap21z.z15.db.model.Job;
+import edu.pw.pap21z.z15.db.model.Pallet;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,8 +26,6 @@ public class ManagerController {
     @FXML
     private TreeView<String> contentsTree;
 
-    private final DataBaseClient dbClient =  new DataBaseClient();
-
     private TreeItem<String> getOrCreateChild(TreeItem<String> node, String childValue) {
         var existingNode = node.getChildren().stream()
                 .filter(i -> Objects.equals(i.getValue(), childValue))
@@ -42,13 +39,12 @@ public class ManagerController {
 
     private TreeItem<String> buildContentsTree() {
         TreeItem<String> rootItem = new TreeItem<>();
-        var locations = dbClient.getLocationData();
+        var locations = App.db.getLocations();
         for (var location : locations) {
             var node = rootItem;
             var path = location.getPath().split("/");
             for (String s : path) node = getOrCreateChild(node, s);
-            for (Item i : dbClient.getItemData()) {
-                if (i.getLocationId() == location.getLocationId())
+            for (Pallet i : location.getPallets()) {
                 node.getChildren().add(new TreeItem<>(i.getDescription()));
             }
         }
@@ -102,15 +98,17 @@ public class ManagerController {
 
     public ObservableList<WorkerEntry> getWorkersList() {
         ArrayList<WorkerEntry> workers = new ArrayList<>();
-        for (Employee emp: dbClient.getEmployeeData()) {
-            workers.add(new WorkerEntry(emp.getName(), emp.getJob()));
+        for (Account emp : App.db.getWorkers()) {
+            String status = emp.getCurrentJob() == null ? "Idle" : emp.getCurrentJob().getId().toString();
+            workers.add(new WorkerEntry(emp.getName(), status));
         }
         return FXCollections.observableArrayList(workers);
     }
+
     public void getJobs() {
         var ordersRoot = new TreeItem<JobEntry>();
-        for (Job job: dbClient.getJobData()) {
-            ordersRoot.getChildren().add(new TreeItem<>(new JobEntry(job.getJobName(), "test", "test")));
+        for (Job job : App.db.getJobs()) {
+            ordersRoot.getChildren().add(new TreeItem<>(new JobEntry(job.getId().toString(), "test", "test")));
         }
         ordersList.setShowRoot(false);
         ordersList.setRoot(ordersRoot);

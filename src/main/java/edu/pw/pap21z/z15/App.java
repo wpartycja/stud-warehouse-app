@@ -1,5 +1,8 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.Database;
+import edu.pw.pap21z.z15.db.model.Account;
+import edu.pw.pap21z.z15.db.model.AccountType;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,13 +16,16 @@ public class App extends Application {
     private static Scene scene;
     private static Stage stage;
 
+    public static Account account = null;
+    public static Database db = new Database();
+
     @Override
-    public void start(Stage primary) throws IOException {
+    public void start(Stage primaryStage) throws IOException {
 
         // set starting scene
         scene = new Scene(loadFXML("login"), 640, 480);
         // configure stage
-        stage = primary;
+        stage = primaryStage;
         stage.setScene(scene);
         stage.setTitle("PAP21Z-Z15");
 
@@ -59,6 +65,16 @@ public class App extends Application {
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
+    }
+
+    public static void setAccount(Account newAccount) throws IOException {
+        account = newAccount;
+
+        if (account == null) setRoot("login");
+        else if (account.getType() == AccountType.MANAGER) setRoot("manager");
+        else if (account.getType() == AccountType.CLIENT) setRoot("client");
+        else if (account.getType() == AccountType.WORKER) setRoot("worker");
+        else throw new IllegalArgumentException("Invalid account type");
     }
 
     public static void main(String[] args) {

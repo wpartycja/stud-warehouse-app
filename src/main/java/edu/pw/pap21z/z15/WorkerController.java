@@ -1,8 +1,6 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.DataBaseClient;
-import edu.pw.pap21z.z15.db.Job;
-import edu.pw.pap21z.z15.db.Location;
+import edu.pw.pap21z.z15.db.model.Job;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +12,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class WorkerController {
@@ -26,14 +22,8 @@ public class WorkerController {
     @FXML
     protected Text jobInfo;
 
-    String currentJobName;
-    Job currentJob;
-
     protected Stage stage;
     protected Scene scene;
-
-    private final DataBaseClient dbClient = new DataBaseClient();
-
 
     public void switchToWorkerTaskScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("workerTask.fxml")));
@@ -45,35 +35,16 @@ public class WorkerController {
 
     public void displayInfo() {
         jobsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentJobName = jobsListView.getSelectionModel().getSelectedItem();
-            for (Job job : dbClient.getJobData()) {
-                if (Objects.equals(job.getJobName(), currentJobName)) {
-                    currentJob = job;
-                    break;
-                }
-            }
-
-            for (Location loc : dbClient.getLocationData()) {
-                if (loc.getLocationId() == currentJob.getDestinationLocationId()) {
-                    String path = loc.getPath();
-                    jobInfo.setText(path);
-                }
-            }
+            Long currentJobId = Long.valueOf(jobsListView.getSelectionModel().getSelectedItem());
+            Job currentJob = App.db.getJobById(currentJobId);
+            jobInfo.setText(currentJob.getDestination().getPath());
         });
     }
 
-    public ArrayList<String> getJobNameList() {
-        List<Job> JobList = dbClient.getJobData();
-        ArrayList<String> jobNameList = new ArrayList<>();
-        for (var job : JobList) {
-            jobNameList.add(job.getJobName());
-        }
-        return jobNameList;
-    }
-
-
     public void initialize() {
-        jobsListView.getItems().addAll(this.getJobNameList());
+        for (Job job : App.db.getJobs()) {
+            jobsListView.getItems().add(job.getId().toString());
+        }
         this.displayInfo();
     }
 

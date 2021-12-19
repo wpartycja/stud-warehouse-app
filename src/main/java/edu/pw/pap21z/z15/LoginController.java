@@ -1,7 +1,5 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.Account;
-import edu.pw.pap21z.z15.db.DataBaseClient;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LoginController {
 
@@ -24,52 +23,6 @@ public class LoginController {
     private TextField password;
 
     static boolean answer;
-
-    private final DataBaseClient dbClient = new DataBaseClient();
-
-    private void checkData(String name, String pass) throws IOException {
-        if (checkUsername(name)) {
-            if (checkPassword(name, pass)) {
-                okBox("Login Status", "You have logged in as: " + name);
-                changeRoot(getAccountType(name));
-            } else {
-                okBox("Login Error", "Wrong password for username: " + name);
-            }
-        } else {
-            okBox("Login Error", "Wrong username!");
-        }
-    }
-
-    private boolean checkUsername(String name) {
-        for (Account acc : dbClient.getAccountData()) {
-            if (acc.getLogin().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkPassword(String name, String pass) {
-        for (Account acc : dbClient.getAccountData()) {
-            if (acc.getLogin().equals(name) && acc.getPassword().equals(pass)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String getAccountType(String name) {
-        for (Account acc : dbClient.getAccountData()) {
-            if (acc.getLogin().equals(name)) {
-                return acc.getType();
-            }
-        }
-        return "login";
-    }
-
-    private static void changeRoot(String type) throws IOException {
-        App.setRoot(type);
-    }
 
     public static void okBox(String title, String message) {
         Stage stage = new Stage();
@@ -131,7 +84,24 @@ public class LoginController {
 
     @FXML
     private void logIn() throws IOException {
-        checkData(username.getText(), password.getText());
+        var account = App.db.getAccountByUsername(username.getText());
+
+        // wrong username
+        if (account == null) {
+            okBox("Login Error", "Wrong username!");
+            return;
+        }
+
+        // wrong password
+        if (!Objects.equals(account.getPassword(), password.getText())) {
+            okBox("Login Error", "Wrong password for username: " + username.getText());
+            return;
+        }
+
+        // correct credentials
+        okBox("Login Status", "You have logged in as: " + username.getText());
+        App.setAccount(account);
+
     }
 
     @FXML
