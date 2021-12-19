@@ -55,6 +55,16 @@
                             <mainClass>edu.pw.pap21z.z15.App</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <!-- Configuration for debugging -->
+                        <id>debug</id>
+                        <configuration>
+                            <options>
+                                <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8000</option>
+                            </options>
+                            <mainClass>edu.pw.pap21z.z15.App</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
