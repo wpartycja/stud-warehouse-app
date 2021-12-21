@@ -24,7 +24,7 @@ public class ClientController {
         var contents = FXCollections.observableArrayList(palletItems);
         warehouseContentsList.setItems(contents);
     }
-
+    // wszystko trzeba zobic
     @FXML
     private void logOut() throws IOException {
         App.setRoot("login");
