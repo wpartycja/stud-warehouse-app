@@ -43,7 +43,7 @@ VALUES (1, 'Krzesła', 'c1', 2);
 INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
 VALUES (2, 'Czekolada', 'c2', 4);
 INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
-VALUES (3, 'Grzejnik', 'c1', 4);
+VALUES (3, 'Grzejnik', 'c1', 7);
 INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
 VALUES (4, 'Ryż', 'c2', 10);
 INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
