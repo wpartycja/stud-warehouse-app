@@ -29,7 +29,7 @@
     <right>
         <VBox prefWidth="400.0" spacing="10.0" BorderPane.alignment="CENTER">
             <Label text="Job queue"/>
-            <TreeTableView fx:id="ordersList" VBox.vgrow="ALWAYS"/>
+            <TreeView fx:id="ordersList" VBox.vgrow="ALWAYS"/>
             <Label text="Workers"/>
             <TableView fx:id="workersList" VBox.vgrow="ALWAYS"/>
             <padding>
