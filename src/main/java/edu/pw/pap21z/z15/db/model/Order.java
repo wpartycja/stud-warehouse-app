@@ -1,6 +1,7 @@
 package edu.pw.pap21z.z15.db.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "ORDERS")
@@ -16,6 +17,13 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", nullable = false, length = 20)
     private OrderType type;
+
+    @OneToMany(mappedBy = "order")
+    private List<Job> jobs;
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
 
     public OrderType getType() {
         return type;
