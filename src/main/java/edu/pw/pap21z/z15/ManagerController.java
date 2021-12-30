@@ -1,15 +1,18 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.model.Account;
-import edu.pw.pap21z.z15.db.model.Job;
-import edu.pw.pap21z.z15.db.model.Pallet;
+import edu.pw.pap21z.z15.db.ManagerRepository;
+import edu.pw.pap21z.z15.db.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +20,10 @@ import java.util.Objects;
 
 public class ManagerController {
 
+    private final ManagerRepository repo = new ManagerRepository(App.db.session);
+
     @FXML
-    private TreeTableView<JobEntry> ordersList;
+    private TreeView<String> ordersList;
 
     @FXML
     private TableView<WorkerEntry> workersList;
@@ -26,10 +31,12 @@ public class ManagerController {
     @FXML
     private TreeView<String> contentsTree;
 
+    private final Image incomingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("down-right-arrow.png")));
+
+    private final Image outgoingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("up-right-arrow.png")));
+
     private TreeItem<String> getOrCreateChild(TreeItem<String> node, String childValue) {
-        var existingNode = node.getChildren().stream()
-                .filter(i -> Objects.equals(i.getValue(), childValue))
-                .findAny();
+        var existingNode = node.getChildren().stream().filter(i -> Objects.equals(i.getValue(), childValue)).findAny();
         if (existingNode.isPresent()) return existingNode.get();
 
         var childItem = new TreeItem<>(childValue);
@@ -39,7 +46,7 @@ public class ManagerController {
 
     private TreeItem<String> buildContentsTree() {
         TreeItem<String> rootItem = new TreeItem<>();
-        var locations = App.db.getLocations();
+        var locations = repo.getLocations();
         for (var location : locations) {
             var node = rootItem;
             var path = location.getPath().split("/");
@@ -49,6 +56,55 @@ public class ManagerController {
             }
         }
         return rootItem;
+    }
+
+    public ObservableList<WorkerEntry> getWorkersList() {
+        ArrayList<WorkerEntry> workers = new ArrayList<>();
+        for (Account emp : repo.getWorkers()) {
+            String status = emp.getCurrentJob() == null ? "Idle" : emp.getCurrentJob().getId().toString();
+            workers.add(new WorkerEntry(emp.getName(), status));
+        }
+        return FXCollections.observableArrayList(workers);
+    }
+
+    @FXML
+    private void initialize() {
+        contentsTree.setShowRoot(false);
+        contentsTree.setRoot(buildContentsTree());
+
+
+        var nameCol = new TableColumn<WorkerEntry, String>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        workersList.getColumns().add(nameCol);
+        var statusCol = new TableColumn<WorkerEntry, String>("Job");
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        workersList.getColumns().add(statusCol);
+
+        workersList.setItems(getWorkersList());
+
+
+        var ordersRoot = new TreeItem<String>();
+        for (Order order : repo.getOrders()) {
+            ImageView icon = new ImageView(order.getType() == OrderType.IN ? incomingIcon : outgoingIcon);
+            icon.setFitHeight(10);
+            icon.setFitWidth(10);
+            var orderItem = new TreeItem<>(String.format("Order #%s", order.getId().toString()), icon);
+            for (Job job : order.getJobs()) {
+                String jobDescription = String.format("Move pallet #%s to %s",
+                        job.getPallet().getId(),
+                        job.getDestination().getPath());
+                orderItem.getChildren().add(new TreeItem<>(jobDescription));
+            }
+            ordersRoot.getChildren().add(orderItem);
+        }
+        ordersList.setShowRoot(false);
+        ordersList.setRoot(ordersRoot);
+
+    }
+
+    @FXML
+    private void logOut() throws IOException {
+        App.setRoot("login");
     }
 
     @SuppressWarnings("unused")
@@ -68,83 +124,5 @@ public class ManagerController {
         public SimpleStringProperty statusProperty() {
             return status;
         }
-    }
-
-    @SuppressWarnings("unused")
-    public static class JobEntry {
-
-        private final SimpleStringProperty item;
-        private final SimpleStringProperty from;
-        private final SimpleStringProperty to;
-
-        private JobEntry(String item, String from, String to) {
-            this.item = new SimpleStringProperty(item);
-            this.from = new SimpleStringProperty(from);
-            this.to = new SimpleStringProperty(to);
-        }
-
-        public SimpleStringProperty itemProperty() {
-            return item;
-        }
-
-        public SimpleStringProperty fromProperty() {
-            return from;
-        }
-
-        public SimpleStringProperty toProperty() {
-            return to;
-        }
-    }
-
-    public ObservableList<WorkerEntry> getWorkersList() {
-        ArrayList<WorkerEntry> workers = new ArrayList<>();
-        for (Account emp : App.db.getWorkers()) {
-            String status = emp.getCurrentJob() == null ? "Idle" : emp.getCurrentJob().getId().toString();
-            workers.add(new WorkerEntry(emp.getName(), status));
-        }
-        return FXCollections.observableArrayList(workers);
-    }
-
-    public void getJobs() {
-        var ordersRoot = new TreeItem<JobEntry>();
-        for (Job job : App.db.getJobs()) {
-            ordersRoot.getChildren().add(new TreeItem<>(new JobEntry(job.getId().toString(), "test", "test")));
-        }
-        ordersList.setShowRoot(false);
-        ordersList.setRoot(ordersRoot);
-    }
-
-    @FXML
-    private void initialize() {
-        contentsTree.setShowRoot(false);
-        contentsTree.setRoot(buildContentsTree());
-
-
-        var nameCol = new TableColumn<WorkerEntry, String>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        workersList.getColumns().add(nameCol);
-        var statusCol = new TableColumn<WorkerEntry, String>("Job");
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        workersList.getColumns().add(statusCol);
-
-        workersList.setItems(getWorkersList());
-
-        var itemCol = new TreeTableColumn<JobEntry, String>("Item");
-        itemCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("item"));
-        ordersList.getColumns().add(itemCol);
-        var fromCol = new TreeTableColumn<JobEntry, String>("From");
-        fromCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("from"));
-        ordersList.getColumns().add(fromCol);
-        var toCol = new TreeTableColumn<JobEntry, String>("To");
-        toCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("to"));
-        ordersList.getColumns().add(toCol);
-
-        getJobs();
-
-    }
-
-    @FXML
-    private void logOut() throws IOException {
-        App.setRoot("login");
     }
 }
