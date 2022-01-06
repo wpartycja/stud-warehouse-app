@@ -62,3 +62,6 @@ INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assig
 VALUES (2, 10, 2, 2, 'PENDING', NULL);
 INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assigned_worker_username)
 VALUES (3, 6, 5, 3, 'PENDING', NULL);
+
+INSERT INTO z15.locations (type, path)
+VALUES ('SHELF', 'Aisle C/Rack 1/Shelf 1');
