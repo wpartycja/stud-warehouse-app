@@ -44,13 +44,13 @@ public class LoginController {
         stage.showAndWait();
     }
 
-    public static boolean confirmExit() {
+    public static boolean yesOrNoBox(String title, String question) {
 
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Exit");
+        stage.setTitle(title);
 
-        Label label = new Label("Sure you want to exit?");
+        Label label = new Label(question);
 
         Button yes = new Button("yes");
         Button no = new Button("no");

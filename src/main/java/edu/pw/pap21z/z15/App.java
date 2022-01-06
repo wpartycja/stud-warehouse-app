@@ -51,7 +51,7 @@ public class App extends Application {
      * Close program with confirmation box [yes/no]
      */
     public static void closeProgram() {
-        boolean answer = LoginController.confirmExit();
+        boolean answer = LoginController.yesOrNoBox("Exit", "Sure you want to exit?");
         if (answer) {
             System.out.println("The program is closing");
             stage.close();
