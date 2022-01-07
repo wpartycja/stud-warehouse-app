@@ -6,10 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,7 +20,7 @@ public class ManagerController {
     private final ManagerRepository repo = new ManagerRepository(App.db.session);
 
     @FXML
-    private TreeView<String> ordersList;
+    private TreeView<Object> ordersList;
 
     @FXML
     private TableView<WorkerEntry> workersList;
@@ -75,28 +72,75 @@ public class ManagerController {
 
         var nameCol = new TableColumn<WorkerEntry, String>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        workersList.getColumns().add(nameCol);
         var statusCol = new TableColumn<WorkerEntry, String>("Job");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        workersList.getColumns().clear();
+        workersList.getColumns().add(nameCol);
         workersList.getColumns().add(statusCol);
 
         workersList.setItems(getWorkersList());
 
 
-        var ordersRoot = new TreeItem<String>();
+        var ordersRoot = new TreeItem<>();
         for (Order order : repo.getOrders()) {
-            ImageView icon = new ImageView(order.getType() == OrderType.IN ? incomingIcon : outgoingIcon);
-            icon.setFitHeight(10);
-            icon.setFitWidth(10);
-            var orderItem = new TreeItem<>(String.format("Order #%s", order.getId().toString()), icon);
-            for (Job job : order.getJobs()) {
-                String jobDescription = String.format("Move pallet #%s to %s",
-                        job.getPallet().getId(),
-                        job.getDestination().getPath());
-                orderItem.getChildren().add(new TreeItem<>(jobDescription));
-            }
+            var orderItem = new TreeItem<Object>(order);
             ordersRoot.getChildren().add(orderItem);
+            orderItem.setExpanded(true);
+            for (Job job : order.getJobs()) {
+                TreeItem<Object> jobItem = new TreeItem<>(job);
+                orderItem.getChildren().add(jobItem);
+                jobItem.setExpanded(true);
+            }
         }
+
+        ordersList.setCellFactory(d -> new TreeCell<>() {
+            @Override
+            protected void updateItem(Object data, boolean empty) {
+                super.updateItem(data, empty);
+                setText(null);
+                setGraphic(null);
+                setContextMenu(null);
+                setStyle(null);
+                if (!empty && data instanceof Order) {
+                    Order order = (Order) data;
+                    ImageView icon = new ImageView(order.getType() == OrderType.IN ? incomingIcon : outgoingIcon);
+                    icon.setFitHeight(10);
+                    icon.setFitWidth(10);
+
+                    setText(String.format("Order #%s", order.getId().toString()));
+                    setGraphic(icon);
+                } else if (!empty && data instanceof Job) {
+                    Job job = (Job) data;
+                    ContextMenu menu = new ContextMenu();
+                    if (job.getStatus() == JobStatus.PLANNED) {
+                        for (Location dest : repo.getAvailableDestinations(job)) {
+                            MenuItem menuItem = new MenuItem("To " + dest.getPath());
+                            menuItem.setOnAction(actionEvent -> {
+                                        repo.scheduleJob(job, dest);
+                                        initialize();
+                                    }
+                            );
+                            menu.getItems().add(menuItem);
+                        }
+                        setText(String.format("Move pallet #%s to ???", job.getPallet().getId()));
+                        setContextMenu(menu);
+                        setStyle("-fx-background-color: LightPink");
+                    } else {
+                        MenuItem menuItem = new MenuItem("Reset destination");
+                        menu.getItems().add(menuItem);
+                        menuItem.setOnAction(actionEvent -> {
+                            repo.unscheduleJob(job);
+                            initialize();
+                                }
+                        );
+                        setContextMenu(menu);
+                        setText(String.format("Move pallet #%s to %s", job.getPallet().getId(), job.getDestination().getPath()));
+                    }
+                } else if (!empty) {
+                    throw new RuntimeException("Order list item of invalid type " + data);
+                }
+            }
+        });
         ordersList.setShowRoot(false);
         ordersList.setRoot(ordersRoot);
 
@@ -125,4 +169,5 @@ public class ManagerController {
             return status;
         }
     }
+
 }

@@ -1,13 +1,13 @@
 package edu.pw.pap21z.z15.db;
 
-import edu.pw.pap21z.z15.db.model.Account;
-import edu.pw.pap21z.z15.db.model.Location;
-import edu.pw.pap21z.z15.db.model.Order;
+import edu.pw.pap21z.z15.db.model.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ManagerRepository {
 
@@ -35,5 +35,33 @@ public class ManagerRepository {
     public List<Account> getWorkers() {
         TypedQuery<Account> query = session.createQuery("SELECT a from Account a where a.type = edu.pw.pap21z.z15.db.model.AccountType.WORKER", Account.class);
         return query.getResultList();
+    }
+
+    public List<Location> getAvailableDestinations(Job job) {
+        if (job.getOrder().getType() == OrderType.IN) {
+            TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.SHELF", Location.class);
+            var shelves = query.getResultList();
+            return shelves.stream()
+                    .filter(s -> s.getPallets().isEmpty())
+                    .collect(Collectors.toList());
+        } else {
+            TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.OUT_RAMP", Location.class);
+            return query.getResultList();
+        }
+    }
+
+    public void scheduleJob(Job job, Location dest) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.PENDING);
+        job.setDestination(dest);
+        transaction.commit();
+    }
+
+    public void unscheduleJob(Job job) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.PLANNED);
+        transaction.commit();
     }
 }
