@@ -35,7 +35,7 @@ public class ClientController {
     @FXML
     private TableView<Job> orderHistory;
 
-    private final List<Long> usedIds = new ArrayList();
+    private final List<Long> usedIds = new ArrayList<>(); // chyba niepotrzebne to?
 
     @FXML
     private void initialize() {
@@ -54,7 +54,8 @@ public class ClientController {
 
         orderMenu.setItems(getOrders());
         orderMenu.getColumns().clear();
-        orderMenu.getColumns().addAll(idColumn, statusColumn);
+        orderMenu.getColumns().add(idColumn);
+        orderMenu.getColumns().add(statusColumn);
 
         TableColumn<Pallet, Long> palletIdColumn = new TableColumn<>("ID");
         palletIdColumn.setMinWidth(100);
@@ -66,7 +67,8 @@ public class ClientController {
 
         itemMenu.setItems(getPallets());
         itemMenu.getColumns().clear();
-        itemMenu.getColumns().addAll(palletIdColumn, descriptionColumn);
+        itemMenu.getColumns().add(palletIdColumn);
+        itemMenu.getColumns().add(descriptionColumn);
     }
 
     private ObservableList<Pallet> getPallets() {
@@ -116,7 +118,7 @@ public class ClientController {
     }
 
     private boolean checkInsert() {
-        return true;
+        return true; // todo?
     }
 
     private void createInOrder(String description) {
@@ -190,7 +192,8 @@ public class ClientController {
         orderHistory = new TableView<>();
         orderHistory.setItems(getOrders());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().addAll(idColumnHistory, statusColumnHistory);
+        orderHistory.getColumns().add(idColumnHistory);
+        orderHistory.getColumns().add(statusColumnHistory);
 
         Scene scene = new Scene(orderHistory, 300, 200);
         stage.setScene(scene);
