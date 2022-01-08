@@ -30,25 +30,20 @@ public class ClientController {
     private TableView<Pallet> itemMenu;
     @FXML
     private ChoiceBox<Long> itemId;
+    @FXML
+    private ComboBox<String> palletDescription;
+    @FXML
+    private TableView<Job> orderHistory;
 
+    private final List<Long> usedIds = new ArrayList();
     @FXML
     private void initialize() {
-
-        List<Long> palletItems = new ArrayList<>();
-        for (Pallet pallet : App.db.getPallets()) {
-            palletItems.add(pallet.getId());
-        }
-        var contents = FXCollections.observableArrayList(palletItems);
-        itemId = new ChoiceBox<>();
-        itemId.getItems().addAll(contents);
-        System.out.println("END OF GETTING CONTENT");
         setTables();
-        System.out.println("END OF SETTING TABLES");
     }
 
     @FXML
     private void setTables() {
-        var idColumn = new TableColumn<Job, Long>("ID");
+        TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
         idColumn.setMinWidth(100);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -56,9 +51,9 @@ public class ClientController {
         statusColumn.setMinWidth(200);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        orderMenu = new TableView<>();
         orderMenu.setItems(getOrders());
-        orderMenu.getColumns().addAll(idColumn ,statusColumn);
+        orderMenu.getColumns().clear();
+        orderMenu.getColumns().addAll(idColumn, statusColumn);
 
         TableColumn<Pallet, Long> palletIdColumn = new TableColumn<>("ID");
         palletIdColumn.setMinWidth(100);
@@ -68,56 +63,77 @@ public class ClientController {
         descriptionColumn.setMinWidth(200);
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        itemMenu = new TableView<>();
         itemMenu.setItems(getPallets());
+        itemMenu.getColumns().clear();
         itemMenu.getColumns().addAll(palletIdColumn, descriptionColumn);
     }
     private ObservableList<Pallet> getPallets() {
+        List<Long> palletIds = new ArrayList<>();
+        List<String> palletDescriptions = new ArrayList<>();
         ObservableList<Pallet> pallets = FXCollections.observableArrayList();
         for (Pallet pallet : App.db.getPallets()) {
             if (pallet.getOwnerUsername().getId().equals(App.account.getId()) && pallet.getLocation().getType() == LocationType.SHELF) {
-                pallets.add(pallet);}
+                pallets.add(pallet);
+                palletIds.add(pallet.getId());
+                palletDescriptions.add(pallet.getDescription());}
         }
+        var palletIdsObservable = FXCollections.observableArrayList(palletIds);
+        itemId.setItems(palletIdsObservable);
+        itemId.getItems().removeAll(usedIds);
+
+        var palletDescriptionsObservable = FXCollections.observableArrayList(palletDescriptions);
+        palletDescription = new ComboBox<>();
+        palletDescription.getItems().addAll(palletDescriptionsObservable);
+        palletDescription.setEditable(true);
         return  pallets;
     }
     private ObservableList<Job> getOrders() {
         ObservableList<Job> jobs = FXCollections.observableArrayList();
+        ObservableList<Job> jobsHistory = FXCollections.observableArrayList();
         for (Job job : App.db.getJobs()) {
-            if (job.getOrder().getClient().getId().equals(App.account.getId())) {
+            if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() != JobStatus.COMPLETED) {
                  jobs.add(job); }
+            if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() == JobStatus.COMPLETED) {
+                jobsHistory.add(job); }
         }
         return  jobs;
     }
+    private ObservableList<Job> getOrdersHistory() {
+        ObservableList<Job> jobs = FXCollections.observableArrayList();
+        for (Job job : App.db.getJobs()) {
+            if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() == JobStatus.COMPLETED) {
+                jobs.add(job); }
+        }
+        return  jobs;
+    }
+
     private boolean checkInsert() { return true;}
 
-    private void createOrder(String description) {
-        long orderId = repo.insertOrder(App.account.getId(), "IN");
-        long palletId = repo.insertPallet(description, App.account.getId(), 3);
-        repo.insertJob(palletId, 3, orderId, "PLANNED");
+    private void createInOrder(String description) {
+        repo.insertInJob(App.account.getId(), "IN", description, App.account.getId(),
+                3, 9, "PLANNED");
     }
     private void createOutOrder(Long palletId) {
-        long orderId = repo.insertOrder(App.account.getId(), "OUT");
-        repo.insertJob(palletId, 4, orderId, "PLANNED");
+        repo.insertOutJob(App.account.getId(), "OUT", palletId, 10, "PLANNED");
     }
 
     @FXML
     private void newOrder() {
-        System.out.println("TODO");
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("New order");
 
-        ChoiceBox <String> palletDescription = new ChoiceBox<>();
-        palletDescription.getItems().addAll("");
-
         Button butConf = new Button("Confirm");
         butConf.setOnAction(e -> {
             if (checkInsert()) {
-                createOrder(palletDescription.getValue());
-                stage.close();
+                createInOrder(palletDescription.getValue());
             }
-            LoginController.okBox("Order Error", "Wrong order input.");
+            else {
+                LoginController.okBox("Order Error", "Wrong order input.");
+            }
+            stage.close();
         });
+
         Button butCancel = new Button("Cancel");
         butCancel.setOnAction(e -> stage.close());
 
@@ -125,14 +141,15 @@ public class ClientController {
         hbox.getChildren().addAll(palletDescription, butConf, butCancel);
         hbox.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(hbox, 250, 80);
+        Scene scene = new Scene(hbox, 350, 120);
         stage.setScene(scene);
         stage.showAndWait();
+
+        initialize();
     }
 
     @FXML
     private void takeOut() {
-        System.out.println("TODO");
         if (itemId.getValue() == null) {
             LoginController.okBox("Take out error", "No pallet id selected to take out from warehouse.");
             return;
@@ -142,6 +159,31 @@ public class ClientController {
         if (ans) {
             createOutOrder(itemId.getValue());
         }
+        usedIds.add(id);
+        initialize();
+    }
+    @FXML
+    private void showHistory() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Order history");
+
+        TableColumn<Job, Long> idColumnHistory = new TableColumn<>("ID");
+        idColumnHistory.setMinWidth(100);
+        idColumnHistory.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Job, JobStatus> statusColumnHistory = new TableColumn<>("Status");
+        statusColumnHistory.setMinWidth(200);
+        statusColumnHistory.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        orderHistory = new TableView<>();
+        orderHistory.setItems(getOrders());
+        orderHistory.getColumns().clear();
+        orderHistory.getColumns().addAll(idColumnHistory, statusColumnHistory);
+
+        Scene scene = new Scene(orderHistory, 300, 200);
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 
     @FXML
