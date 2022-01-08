@@ -1,5 +1,6 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.ManagerRepository;
 import edu.pw.pap21z.z15.db.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -29,6 +30,8 @@ public class ManagerController {
 
     private final Image outgoingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("up-right-arrow.png")));
 
+    private final ManagerRepository repo = new ManagerRepository(App.dbSession);
+
     private TreeItem<String> getOrCreateChild(TreeItem<String> node, String childValue) {
         var existingNode = node.getChildren().stream().filter(i -> Objects.equals(i.getValue(), childValue)).findAny();
         if (existingNode.isPresent()) return existingNode.get();
@@ -40,7 +43,7 @@ public class ManagerController {
 
     private TreeItem<String> buildContentsTree() {
         TreeItem<String> rootItem = new TreeItem<>();
-        var locations = App.db.getLocations();
+        var locations = repo.getLocations();
         for (var location : locations) {
             var node = rootItem;
             var path = location.getPath().split("/");
@@ -54,7 +57,7 @@ public class ManagerController {
 
     public ObservableList<WorkerEntry> getWorkersList() {
         ArrayList<WorkerEntry> workers = new ArrayList<>();
-        for (Account emp : App.db.getWorkers()) {
+        for (Account emp : repo.getWorkers()) {
             String status = emp.getCurrentJob() == null ? "Idle" : emp.getCurrentJob().getId().toString();
             workers.add(new WorkerEntry(emp.getName(), status));
         }
@@ -79,7 +82,7 @@ public class ManagerController {
 
 
         var ordersRoot = new TreeItem<>();
-        for (Order order : App.db.getOrders()) {
+        for (Order order : repo.getOrders()) {
             var orderItem = new TreeItem<Object>(order);
             ordersRoot.getChildren().add(orderItem);
             orderItem.setExpanded(true);
@@ -110,10 +113,10 @@ public class ManagerController {
                     Job job = (Job) data;
                     ContextMenu menu = new ContextMenu();
                     if (job.getStatus() == JobStatus.PLANNED) {
-                        for (Location dest : App.db.getAvailableDestinations(job)) {
+                        for (Location dest : repo.getAvailableDestinations(job)) {
                             MenuItem menuItem = new MenuItem("To " + dest.getPath());
                             menuItem.setOnAction(actionEvent -> {
-                                        App.db.scheduleJob(job, dest);
+                                        repo.scheduleJob(job, dest);
                                         initialize();
                                     }
                             );
@@ -126,7 +129,7 @@ public class ManagerController {
                         MenuItem menuItem = new MenuItem("Reset destination");
                         menu.getItems().add(menuItem);
                         menuItem.setOnAction(actionEvent -> {
-                                    App.db.unscheduleJob(job);
+                                    repo.unscheduleJob(job);
                                     initialize();
                                 }
                         );

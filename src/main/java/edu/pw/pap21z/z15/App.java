@@ -1,6 +1,5 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.Database;
 import edu.pw.pap21z.z15.db.model.Account;
 import edu.pw.pap21z.z15.db.model.AccountType;
 import javafx.application.Application;
@@ -9,6 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
 
 public class App extends Application {
@@ -17,7 +19,8 @@ public class App extends Application {
     private static Stage stage;
 
     public static Account account = null;
-    public static Database db = new Database();
+    private static final EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("oracledb");
+    public static final EntityManager dbSession = sessionFactory.createEntityManager();
 
     @Override
     public void start(Stage primaryStage) throws IOException {

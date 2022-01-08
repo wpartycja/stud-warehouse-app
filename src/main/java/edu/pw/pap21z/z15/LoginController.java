@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class LoginController {
 
-    private final LoginRepository repo = new LoginRepository(App.db.session);
+    private final LoginRepository repo = new LoginRepository(App.dbSession);
 
     @FXML
     private TextField username;
@@ -89,7 +89,7 @@ public class LoginController {
 
     @FXML
     private void logIn() throws IOException {
-        var account = App.db.getAccountByUsername(username.getText());
+        var account = repo.getAccountByUsername(username.getText());
 
         // wrong username
         if (account == null) {
@@ -128,13 +128,22 @@ public class LoginController {
 
         Button createAccount = new Button("Create Account");
         createAccount.setOnAction(e -> {
-            if (usr.getText() == null) { okBox("Account error", "Login can not be empty!");}
-            else if (App.db.getAccountByUsername(usr.getText()) != null) {okBox("Account error", "Chosen username is already taken!");}
-            else if (psw1.getText() == null) { okBox("Account error", "Password can not be empty!");}
-            else if (name.getText() == null) { okBox("Account error", "Name can not be empty!");}
-            else if (surname.getText() == null) { okBox("Account error", "Surname can not be empty!");}
-            else if (!psw1.getText().equals(psw2.getText())) {okBox("Account error","Password must be the same in both fields");}
-            else {repo.insertAccount(usr.getText(),psw1.getText(),"CLIENT",name.getText(),surname.getText()); stage.close();}
+            if (usr.getText() == null) {
+                okBox("Account error", "Login can not be empty!");
+            } else if (repo.getAccountByUsername(usr.getText()) != null) {
+                okBox("Account error", "Chosen username is already taken!");
+            } else if (psw1.getText() == null) {
+                okBox("Account error", "Password can not be empty!");
+            } else if (name.getText() == null) {
+                okBox("Account error", "Name can not be empty!");
+            } else if (surname.getText() == null) {
+                okBox("Account error", "Surname can not be empty!");
+            } else if (!psw1.getText().equals(psw2.getText())) {
+                okBox("Account error", "Password must be the same in both fields");
+            } else {
+                repo.insertAccount(usr.getText(), psw1.getText(), "CLIENT", name.getText(), surname.getText());
+                stage.close();
+            }
         });
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
@@ -144,8 +153,9 @@ public class LoginController {
         stage.setScene(scene);
         stage.showAndWait();
     }
+
     public static void infoAccount() {
-        LoginRepository repository = new LoginRepository(App.db.session);
+        LoginRepository repository = new LoginRepository(App.dbSession);
 
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -157,9 +167,14 @@ public class LoginController {
 
         Button saveInfo = new Button("Save");
         saveInfo.setOnAction(e -> {
-            if (name.getText() == null) { okBox("Account error", "Name can not be empty!");}
-            else if (surname.getText() == null) { okBox("Account error", "Surname can not be empty!");}
-            else {repository.updateAccount(name.getText(), surname.getText(), App.account.getId()); stage.close();}
+            if (name.getText() == null) {
+                okBox("Account error", "Name can not be empty!");
+            } else if (surname.getText() == null) {
+                okBox("Account error", "Surname can not be empty!");
+            } else {
+                repository.updateAccount(name.getText(), surname.getText(), App.account.getId());
+                stage.close();
+            }
         });
 
         VBox layout = new VBox(10);
