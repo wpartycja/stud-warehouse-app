@@ -15,7 +15,7 @@ import java.util.List;
 public class Database {
 
     private final EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("oracledb");
-    private final EntityManager session = sessionFactory.createEntityManager();
+    public final EntityManager session = sessionFactory.createEntityManager();
 
     private <T> List<T> getAll(Class<T> cls) {
         CriteriaQuery<T> criteria = session.getCriteriaBuilder().createQuery(cls);
