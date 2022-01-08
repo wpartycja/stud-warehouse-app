@@ -23,5 +23,44 @@ public class ManagerRepository {
         return session.createQuery(criteria).getResultList();
     }
 
+    public List<Location> getLocations() {
+        return getAll(Location.class);
+    }
 
+    public List<Order> getOrders() {
+        return getAll(Order.class);
+    }
+
+    public List<Account> getWorkers() {
+        TypedQuery<Account> query = session.createQuery("SELECT a from Account a where a.type = edu.pw.pap21z.z15.db.model.AccountType.WORKER", Account.class);
+        return query.getResultList();
+    }
+
+    public List<Location> getAvailableDestinations(Job job) {
+        if (job.getOrder().getType() == OrderType.IN) {
+            TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.SHELF", Location.class);
+            var shelves = query.getResultList();
+            return shelves.stream()
+                    .filter(s -> s.getPallets().isEmpty())
+                    .collect(Collectors.toList());
+        } else {
+            TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.OUT_RAMP", Location.class);
+            return query.getResultList();
+        }
+    }
+
+    public void scheduleJob(Job job, Location dest) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.PENDING);
+        job.setDestination(dest);
+        transaction.commit();
+    }
+
+    public void unscheduleJob(Job job) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.PLANNED);
+        transaction.commit();
+    }
 }

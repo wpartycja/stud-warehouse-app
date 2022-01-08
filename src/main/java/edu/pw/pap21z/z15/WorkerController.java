@@ -1,6 +1,5 @@
 package edu.pw.pap21z.z15;
 
-import edu.pw.pap21z.z15.db.model.Job;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,15 +35,17 @@ public class WorkerController {
     public void displayInfo() {
         jobsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Long currentJobId = Long.valueOf(jobsListView.getSelectionModel().getSelectedItem());
-            Job currentJob = App.db.getJobById(currentJobId);
-            jobInfo.setText(currentJob.getDestination().getPath());
+//            Job currentJob = App.db.getJobById(currentJobId);
+//            jobInfo.setText(currentJob.getDestination().getPath());
+            // FIXME: add WorkerRepository class
         });
     }
 
     public void initialize() {
-        for (Job job : App.db.getJobs()) {
-            jobsListView.getItems().add(job.getId().toString());
-        }
+//        for (Job job : App.db.getJobs()) {
+//            jobsListView.getItems().add(job.getId().toString());
+//        }
+        // FIXME: add WorkerRepository class
         this.displayInfo();
     }
 

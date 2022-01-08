@@ -1,5 +1,7 @@
 package edu.pw.pap21z.z15.db;
 
+import edu.pw.pap21z.z15.db.model.Account;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -11,6 +13,10 @@ public class LoginRepository {
         this.session = session;
     }
 
+    public Account getAccountByUsername(String username) {
+        return session.find(Account.class, username);
+    }
+
     public void insertAccount(String account_username, String password, String type, String name, String surname) {
         EntityTransaction transaction = session.getTransaction();
         transaction.begin();
@@ -20,6 +26,7 @@ public class LoginRepository {
                 account_username, password, type, name, surname)).executeUpdate();
         transaction.commit();
     }
+
     public void updateAccount(String name, String surname, String account_username) {
         EntityTransaction transaction = session.getTransaction();
         transaction.begin();
