@@ -37,6 +37,7 @@ public class LoginController {
         Label label = new Label(message);
 
         Button ok = new Button("ok");
+        ok.setDefaultButton(true);
 
         ok.setOnAction(e -> stage.close());
 
@@ -58,6 +59,7 @@ public class LoginController {
         Label label = new Label(question);
 
         Button yes = new Button("yes");
+        yes.setDefaultButton(true);
         Button no = new Button("no");
 
         yes.setOnAction(e -> {
