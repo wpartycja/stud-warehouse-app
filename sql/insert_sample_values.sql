@@ -48,6 +48,13 @@ INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
 VALUES (4, 'Ryż', 'c2', 10);
 INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
 VALUES (5, 'Sprzęt elektroniczny', 'c2', 10);
+INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
+VALUES (6, 'Lustro', 'c1', 2);
+INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
+VALUES (7, 'Kaloryfer', 'c1', 3);
+INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
+VALUES (8, 'Zmywarka', 'c1', 6);
+
 
 INSERT INTO z15.orders (order_id, client_username, type)
 VALUES (1, 'c1', 'OUT');
@@ -55,6 +62,10 @@ INSERT INTO z15.orders (order_id, client_username, type)
 VALUES (2, 'c2', 'OUT');
 INSERT INTO z15.orders (order_id, client_username, type)
 VALUES (3, 'c2', 'IN');
+INSERT INTO z15.orders (order_id, client_username, type)
+VALUES (4, 'c1', 'IN');
+INSERT INTO z15.orders (order_id, client_username, type)
+VALUES (5, 'c1', 'OUT');
 
 INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assigned_worker_username)
 VALUES (1, 10, 1, 1, 'PENDING', NULL);
@@ -62,6 +73,9 @@ INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assig
 VALUES (2, 10, 2, 2, 'PENDING', NULL);
 INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assigned_worker_username)
 VALUES (3, 6, 5, 3, 'PENDING', NULL);
-
-INSERT INTO z15.locations (type, path)
-VALUES ('SHELF', 'Aisle C/Rack 1/Shelf 1');
+INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assigned_worker_username)
+VALUES (4, 9, 6, 3, 'IN_PROGRESS', NULL);
+INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assigned_worker_username)
+VALUES (5, 9, 7, 4, 'PENDING', NULL);
+INSERT INTO z15.jobs (job_id, destination_id, pallet_id, order_id, status, assigned_worker_username)
+VALUES (6, 10, 8, 5, 'IN_PROGRESS', NULL);
