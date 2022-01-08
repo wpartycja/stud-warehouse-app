@@ -20,4 +20,13 @@ public class LoginRepository {
                 account_username, password, type, name, surname)).executeUpdate();
         transaction.commit();
     }
+    public void updateAccount(String name, String surname, String account_username) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        session.createNativeQuery(String.format(
+                "UPDATE z15.accounts SET name = '%s', surname =  '%s' " +
+                        "WHERE account_username = '%s'",
+                name, surname, account_username)).executeUpdate();
+        transaction.commit();
+    }
 }

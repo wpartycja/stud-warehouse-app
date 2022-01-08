@@ -144,6 +144,32 @@ public class LoginController {
         stage.setScene(scene);
         stage.showAndWait();
     }
+    public static void infoAccount() {
+        LoginRepository repository = new LoginRepository(App.db.session);
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Account information");
+
+        Label usr = new Label(App.account.getId());
+        TextField name = new TextField(App.account.getName());
+        TextField surname = new TextField(App.account.getSurname());
+
+        Button saveInfo = new Button("Save");
+        saveInfo.setOnAction(e -> {
+            if (name.getText() == null) { okBox("Account error", "Name can not be empty!");}
+            else if (surname.getText() == null) { okBox("Account error", "Surname can not be empty!");}
+            else {repository.updateAccount(name.getText(), surname.getText(), App.account.getId()); stage.close();}
+        });
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(usr, name, surname, saveInfo);
+
+        Scene scene = new Scene(layout, 350, 200);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
 
     @FXML
     private void quit() {
