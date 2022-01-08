@@ -137,6 +137,7 @@ public class ClientController {
         stage.setTitle("New order");
 
         Button butConf = new Button("Confirm");
+        butConf.setDefaultButton(true);
         butConf.setOnAction(e -> {
             if (checkInsert()) {
                 createInOrder(palletDescription.getValue());

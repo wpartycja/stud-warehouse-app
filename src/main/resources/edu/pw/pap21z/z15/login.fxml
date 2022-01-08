@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.LoginController">
+<?import javafx.scene.text.Font?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
+            prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.pw.pap21z.z15.LoginController">
     <center>
         <GridPane alignment="CENTER" prefHeight="126.0" prefWidth="640.0" BorderPane.alignment="CENTER">
             <columnConstraints>
@@ -24,19 +25,13 @@
             <padding>
                 <Insets left="30.0" right="30.0"/>
             </padding>
-            <Label text="Username: ">
-         </Label>
-            <Label text="Password: " GridPane.rowIndex="1">
-         </Label>
-            <TextField fx:id="username" promptText="login" GridPane.columnIndex="1">
-         </TextField>
+            <Label text="Username: "/>
+            <TextField fx:id="username" promptText="login" GridPane.columnIndex="1"/>
+            <Label text="Password: " GridPane.rowIndex="1"/>
+            <PasswordField fx:id="password" promptText="password" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Button mnemonicParsing="false" onAction="#logIn" text="Log In" GridPane.columnIndex="1"
-                    GridPane.rowIndex="2">
-         </Button>
-            <Button mnemonicParsing="false" onAction="#create" text="Create an account" GridPane.rowIndex="2">
-         </Button>
-            <PasswordField fx:id="password" promptText="password" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         </PasswordField>
+                    GridPane.rowIndex="2" defaultButton="true"/>
+            <Button mnemonicParsing="false" onAction="#create" text="Create an account" GridPane.rowIndex="2"/>
         </GridPane>
     </center>
     <top>
@@ -45,15 +40,13 @@
                 <font>
                     <Font size="32.0"/>
                 </font>
-         </Label>
-            <Label text="Login to the existing account or create new">
-         </Label>
+            </Label>
+            <Label text="Login to the existing account or create new"/>
         </VBox>
     </top>
     <bottom>
         <VBox alignment="CENTER" prefHeight="77.0" prefWidth="640.0" BorderPane.alignment="CENTER">
-            <Button mnemonicParsing="false" onAction="#quit" text="Quit">
-         </Button>
+            <Button mnemonicParsing="false" onAction="#quit" text="Quit"/>
         </VBox>
     </bottom>
 </BorderPane>
