@@ -1,10 +1,7 @@
 package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.ClientRepository;
-import edu.pw.pap21z.z15.db.model.Job;
-import edu.pw.pap21z.z15.db.model.JobStatus;
-import edu.pw.pap21z.z15.db.model.LocationType;
-import edu.pw.pap21z.z15.db.model.Pallet;
+import edu.pw.pap21z.z15.db.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,12 +15,16 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ClientController {
 
     private final ClientRepository repo = new ClientRepository(App.dbSession);
 
+    @FXML
+    private Label logged;
     @FXML
     private TableView<Job> orderMenu;
     @FXML
@@ -39,6 +40,7 @@ public class ClientController {
 
     @FXML
     private void initialize() {
+        logged.setText("Logged in as " + App.account.getId());
         setTables();
     }
 
@@ -73,7 +75,7 @@ public class ClientController {
 
     private ObservableList<Pallet> getPallets() {
         List<Long> palletIds = new ArrayList<>();
-        List<String> palletDescriptions = new ArrayList<>();
+        Set<String> palletDescriptions = new HashSet<>();
         ObservableList<Pallet> pallets = FXCollections.observableArrayList();
         for (Pallet pallet : repo.getPallets()) {
             if (pallet.getOwnerUsername().getId().equals(App.account.getId()) && pallet.getLocation().getType() == LocationType.SHELF) {
@@ -122,12 +124,11 @@ public class ClientController {
     }
 
     private void createInOrder(String description) {
-        repo.insertInJob(App.account.getId(), "IN", description, App.account.getId(),
-                3, 9, "PLANNED");
+        repo.insertInJob(App.account.getId(), "IN", description, "PLANNED");
     }
 
     private void createOutOrder(Long palletId) {
-        repo.insertOutJob(App.account.getId(), "OUT", palletId, 10, "PLANNED");
+        repo.insertOutJob(App.account.getId(), "OUT", palletId,  "PLANNED");
     }
 
     @FXML
@@ -168,7 +169,7 @@ public class ClientController {
             return;
         }
         Long id = itemId.getValue();
-        boolean ans = LoginController.yesOrNoBox("Take out confirmation", "You sure you want to take out pallet" + id + "?");
+        boolean ans = LoginController.yesOrNoBox("Take out confirmation", "You sure you want to take out pallet " + id + "?");
         if (ans) {
             createOutOrder(itemId.getValue());
         }
@@ -182,27 +183,45 @@ public class ClientController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Order history");
 
-        TableColumn<Job, Long> idColumnHistory = new TableColumn<>("ID");
-        idColumnHistory.setMinWidth(100);
-        idColumnHistory.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
+        idColumn.setMinWidth(70);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<Job, JobStatus> statusColumnHistory = new TableColumn<>("Status");
-        statusColumnHistory.setMinWidth(200);
-        statusColumnHistory.setCellValueFactory(new PropertyValueFactory<>("status"));
+        TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
+        statusColumn.setMinWidth(140);
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        TableColumn<Job, Order> orderColumn = new TableColumn<>("Order");
+        orderColumn.setMinWidth(140);
+        orderColumn.setCellValueFactory(new PropertyValueFactory<>("order"));
+
+        TableColumn<Job, Pallet> descriptionColumn = new TableColumn<>("Pallet");
+        descriptionColumn.setMinWidth(140);
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("pallet"));
+
+        TableColumn<Job, Location> locationColumn = new TableColumn<>("Destination");
+        locationColumn.setMinWidth(140);
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
 
         orderHistory = new TableView<>();
         orderHistory.setItems(getOrders());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().add(idColumnHistory);
-        orderHistory.getColumns().add(statusColumnHistory);
+        orderHistory.getColumns().addAll(idColumn, statusColumn,orderColumn, descriptionColumn, locationColumn );
 
-        Scene scene = new Scene(orderHistory, 300, 200);
+        Scene scene = new Scene(orderHistory);
         stage.setScene(scene);
         stage.showAndWait();
     }
 
     @FXML
-    private void logOut() throws IOException {
-        App.setRoot("login");
-    }
+    private void logOut() throws IOException { App.setRoot("login"); }
+    @FXML
+    private void refresh() { initialize(); }
+    @FXML
+    private void quit() { App.closeProgram(); }
+    @FXML
+    private void info() { LoginController.infoAccount(); }
+    @FXML
+    private void edit() { LoginController.editAccount(); }
+
 }
