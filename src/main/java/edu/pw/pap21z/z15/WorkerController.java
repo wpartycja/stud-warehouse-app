@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -35,10 +36,12 @@ public class WorkerController {
     public void displayJob() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(WorkerController.class.getResource("./workerJob.fxml"));
-        StackPane jobDisplayPane = loader.load();
+        BorderPane jobDisplayPane = loader.load();
 
         Stage jobDisplayStage = new Stage();
+        jobDisplayStage.setFullScreen(true);
         jobDisplayStage.setMaximized(true);
+        jobDisplayStage.setResizable(false);
         jobDisplayStage.setTitle("Current job");
         jobDisplayStage.initModality(Modality.APPLICATION_MODAL);
         jobDisplayStage.initOwner(stage);

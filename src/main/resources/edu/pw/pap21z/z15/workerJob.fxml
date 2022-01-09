@@ -3,35 +3,59 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
 
-<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
-   <children>
-      <VBox prefHeight="1200.0" prefWidth="1600.0">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
+   <top>
+      <HBox alignment="CENTER">
          <children>
-            <HBox alignment="CENTER">
-               <children>
-                  <Label alignment="CENTER_RIGHT" text="You are doing job:   " HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="50.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="73.0" prefWidth="74.0" text="id" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="50.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets bottom="50.0" left="30.0" right="30.0" top="50.0" />
-               </padding>
-            </HBox>
-            <Label text="Go to: " VBox.vgrow="NEVER">
+            <Label alignment="CENTER_RIGHT" text="You are doing job:   " HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="50.0" />
+               </font>
+            </Label>
+            <Label text="id" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="50.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="50.0" left="30.0" right="30.0" top="50.0" />
+         </padding>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="doneButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#confirmJob" text="Done">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="40.0" right="50.0" top="40.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelJob" text="Cancel">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="40.0" left="50.0" top="40.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+   <center>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Go to: ">
                <font>
                   <Font size="50.0" />
                </font>
@@ -39,35 +63,15 @@
                   <Insets left="50.0" />
                </padding>
             </Label>
-            <TextFlow lineSpacing="50.0" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
-               </VBox.margin>
+            <TextFlow lineSpacing="50.0">
                <padding>
-                  <Insets bottom="50.0" top="400.0" />
+                  <Insets bottom="50.0" />
                </padding>
             </TextFlow>
-            <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-               <children>
-                  <Button fx:id="doneButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#confirmJob" prefHeight="111.0" prefWidth="389.0" text="Done">
-                     <font>
-                        <Font size="40.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets right="50.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelJob" prefHeight="111.0" prefWidth="389.0" text="Cancel">
-                     <font>
-                        <Font size="40.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
          </children>
+         <BorderPane.margin>
+            <Insets left="50.0" right="50.0" />
+         </BorderPane.margin>
       </VBox>
-   </children>
-</StackPane>
+   </center>
+</BorderPane>
