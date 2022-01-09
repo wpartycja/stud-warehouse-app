@@ -155,16 +155,38 @@ public class LoginController {
         stage.setScene(scene);
         stage.showAndWait();
     }
-
     public static void infoAccount() {
-        LoginRepository repository = new LoginRepository(App.dbSession);
-
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Account information");
 
-        Label usr = new Label(App.account.getId());
+        Label usr = new Label("Username:\t" + App.account.getId());
+        Label name = new Label("Name:\t\t" + App.account.getName());
+        Label surname = new Label("Surname:\t\t" + App.account.getSurname());
+
+        Button close = new Button("Close");
+        close.setOnAction(e -> stage.close());
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(usr, name, surname, close);
+        layout.setAlignment(Pos.CENTER_LEFT);
+
+        Scene scene = new Scene(layout, 300, 150);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    public static void editAccount() {
+        LoginRepository repository = new LoginRepository(App.dbSession);
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Edit information");
+
+        Label nameLabel = new Label("New name:");
         TextField name = new TextField(App.account.getName());
+        Label surnameLabel = new Label("New surname:");
         TextField surname = new TextField(App.account.getSurname());
 
         Button saveInfo = new Button("Save");
@@ -181,9 +203,10 @@ public class LoginController {
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
-        layout.getChildren().addAll(usr, name, surname, saveInfo);
+        layout.getChildren().addAll(nameLabel, name, surnameLabel, surname, saveInfo);
+        layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 350, 200);
+        Scene scene = new Scene(layout, 300, 200);
         stage.setScene(scene);
         stage.showAndWait();
     }
