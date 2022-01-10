@@ -29,28 +29,16 @@ public class WorkerController {
     @FXML
     private TableView<Job> jobInfoTableView;
 
-    private Main main;
 
-    Stage stage = new Stage();
+
+
+    protected static Stage primaryStage = new Stage();
 
     public void displayJob() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(WorkerController.class.getResource("./workerJob.fxml"));
-        BorderPane jobDisplayPane = loader.load();
-
-        Stage jobDisplayStage = new Stage();
-        jobDisplayStage.setFullScreen(true);
-        jobDisplayStage.setMaximized(true);
-        jobDisplayStage.setResizable(false);
-        jobDisplayStage.setTitle("Current job");
-        jobDisplayStage.initModality(Modality.APPLICATION_MODAL);
-        jobDisplayStage.initOwner(stage);
-        Scene scene = new Scene(jobDisplayPane);
-        jobDisplayStage.setScene(scene);
-        jobDisplayStage.showAndWait();
-
-        initialize();
+        App.setRoot("workerJob");
     }
+
+
 
 
 //    public void displayJob(){
@@ -91,8 +79,8 @@ public class WorkerController {
 //            // FIXME: add WorkerRepository class
 //        });
 //    }
-
-    public void initialize() {
+    @FXML
+    private void initialize() {
 //        for (Job job : App.db.getJobs()) {
 //            jobsListView.getItems().add(job.getId().toString());
 //        }
@@ -108,12 +96,12 @@ public class WorkerController {
     @FXML
     private void confirmJob() {
         // TODO: changes in database (change JobStatus)
-        stage.close();
+        primaryStage.close();
     }
 
     @FXML
     private void cancelJob() {
         // TODO: changes in database (change JobStatus)
-        stage.close();
+        primaryStage.close();
     }
 }

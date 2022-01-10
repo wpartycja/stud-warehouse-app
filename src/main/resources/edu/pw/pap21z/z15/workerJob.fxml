@@ -9,8 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerController">
+<BorderPane fx:id="workerJobView" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerJobController">
    <top>
       <HBox alignment="CENTER">
          <children>
