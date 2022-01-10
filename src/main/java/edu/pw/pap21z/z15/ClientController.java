@@ -2,6 +2,8 @@ package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.ClientRepository;
 import edu.pw.pap21z.z15.db.model.*;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,23 +43,43 @@ public class ClientController {
 
     @FXML
     private void initialize() {
-        logged.setText("Logged in as " + App.account.getId());
+        logged.setText("Logged in as " + App.account.getName() + " "  + App.account.getSurname());
         setTables();
     }
 
     @FXML
     private void setTables() {
         TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
-        idColumn.setMinWidth(100);
+        idColumn.setMinWidth(50);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
-        statusColumn.setMinWidth(200);
+        statusColumn.setMinWidth(140);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order Id");
+        orderIdColumn.setMinWidth(50);
+        orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
+            @Override
+            public ObservableValue<Long> call(TableColumn.CellDataFeatures<Job, Long> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getId());
+            }
+        });
+
+        TableColumn<Job, String> orderColumn = new TableColumn<>("Order type");
+        orderColumn.setMinWidth(50);
+        orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getType());
+            }
+        });
 
         orderMenu.setItems(getOrders());
         orderMenu.getColumns().clear();
         orderMenu.getColumns().add(idColumn);
+        orderMenu.getColumns().add(orderColumn);
+        orderMenu.getColumns().add(orderIdColumn);
         orderMenu.getColumns().add(statusColumn);
 
         TableColumn<Pallet, Long> palletIdColumn = new TableColumn<>("ID");
@@ -112,15 +135,11 @@ public class ClientController {
     private ObservableList<Job> getOrdersHistory() {
         ObservableList<Job> jobs = FXCollections.observableArrayList();
         for (Job job : repo.getJobs()) {
-            if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() == JobStatus.COMPLETED) {
+            if (job.getOrder().getClient().getId().equals(App.account.getId())) {
                 jobs.add(job);
             }
         }
         return jobs;
-    }
-
-    private boolean checkInsert() {
-        return true; // todo?
     }
 
     private void createInOrder(String description) {
@@ -140,7 +159,7 @@ public class ClientController {
         Button butConf = new Button("Confirm");
         butConf.setDefaultButton(true);
         butConf.setOnAction(e -> {
-            if (checkInsert()) {
+            if (palletDescription.getValue() != null) {
                 createInOrder(palletDescription.getValue());
             } else {
                 LoginController.okBox("Order Error", "Wrong order input.");
@@ -184,29 +203,53 @@ public class ClientController {
         stage.setTitle("Order history");
 
         TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
-        idColumn.setMinWidth(70);
+        idColumn.setMaxWidth(50);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
-        statusColumn.setMinWidth(140);
+        statusColumn.setMaxWidth(140);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<Job, Order> orderColumn = new TableColumn<>("Order");
-        orderColumn.setMinWidth(140);
-        orderColumn.setCellValueFactory(new PropertyValueFactory<>("order"));
+        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order Id");
+        orderIdColumn.setMinWidth(50);
+        orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
+            @Override
+            public ObservableValue<Long> call(TableColumn.CellDataFeatures<Job, Long> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getId());
+            }
+        });
 
-        TableColumn<Job, Pallet> descriptionColumn = new TableColumn<>("Pallet");
-        descriptionColumn.setMinWidth(140);
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("pallet"));
+        TableColumn<Job, String> orderColumn = new TableColumn<>("Order type");
+        orderColumn.setMaxWidth(50);
+        orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getType());
+            }
+        });
 
-        TableColumn<Job, Location> locationColumn = new TableColumn<>("Destination");
-        locationColumn.setMinWidth(140);
-        locationColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
+        TableColumn<Job, String> descriptionColumn = new TableColumn<>("Pallet");
+        descriptionColumn.setMaxWidth(140);
+        descriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getDescription());
+            }
+        });
+
+        TableColumn<Job, String> locationColumn = new TableColumn<>("Destination");
+        locationColumn.setMinWidth(180);
+        locationColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
+               @Override
+               public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobStringCellDataFeatures) {
+                   return new ReadOnlyObjectWrapper(jobStringCellDataFeatures.getValue().getDestination().getPath());
+               }
+           });
 
         orderHistory = new TableView<>();
-        orderHistory.setItems(getOrders());
+        orderHistory.setItems(getOrdersHistory());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().addAll(idColumn, statusColumn,orderColumn, descriptionColumn, locationColumn );
+        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn, descriptionColumn, locationColumn);
 
         Scene scene = new Scene(orderHistory);
         stage.setScene(scene);
