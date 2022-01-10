@@ -23,12 +23,15 @@
            <menus>
              <Menu mnemonicParsing="false" text="Session">
                <items>
-                 <MenuItem mnemonicParsing="false" onAction="#logOut" text="Logout" />
+                     <MenuItem mnemonicParsing="false" onAction="#sessionRefresh" text="Refresh" />
+                 <MenuItem mnemonicParsing="false" onAction="#sessionLogOut" text="Logout" />
+                     <MenuItem mnemonicParsing="false" onAction="#sessionExit" text="Exit" />
                </items>
              </Menu>
              <Menu mnemonicParsing="false" text="Account">
                <items>
-                 <MenuItem mnemonicParsing="false" text="Information" />
+                 <MenuItem mnemonicParsing="false" onAction="#accountInfo" text="Info" />
+                     <MenuItem mnemonicParsing="false" onAction="#accountEdit" text="Edit" />
                </items>
              </Menu>
              <Menu mnemonicParsing="false" text="Help">
@@ -71,7 +74,7 @@
                       </Label>
                       <ListView fx:id="jobsListView" prefHeight="367.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
                         <cursor>
-                           <Cursor fx:constant="NE_RESIZE" />
+                           <Cursor fx:constant="DEFAULT" />
                         </cursor>
                         <VBox.margin>
                            <Insets bottom="10.0" left="10.0" right="10.0" />

@@ -134,9 +134,19 @@ public class WorkerController {
     }
 
     @FXML
-    private void logOut() throws IOException {
-        App.setRoot("login");
-    }
+    private void sessionRefresh(){ initialize(); }
+
+    @FXML
+    private void sessionLogOut() throws IOException { App.setRoot("login"); }
+
+    @FXML
+    private void sessionExit() { App.closeProgram(); }
+
+    @FXML
+    private void accountInfo() { LoginController.infoAccount(); }
+
+    @FXML
+    private void accountEdit() { LoginController.editAccount(); }
 
     public class WorkerJobInfo {
         private String property;
