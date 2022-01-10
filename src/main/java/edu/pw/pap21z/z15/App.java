@@ -16,7 +16,7 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    private static Stage stage;
+    public static Stage stage;
 
     public static Account account = null;
     private static final EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("oracledb");
