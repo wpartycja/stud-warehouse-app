@@ -1,10 +1,13 @@
 package edu.pw.pap21z.z15.db;
 
 import edu.pw.pap21z.z15.db.model.Job;
+import edu.pw.pap21z.z15.db.model.Location;
+import edu.pw.pap21z.z15.db.model.Order;
 import edu.pw.pap21z.z15.db.model.Pallet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
@@ -22,33 +25,48 @@ public class ClientRepository {
         return session.createQuery(criteria).getResultList();
     }
 
-    public void insertInJob(String clientUsername, String type,
-                            String description, String ownerUsername, long locationId,
-                            long destinationId, String status) {
+    public void insertInJob(String clientUsername, String type, String description, String status) {
         EntityTransaction transaction = session.getTransaction();
         transaction.begin();
-        long orderId = insertOrder(clientUsername, type);
-        long palletId = insertPallet(description, ownerUsername, locationId);
-        insertJob(palletId, destinationId, orderId, status);
+
+        insertOrder(clientUsername, type);
+
+        TypedQuery<Location> getIN_RAMPLocation = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.IN_RAMP", Location.class);
+        Location destination = getIN_RAMPLocation.getSingleResult();
+        TypedQuery<Order> getOrderId = session.createQuery("SELECT o from Order o WHERE o.id = (SELECT MAX(o2.id) from Order o2)", Order.class);
+        Order order = getOrderId.getSingleResult();
+
+        insertPallet(description, clientUsername, destination.getId());
+
+        TypedQuery<Pallet> getPalletId = session.createQuery("SELECT p from Pallet p WHERE p.id = (SELECT MAX(p2.id) from Pallet p2)", Pallet.class);
+        Pallet pallet = getPalletId.getSingleResult();
+
+        insertJob(pallet.getId(), destination.getId(), order.getId(), status);
         transaction.commit();
     }
 
-    public void insertOutJob(String clientUsername, String type,
-                             long palletId, long destinationId, String status) {
+    public void insertOutJob(String clientUsername, String type, long palletId, String status) {
         EntityTransaction transaction = session.getTransaction();
         transaction.begin();
-        long orderId = insertOrder(clientUsername, type);
-        insertJob(palletId, destinationId, orderId, status);
+
+        insertOrder(clientUsername, type);
+
+        TypedQuery<Order> getOrderId = session.createQuery("SELECT o from Order o WHERE o.id = (SELECT MAX(o2.id) from Order o2)", Order.class);
+        Order order = getOrderId.getSingleResult();
+        TypedQuery<Location> getOUT_RAMPLocation = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.OUT_RAMP", Location.class);
+        Location destination = getOUT_RAMPLocation.getSingleResult();
+
+        insertJob(palletId, destination.getId(), order.getId(), status);
         transaction.commit();
     }
 
-    public long insertOrder(String clientUsername, String type) {
-        return session.createNativeQuery(String.format("INSERT INTO z15.orders (client_username, type) " +
+    public void insertOrder(String clientUsername, String type) {
+        session.createNativeQuery(String.format("INSERT INTO z15.orders (client_username, type) " +
                 "VALUES ('%s', '%s')", clientUsername, type)).executeUpdate();
     }
 
-    public long insertPallet(String description, String ownerUsername, long locationId) {
-        return session.createNativeQuery(String.format("INSERT INTO z15.pallets (description, owner_username, location_id) " +
+    public void insertPallet(String description, String ownerUsername, long locationId) {
+        session.createNativeQuery(String.format("INSERT INTO z15.pallets (description, owner_username, location_id) " +
                 "VALUES ('%s', '%s', %d)", description, ownerUsername, locationId)).executeUpdate();
     }
 
