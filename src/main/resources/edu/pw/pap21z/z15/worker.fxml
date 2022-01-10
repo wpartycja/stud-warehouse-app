@@ -93,7 +93,7 @@
                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                         </columnResizePolicy>
                      </TableView>
-                      <Button alignment="CENTER" mnemonicParsing="false" onAction="#displayJob" prefHeight="29.0" prefWidth="73.0" text="Do" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+                      <Button alignment="CENTER" mnemonicParsing="false" onAction="#displayJobView" prefHeight="29.0" prefWidth="73.0" text="Do" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                           <font>
                               <Font size="14.0" />
                           </font>

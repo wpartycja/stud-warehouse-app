@@ -1,5 +1,7 @@
 package edu.pw.pap21z.z15;
 
+import edu.pw.pap21z.z15.db.ManagerRepository;
+import edu.pw.pap21z.z15.db.WorkerRepository;
 import edu.pw.pap21z.z15.db.model.Job;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -19,6 +22,7 @@ import javafx.stage.Stage;
 import org.jboss.jandex.Main;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public class WorkerController {
@@ -29,47 +33,34 @@ public class WorkerController {
     @FXML
     private TableView<Job> jobInfoTableView;
 
+    private final Image incomingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("down-right-arrow.png")));
 
+    private final Image outgoingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("up-right-arrow.png")));
 
+    private final WorkerRepository repo = new WorkerRepository(App.dbSession);
 
-    protected static Stage primaryStage = new Stage();
-
-    public void displayJob() throws IOException {
+    @FXML
+    private void displayJobView() throws IOException {
         App.setRoot("workerJob");
     }
 
+    private void fillJobsListView(){
+        List<Job> jobsList = repo.getJobs();
+        for(Job job : jobsList){
+            jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
+        }
+    }
 
+    @FXML
+    private void initialize() {
+        fillJobsListView();
+    }
 
-
-//    public void displayJob(){
-//        //TODO: change JobStatus
-//        Stage stage = new Stage();
-//        stage.setMaximized(true);
-//        stage.initModality(Modality.APPLICATION_MODAL);
-//        stage.setTitle("Current Job"); // TODO: title ? of the job
-//
-//        Button doneButton = new Button("Done");
-//        doneButton.setDefaultButton(true);
-//        doneButton.setOnAction(e-> {
-//            // TODO: changes in database (change JobStatus)
-//            stage.close();
-//        });
-//
-//        Button cancelButton= new Button("Cancel");
-//        cancelButton.setOnAction(e -> {
-//            // TODO: changes in database (change JobStatus)
-//            stage.close();
-//        });
-//
-//        VBox vbox = new VBox((40));
-//        vbox.getChildren().addAll(doneButton, cancelButton);
-//
-//        Scene scene = new Scene (vbox);
-//        stage.setScene(scene);
-//        stage.showAndWait();
-//
-//        initialize();
-//    }
+    @FXML
+    private void logOut() throws IOException {
+        App.setRoot("login");
+    }
+}
 
 //    public void displayInfo() {
 //        jobsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -79,29 +70,3 @@ public class WorkerController {
 //            // FIXME: add WorkerRepository class
 //        });
 //    }
-    @FXML
-    private void initialize() {
-//        for (Job job : App.db.getJobs()) {
-//            jobsListView.getItems().add(job.getId().toString());
-//        }
-        // FIXME: add WorkerRepository class
-        //this.displayInfo();
-    }
-
-    @FXML
-    private void logOut() throws IOException {
-        App.setRoot("login");
-    }
-
-    @FXML
-    private void confirmJob() {
-        // TODO: changes in database (change JobStatus)
-        primaryStage.close();
-    }
-
-    @FXML
-    private void cancelJob() {
-        // TODO: changes in database (change JobStatus)
-        primaryStage.close();
-    }
-}
