@@ -36,7 +36,7 @@ public class WorkerController {
     private TableColumn<WorkerJobInfo, String> infoCol;
 
     @FXML
-    private Label accountInfo;
+    private Label loggedLabel;
 
     private final WorkerRepository repo = new WorkerRepository(App.dbSession);
 
@@ -98,12 +98,6 @@ public class WorkerController {
             }
         }));
     }
-        //-> {
-            //Long currentJobId = Long.valueOf(jobsListView.getSelectionModel().getSelectedItem());
-//            Job currentJob = App.db.getJobById(currentJobId);
-//            jobInfo.setText(currentJob.getDestination().getPath());
-            // FIXME: add WorkerRepository class
-        //}}
 
     @FXML
     private void displayJobView() throws IOException {
@@ -128,6 +122,7 @@ public class WorkerController {
 
     @FXML
     private void initialize() {
+        loggedLabel.setText(App.account.getName() + " " + App.account.getSurname());
         fillJobsListView();
         emptyJobInfo();
         displayInfo();
