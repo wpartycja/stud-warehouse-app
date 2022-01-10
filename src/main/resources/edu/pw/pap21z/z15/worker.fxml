@@ -49,7 +49,7 @@
                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                   </HBox.margin>
                </Label>
-               <Label prefHeight="17.0" prefWidth="165.0" text="\@TODO: get from db">
+               <Label fx:id="accountInfo" prefHeight="17.0" prefWidth="165.0" text="\@TODO: get from db">
                   <HBox.margin>
                      <Insets />
                   </HBox.margin>
@@ -61,14 +61,14 @@
          </HBox>
          <HBox prefHeight="427.0" prefWidth="640.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
-               <VBox prefHeight="393.0" prefWidth="294.0" HBox.hgrow="ALWAYS">
+               <VBox prefHeight="403.0" prefWidth="199.0" HBox.hgrow="ALWAYS">
                   <children>
                       <Label contentDisplay="CENTER" lineSpacing="4.0" prefHeight="23.0" prefWidth="147.0" text="Current job queue" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                         <VBox.margin>
                            <Insets bottom="10.0" left="10.0" right="10.0" />
                         </VBox.margin>
                       </Label>
-                      <ListView fx:id="jobsListView" prefHeight="377.0" prefWidth="403.0" VBox.vgrow="ALWAYS">
+                      <ListView fx:id="jobsListView" prefHeight="367.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
                         <cursor>
                            <Cursor fx:constant="NE_RESIZE" />
                         </cursor>
@@ -85,7 +85,7 @@
                            <Insets bottom="10.0" right="10.0" />
                         </VBox.margin>
                      </Label>
-                     <TableView fx:id="jobInfoTableView" prefHeight="404.0" prefWidth="177.0" VBox.vgrow="ALWAYS">
+                     <TableView fx:id="jobInfoTableView" prefHeight="328.0" prefWidth="241.0" VBox.vgrow="ALWAYS">
                         <VBox.margin>
                            <Insets />
                         </VBox.margin>

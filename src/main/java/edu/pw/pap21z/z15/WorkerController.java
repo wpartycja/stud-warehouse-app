@@ -2,7 +2,9 @@ package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.ManagerRepository;
 import edu.pw.pap21z.z15.db.WorkerRepository;
+import edu.pw.pap21z.z15.db.model.Account;
 import edu.pw.pap21z.z15.db.model.Job;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,8 +48,16 @@ public class WorkerController {
 
     private void fillJobsListView(){
         List<Job> jobsList = repo.getJobs();
-        for(Job job : jobsList){
-            jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
+        for(Job job : jobsList) {
+            Account jobAssignedWorker= job.getAssignedWorker();
+            try {
+                String username = jobAssignedWorker.getId();
+                if (username.equals("w1")) { // TODO: whos session is that
+                    jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
+                }
+            } catch (NullPointerException noAssignedWorker) {
+                continue;
+            }
         }
     }
 
