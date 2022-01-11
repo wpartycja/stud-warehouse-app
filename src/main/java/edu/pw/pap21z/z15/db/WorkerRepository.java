@@ -34,14 +34,18 @@ public class WorkerRepository {
     }
 
     public void startJob(Job job, String worker_id){
-        EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
-        job.setStatus(JobStatus.IN_PROGRESS);
         Account worker = (Account) session.find(Account.class, worker_id);
         if (worker == null) {
             throw new EntityNotFoundException("Can't find worker Id: " + worker_id);
         }
-        worker.setCurrentJob(job);
-        transaction.commit();
+        try {
+            session.getTransaction().begin();
+            job.setStatus(JobStatus.IN_PROGRESS);
+            worker.setCurrentJob(job);
+            session.getTransaction().commit();
+        } catch (Exception e){
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 }
