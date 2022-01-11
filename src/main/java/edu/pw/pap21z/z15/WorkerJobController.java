@@ -30,7 +30,7 @@ public class WorkerJobController{
         App.stage.setFullScreen(true);
         Account currentWorker = App.account;
 
-        Job currentJob = repo.getCurrentJob(currentWorker, JobStatus.IN_PROGRESS);
+        Job currentJob = currentWorker.getCurrentJob();
 
         jobIdLabel.setText("#" + currentJob.getId());
         String[] path = currentJob.getDestination().getPath().split("/");

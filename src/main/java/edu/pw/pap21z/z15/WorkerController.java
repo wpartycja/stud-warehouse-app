@@ -90,10 +90,10 @@ public class WorkerController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 String currentJobStr = jobsListView.getSelectionModel().getSelectedItem();
-                int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#")+1));
-                Job currentJob = repo.getJobById(job_id);
-                displayJobInfo(currentJob);
-                selectedJob = currentJob;
+                //int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#")+1));
+                //Job currentJob = repo.getJobById(job_id);
+                //selectedJob = currentJob;
+                //displayJobInfo(currentJob);
             }
         }));
     }
@@ -101,7 +101,8 @@ public class WorkerController {
     @FXML
     private void displayJobView() throws IOException {
         if (selectedJob != null){
-            selectedJob.setStatus(JobStatus.IN_PROGRESS);
+            //selectedJob.setStatus(JobStatus.IN_PROGRESS);
+            //App.account.setCurrentJob(selectedJob);
             App.setRoot("workerJob");
         }
     }

@@ -27,23 +27,23 @@ public class WorkerRepository {
 
     public List<Job> getJobs(){ return getAll(Job.class); }
 
-    public Job getJobById(long job_id) {
-        Job job = (Job) session.find(Job.class, job_id);
-        if (job == null) {
-            throw new EntityNotFoundException("Can't find job Id: " + job_id);
-        }
-        return job;
-    }
+//    public Job getJobById(long job_id) {
+//        Job job = (Job) session.find(Job.class, job_id);
+//        if (job == null) {
+//            throw new EntityNotFoundException("Can't find job Id: " + job_id);
+//        }
+//        return job;
+//    }
 
-    public Job getCurrentJob(Account worker, JobStatus jobStatus){
-        TypedQuery<Job> query = session.createQuery("SELECT j FROM Job j WHERE j.status = edu.pw.pap21z.z15.db.model.JobStatus.IN_PROGRESS", Job.class);
-        List<Job> jobs = query.getResultList();
-        Job currentJob = null;
-        for (Job job : jobs){
-            if(job.getAssignedWorker() == worker){
-                currentJob = job;
-            }
-        }
-        return currentJob;
-    }
+//    public Job getCurrentJob(Account worker, JobStatus jobStatus){
+//        TypedQuery<Job> query = session.createQuery("SELECT j FROM Job j WHERE j.status = edu.pw.pap21z.z15.db.model.JobStatus.IN_PROGRESS", Job.class);
+//        List<Job> jobs = query.getResultList();
+//        Job currentJob = null;
+//        for (Job job : jobs){
+//            if(job.getAssignedWorker() == worker){
+//                currentJob = job;
+//            }
+//        }
+//        return currentJob;
+//    }
 }
