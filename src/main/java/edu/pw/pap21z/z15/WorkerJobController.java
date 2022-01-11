@@ -1,59 +1,45 @@
 package edu.pw.pap21z.z15;
 
-import javafx.event.ActionEvent;
+import edu.pw.pap21z.z15.db.WorkerRepository;
+import edu.pw.pap21z.z15.db.model.Account;
+import edu.pw.pap21z.z15.db.model.Job;
+import edu.pw.pap21z.z15.db.model.JobStatus;
+import edu.pw.pap21z.z15.db.model.LocationType;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
+import javafx.scene.control.Label;
 import java.io.IOException;
-import java.util.Objects;
 
 public class WorkerJobController{
 
+    @FXML
+    Label jobIdLabel;
 
     @FXML
-    private void initialize() throws IOException {
-          App.stage.setFullScreen(true);
+    Label firstLabel;
+
+    @FXML
+    Label secondLabel;
+
+    @FXML
+    Label thirdLabel;
+
+    private final WorkerRepository repo = new WorkerRepository(App.dbSession);
+
+    @FXML
+    private void initialize(){
+        App.stage.setFullScreen(true);
+        Account currentWorker = App.account;
+
+        Job currentJob = repo.getCurrentJob(currentWorker, JobStatus.IN_PROGRESS);
+
+        jobIdLabel.setText("#" + currentJob.getId());
+        String[] path = currentJob.getDestination().getPath().split("/");
+        firstLabel.setText(path[0]);
+        secondLabel.setText(path[1]);
+        if (currentJob.getDestination().getType() == LocationType.SHELF){
+            thirdLabel.setText(path[2]);
+        }
     }
-//
-//        jobDisplayScene = new Scene(workerJobView);
-//
-//        jobDisplayStage = new Stage();
-//        jobDisplayStage.setFullScreen(true);
-//        //jobDisplayStage.setMaximized(true);
-//        //jobDisplayStage.setResizable(false);
-//        jobDisplayStage.setTitle("Current job");
-//
-//        jobDisplayStage.setScene(jobDisplayScene);
-//        jobDisplayStage.showAndWait();
-//    }
-//
-
-//        FXMLLoader loader = new FXMLLoader();
-//        loader.setLocation(WorkerJobController.class.getResource("./workerJob.fxml"));
-//        BorderPane jobDisplayPane = loader.load();
-
-//
-//        Stage jobDisplayStage = new Stage();
-//        jobDisplayStage.setFullScreen(true);
-//        jobDisplayStage.setMaximized(true);
-//        jobDisplayStage.setResizable(false);
-//        jobDisplayStage.setTitle("Current job");
-//        jobDisplayStage.initModality(Modality.APPLICATION_MODAL);
-//        jobDisplayStage.initOwner(primaryStage);
-//        Scene scene = new Scene(jobDisplayPane);
-//        jobDisplayStage.setScene(scene);
-//        jobDisplayStage.showAndWait();
-
-
-
 
     @FXML
     private void confirmJob() throws IOException {

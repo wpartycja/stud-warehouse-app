@@ -1,10 +1,7 @@
 package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.WorkerRepository;
-import edu.pw.pap21z.z15.db.model.Job;
-import edu.pw.pap21z.z15.db.model.Location;
-import edu.pw.pap21z.z15.db.model.LocationType;
-import edu.pw.pap21z.z15.db.model.Pallet;
+import edu.pw.pap21z.z15.db.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,7 +13,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -38,15 +34,17 @@ public class WorkerController {
     @FXML
     private Label loggedLabel;
 
+    public Job selectedJob = null;
+
     private final WorkerRepository repo = new WorkerRepository(App.dbSession);
 
-    WorkerJobInfo tJob_id = new WorkerJobInfo("Job id: ", "");
-    WorkerJobInfo tPallet_id = new WorkerJobInfo("Pallet id: ", "");
-    WorkerJobInfo tDescription = new WorkerJobInfo("Description:", "");
-    WorkerJobInfo tOwner = new WorkerJobInfo("Owner: ", "");
-    WorkerJobInfo tLoc1 = new WorkerJobInfo("Location: ", "");
-    WorkerJobInfo tLoc2 = new WorkerJobInfo("", "");
-    WorkerJobInfo tLoc3 = new WorkerJobInfo("", "");
+    public WorkerJobInfo tJob_id = new WorkerJobInfo("Job id: ", "");
+    public WorkerJobInfo tPallet_id = new WorkerJobInfo("Pallet id: ", "");
+    public WorkerJobInfo tDescription = new WorkerJobInfo("Description:", "");
+    public WorkerJobInfo tOwner = new WorkerJobInfo("Owner: ", "");
+    public WorkerJobInfo tLoc1 = new WorkerJobInfo("Location: ", "");
+    public WorkerJobInfo tLoc2 = new WorkerJobInfo("", "");
+    public WorkerJobInfo tLoc3 = new WorkerJobInfo("", "");
 
     private ObservableList<WorkerJobInfo> jobWorkerJobInfoList = FXCollections.observableArrayList(
             tJob_id, tPallet_id, tDescription, tOwner, tLoc1, tLoc2, tLoc3
@@ -95,24 +93,29 @@ public class WorkerController {
                 int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#")+1));
                 Job currentJob = repo.getJobById(job_id);
                 displayJobInfo(currentJob);
+                selectedJob = currentJob;
             }
         }));
     }
 
     @FXML
     private void displayJobView() throws IOException {
-        App.setRoot("workerJob");
+        if (selectedJob != null){
+            selectedJob.setStatus(JobStatus.IN_PROGRESS);
+            App.setRoot("workerJob");
+        }
     }
+
 
     private void fillJobsListView(){
         List<Job> jobsList = repo.getJobs();
         for(Job job : jobsList) {
-            //Account jobAssignedWorker= job.getAssignedWorker();
+            Account jobAssignedWorker= job.getAssignedWorker();
             try {
-                //String username = jobAssignedWorker.getId();
-                //if (username.equals("w1")) { // TODO: whos session is that
+                String username = jobAssignedWorker.getId();
+                if (username.equals(App.account.getId())) {
                     jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
-                //}
+                }
             } catch (NullPointerException noAssignedWorker) {
                 continue;
             }
@@ -169,12 +172,3 @@ public class WorkerController {
         }
     }
 }
-
-//    public void displayInfo() {
-//        jobsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            Long currentJobId = Long.valueOf(jobsListView.getSelectionModel().getSelectedItem());
-////            Job currentJob = App.db.getJobById(currentJobId);
-////            jobInfo.setText(currentJob.getDestination().getPath());
-//            // FIXME: add WorkerRepository class
-//        });
-//    }
