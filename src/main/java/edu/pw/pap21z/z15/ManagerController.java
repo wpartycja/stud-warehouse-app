@@ -26,6 +26,9 @@ public class ManagerController {
     @FXML
     private TreeView<String> contentsTree;
 
+    @FXML
+    private Label loggedLabel;
+
     private final Image incomingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("down-right-arrow.png")));
 
     private final Image outgoingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("up-right-arrow.png")));
@@ -66,6 +69,7 @@ public class ManagerController {
 
     @FXML
     private void initialize() {
+        loggedLabel.setText(App.account.getName() + " " + App.account.getSurname());
         contentsTree.setShowRoot(false);
         contentsTree.setRoot(buildContentsTree());
 
@@ -146,10 +150,21 @@ public class ManagerController {
 
     }
 
+
     @FXML
-    private void logOut() throws IOException {
-        App.setRoot("login");
-    }
+    private void sessionRefresh(){ initialize(); }
+
+    @FXML
+    private void sessionLogOut() throws IOException { App.setRoot("login"); }
+
+    @FXML
+    private void sessionExit() { App.closeProgram(); }
+
+    @FXML
+    private void accountInfo() { LoginController.infoAccount(); }
+
+    @FXML
+    private void accountEdit() { LoginController.editAccount(); }
 
     @SuppressWarnings("unused")
     public static class WorkerEntry {

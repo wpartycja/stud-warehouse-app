@@ -1,43 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0"
-            xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="edu.pw.pap21z.z15.ManagerController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ManagerController">
     <top>
-        <HBox spacing="10.0" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-            </padding>
-            <Region maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
-            <Label maxHeight="1.7976931348623157E308" text="Logged in as Manager 1"/>
-            <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#logOut" text="Log out"/>
-        </HBox>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Session">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#sessionRefresh" text="Refresh" />
+                        <MenuItem mnemonicParsing="false" onAction="#sessionLogOut" text="Logout" />
+                    <MenuItem mnemonicParsing="false" onAction="#sessionExit" text="Exit" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Account">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#accountInfo" text="Info" />
+                        <MenuItem mnemonicParsing="false" onAction="#accountEdit" text="Edit" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+              <HBox spacing="10.0">
+                  <padding>
+                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  </padding>
+                  <Region maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="373.0" HBox.hgrow="ALWAYS" />
+                  <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="115.0" text="Logged in as:" />
+               <Label fx:id="loggedLabel" prefHeight="18.0" prefWidth="160.0">
+                  <HBox.margin>
+                     <Insets />
+                  </HBox.margin>
+               </Label>
+              </HBox>
+         </children>
+      </VBox>
     </top>
     <center>
         <VBox spacing="10.0" BorderPane.alignment="CENTER">
-            <Label text="Warehouse contents"/>
-            <TreeView fx:id="contentsTree" VBox.vgrow="ALWAYS"/>
+            <Label text="Warehouse contents">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin></Label>
+            <TreeView fx:id="contentsTree" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </VBox.margin></TreeView>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
+         <opaqueInsets>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </opaqueInsets>
         </VBox>
     </center>
     <right>
         <VBox prefWidth="400.0" spacing="10.0" BorderPane.alignment="CENTER">
-            <Label text="Job queue"/>
-            <TreeView fx:id="ordersList" VBox.vgrow="ALWAYS"/>
-            <Label text="Workers"/>
-            <TableView fx:id="workersList" VBox.vgrow="ALWAYS"/>
+            <Label text="Job queue">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin></Label>
+            <TreeView fx:id="ordersList" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </VBox.margin></TreeView>
+            <Label text="Workers">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin></Label>
+            <TableView fx:id="workersList" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </VBox.margin></TableView>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
         </VBox>
     </right>
-    <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-    </padding>
 </BorderPane>
