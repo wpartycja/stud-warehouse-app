@@ -58,7 +58,16 @@ public class WorkerController {
         infoCol.setCellValueFactory(new PropertyValueFactory<WorkerJobInfo, String>("data"));
 
         jobInfoTableView.setItems(jobWorkerJobInfoList);
+    }
 
+    private void resetJobInfo(){
+        tJob_id.setData("");
+        tPallet_id.setData("");
+        tDescription.setData("");
+        tOwner.setData("");
+        tLoc1.setData("");
+        tLoc2.setData("");
+        tLoc3.setData("");
     }
 
     private void displayJobInfo(Job job){
@@ -94,10 +103,12 @@ public class WorkerController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 String currentJobStr = jobsListView.getSelectionModel().getSelectedItem();
-                int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#")+1));
-                Job currentJob = repo.getJobById(job_id);
-                selectedJob = currentJob;
-                displayJobInfo(currentJob);
+                if (currentJobStr != null) {
+                    int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#") + 1));
+                    Job currentJob = repo.getJobById(job_id);
+                    selectedJob = currentJob;
+                    displayJobInfo(currentJob);
+                }
             }
         }));
     }
@@ -144,6 +155,13 @@ public class WorkerController {
 
     @FXML
     private void initialize() {
+//        if (!jobsListView.getItems().isEmpty()){
+//            jobsListView.getItems().clear();
+//
+//        }
+//        selectedJob = null;
+//        resetJobInfo();
+//        jobsListView.getSelectionModel().select(-1);//deselect all
         loggedLabel.setText(App.account.getName() + " " + App.account.getSurname());
         fillJobsListView();
         emptyJobInfo();
@@ -151,7 +169,7 @@ public class WorkerController {
     }
 
     @FXML
-    private void sessionRefresh(){ initialize(); }
+    private void sessionRefresh() throws IOException { App.setRoot("worker"); }
 
     @FXML
     private void sessionLogOut() throws IOException { App.setRoot("login"); }
