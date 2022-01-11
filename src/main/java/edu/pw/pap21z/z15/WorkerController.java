@@ -7,14 +7,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class WorkerController {
 
@@ -36,6 +36,10 @@ public class WorkerController {
     public Job selectedJob = null;
 
     private final WorkerRepository repo = new WorkerRepository(App.dbSession);
+
+    private final Image incomingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("down-right-arrow.png")));
+
+    private final Image outgoingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("up-right-arrow.png")));
 
     public WorkerJobInfo tJob_id = new WorkerJobInfo("Job id: ", "");
     public WorkerJobInfo tPallet_id = new WorkerJobInfo("Pallet id: ", "");
@@ -76,7 +80,6 @@ public class WorkerController {
             tLoc2.setData(path[1]);
             tLoc3.setData("");
         }
-
         jobInfoTableView.refresh();
     }
 
@@ -107,6 +110,29 @@ public class WorkerController {
         for(Job job : jobsList) {
            jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
         }
+        jobsListView.setCellFactory(param -> new ListCell<String>(){
+            private ImageView imageView = new ImageView();
+            @Override
+            public void updateItem(String name, boolean empty){
+                super.updateItem(name, empty);
+                if (empty){
+                    setText(null);
+                    setGraphic(null);
+                } else{
+                    int job_id = Integer.parseInt(name.split("#")[1]);
+                    Job currJob = repo.getJobById(job_id);
+                    if (currJob.getOrder().getType() == OrderType.IN){
+                        imageView.setImage(incomingIcon);
+                        setText(name);
+                        setGraphic(imageView);
+                    } else if (currJob.getOrder().getType() == OrderType.OUT){
+                        imageView.setImage(outgoingIcon);
+                        setText(name);
+                        setGraphic(imageView);
+                    }
+                }
+            }
+        });
     }
 
 

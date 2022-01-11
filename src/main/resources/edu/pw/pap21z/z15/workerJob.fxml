@@ -15,12 +15,12 @@
          <children>
             <Label alignment="CENTER_RIGHT" text="You are doing job:   " HBox.hgrow="ALWAYS">
                <font>
-                  <Font size="50.0" />
+                  <Font name="System Bold" size="70.0" />
                </font>
             </Label>
             <Label fx:id="jobIdLabel" HBox.hgrow="ALWAYS">
                <font>
-                  <Font size="50.0" />
+                  <Font size="70.0" />
                </font>
             </Label>
          </children>
@@ -52,31 +52,34 @@
       </HBox>
    </bottom>
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Go to: ">
+            <Label prefHeight="138.0" prefWidth="544.0" text="Go to: ">
                <font>
-                  <Font size="50.0" />
+                  <Font name="System Italic" size="60.0" />
                </font>
                <padding>
-                  <Insets left="50.0" />
+                  <Insets bottom="10.0" left="50.0" />
                </padding>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </Label>
-            <Label fx:id="firstLabel">
+            <Label fx:id="firstLabel" contentDisplay="CENTER">
                <font>
-                  <Font size="50.0" />
+                  <Font size="70.0" />
                </font>
             </Label>
             <Separator prefWidth="200.0" />
-            <Label fx:id="secondLabel">
+            <Label fx:id="secondLabel" contentDisplay="CENTER">
                <font>
-                  <Font size="50.0" />
+                  <Font size="70.0" />
                </font>
             </Label>
             <Separator prefWidth="200.0" />
-            <Label fx:id="thirdLabel">
+            <Label fx:id="thirdLabel" contentDisplay="CENTER">
                <font>
-                  <Font size="50.0" />
+                  <Font size="70.0" />
                </font>
             </Label>
          </children>
