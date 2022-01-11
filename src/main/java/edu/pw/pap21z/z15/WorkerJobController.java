@@ -23,14 +23,19 @@ public class WorkerJobController{
     @FXML
     Label thirdLabel;
 
+    private Account currentWorker;
+    private Job currentJob;
+
+
+
     private final WorkerRepository repo = new WorkerRepository(App.dbSession);
 
     @FXML
     private void initialize(){
         App.stage.setFullScreen(true);
-        Account currentWorker = App.account;
+        currentWorker = App.account;
 
-        Job currentJob = currentWorker.getCurrentJob();
+        currentJob = currentWorker.getCurrentJob();
 
         jobIdLabel.setText("#" + currentJob.getId());
         String[] path = currentJob.getDestination().getPath().split("/");
@@ -43,14 +48,14 @@ public class WorkerJobController{
 
     @FXML
     private void confirmJob() throws IOException {
-        // TODO: changes in database (change JobStatus)
+        repo.completeJob(currentJob, currentWorker);
         App.setRoot("worker");
         App.stage.setFullScreen(false);
     }
 
     @FXML
     private void cancelJob() throws IOException {
-        // TODO: changes in database (change JobStatus)
+        repo.undoJob(currentJob, currentWorker);
         App.setRoot("worker");
         App.stage.setFullScreen(false);
     }

@@ -12,10 +12,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
+
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class WorkerController {
 
@@ -104,17 +103,9 @@ public class WorkerController {
 
 
     private void fillJobsListView(){
-        List<Job> jobsList = repo.getJobs();
+        List<Job> jobsList = repo.getPendingJobs();
         for(Job job : jobsList) {
-            Account jobAssignedWorker= job.getAssignedWorker();
-            try {
-                String username = jobAssignedWorker.getId();
-                if (username.equals(App.account.getId())) {
-                    jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
-                }
-            } catch (NullPointerException noAssignedWorker) {
-                continue;
-            }
+           jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
         }
     }
 

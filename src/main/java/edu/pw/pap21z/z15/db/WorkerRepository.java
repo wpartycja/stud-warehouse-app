@@ -1,9 +1,6 @@
 package edu.pw.pap21z.z15.db;
 
-import edu.pw.pap21z.z15.db.model.Account;
-import edu.pw.pap21z.z15.db.model.Job;
-import edu.pw.pap21z.z15.db.model.JobStatus;
-import edu.pw.pap21z.z15.db.model.Location;
+import edu.pw.pap21z.z15.db.model.*;
 import javafx.concurrent.Worker;
 
 import javax.persistence.*;
@@ -23,7 +20,10 @@ public class WorkerRepository {
         return session.createQuery(criteria).getResultList();
     }
 
-    public List<Job> getJobs(){ return getAll(Job.class); }
+    public List<Job> getPendingJobs(){
+        TypedQuery<Job> query = session.createQuery("SELECT j from Job j where j.status = edu.pw.pap21z.z15.db.model.JobStatus.PENDING", Job.class);
+        return query.getResultList();
+    }
 
     public Job getJobById(long job_id) {
         Job job = (Job) session.find(Job.class, job_id);
@@ -42,6 +42,35 @@ public class WorkerRepository {
             session.getTransaction().begin();
             job.setStatus(JobStatus.IN_PROGRESS);
             worker.setCurrentJob(job);
+            session.getTransaction().commit();
+        } catch (Exception e){
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+    }
+
+
+    public void completeJob(Job job, Account worker){
+
+        try {
+            session.getTransaction().begin();
+            job.setStatus(JobStatus.COMPLETED);
+            worker.setCurrentJob(null);
+            Location jobDest = job.getDestination();
+            Pallet jobPallet = job.getPallet();
+            jobPallet.setLocation(jobDest);
+            session.getTransaction().commit();
+        } catch (Exception e){
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public void undoJob(Job job, Account worker){
+        try {
+            session.getTransaction().begin();
+            job.setStatus(JobStatus.PENDING);
+            worker.setCurrentJob(null);
             session.getTransaction().commit();
         } catch (Exception e){
             session.getTransaction().rollback();
