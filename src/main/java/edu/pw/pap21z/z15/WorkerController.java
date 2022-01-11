@@ -11,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -49,28 +48,60 @@ public class WorkerController {
     public WorkerJobInfo tLoc2 = new WorkerJobInfo("", "");
     public WorkerJobInfo tLoc3 = new WorkerJobInfo("", "");
 
-    private ObservableList<WorkerJobInfo> jobWorkerJobInfoList = FXCollections.observableArrayList(
+    private final ObservableList<WorkerJobInfo> jobWorkerJobInfoList = FXCollections.observableArrayList(
             tJob_id, tPallet_id, tDescription, tOwner, tLoc1, tLoc2, tLoc3
     );
 
+    /**
+     * sets starting items to TableView with jobs
+     **/
     private void emptyJobInfo(){
-        propertiesCol.setCellValueFactory(new PropertyValueFactory<WorkerJobInfo, String>("property"));
-        infoCol.setCellValueFactory(new PropertyValueFactory<WorkerJobInfo, String>("data"));
+        propertiesCol.setCellValueFactory(new PropertyValueFactory<>("property"));
+        infoCol.setCellValueFactory(new PropertyValueFactory<>("data"));
 
         jobInfoTableView.setItems(jobWorkerJobInfoList);
     }
 
-    private void resetJobInfo(){
-        tJob_id.setData("");
-        tPallet_id.setData("");
-        tDescription.setData("");
-        tOwner.setData("");
-        tLoc1.setData("");
-        tLoc2.setData("");
-        tLoc3.setData("");
+    /**
+     * sets ListView with jobs + adds arrow images
+     */
+    private void fillJobsListView(){
+        List<Job> jobsList = repo.getPendingJobs();
+        for(Job job : jobsList) {
+            jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
+        }
+        jobsListView.setCellFactory(param -> new ListCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    int job_id = Integer.parseInt(name.split("#")[1]);
+                    Job currJob = repo.getJobById(job_id);
+                    if (currJob.getOrder().getType() == OrderType.IN) {
+                        imageView.setImage(incomingIcon);
+                        setText(name);
+                        setGraphic(imageView);
+                    } else if (currJob.getOrder().getType() == OrderType.OUT) {
+                        imageView.setImage(outgoingIcon);
+                        setText(name);
+                        setGraphic(imageView);
+                    }
+                }
+            }
+        });
     }
 
-    private void displayJobInfo(Job job){
+    /**
+     * sets properties of selected job into ObservableList<WorkerJobInfo>
+     *
+     * @param job - selected by user job (from the ListView)
+     */
+    private void setJobTableView(Job job){
         Pallet pallet= job.getPallet();
         Location location = job.getDestination();
         String[] path = location.getPath().split("/");
@@ -98,8 +129,11 @@ public class WorkerController {
         jobInfoTableView.refresh();
     }
 
-    public void displayInfo() {
-        jobsListView.getSelectionModel().selectedItemProperty().addListener((new ChangeListener<String>() {
+    /**
+     * displays job properties in TableView
+     */
+    public void displayJobInfo() {
+        jobsListView.getSelectionModel().selectedItemProperty().addListener((new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 String currentJobStr = jobsListView.getSelectionModel().getSelectedItem();
@@ -107,12 +141,15 @@ public class WorkerController {
                     int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#") + 1));
                     Job currentJob = repo.getJobById(job_id);
                     selectedJob = currentJob;
-                    displayJobInfo(currentJob);
+                    setJobTableView(currentJob);
                 }
             }
         }));
     }
 
+    /**
+     * changes for the workerJob view
+     */
     @FXML
     private void displayJobView() throws IOException {
         if (selectedJob != null){
@@ -122,50 +159,12 @@ public class WorkerController {
     }
 
 
-    private void fillJobsListView(){
-        List<Job> jobsList = repo.getPendingJobs();
-        for(Job job : jobsList) {
-           jobsListView.getItems().add(String.format("Job #%s", job.getId().toString()));
-        }
-        jobsListView.setCellFactory(param -> new ListCell<String>(){
-            private ImageView imageView = new ImageView();
-            @Override
-            public void updateItem(String name, boolean empty){
-                super.updateItem(name, empty);
-                if (empty){
-                    setText(null);
-                    setGraphic(null);
-                } else{
-                    int job_id = Integer.parseInt(name.split("#")[1]);
-                    Job currJob = repo.getJobById(job_id);
-                    if (currJob.getOrder().getType() == OrderType.IN){
-                        imageView.setImage(incomingIcon);
-                        setText(name);
-                        setGraphic(imageView);
-                    } else if (currJob.getOrder().getType() == OrderType.OUT){
-                        imageView.setImage(outgoingIcon);
-                        setText(name);
-                        setGraphic(imageView);
-                    }
-                }
-            }
-        });
-    }
-
-
     @FXML
     private void initialize() {
-//        if (!jobsListView.getItems().isEmpty()){
-//            jobsListView.getItems().clear();
-//
-//        }
-//        selectedJob = null;
-//        resetJobInfo();
-//        jobsListView.getSelectionModel().select(-1);//deselect all
         loggedLabel.setText(App.account.getName() + " " + App.account.getSurname());
         fillJobsListView();
         emptyJobInfo();
-        displayInfo();
+        displayJobInfo();
     }
 
     @FXML
@@ -183,7 +182,11 @@ public class WorkerController {
     @FXML
     private void accountEdit() { LoginController.editAccount(); }
 
-    public class WorkerJobInfo {
+
+    /**
+     * class needed to add data to TableView
+     */
+    public static class WorkerJobInfo {
         private String property;
         private String data;
 

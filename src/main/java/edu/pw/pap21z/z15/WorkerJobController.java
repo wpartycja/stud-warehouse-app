@@ -3,7 +3,6 @@ package edu.pw.pap21z.z15;
 import edu.pw.pap21z.z15.db.WorkerRepository;
 import edu.pw.pap21z.z15.db.model.Account;
 import edu.pw.pap21z.z15.db.model.Job;
-import edu.pw.pap21z.z15.db.model.JobStatus;
 import edu.pw.pap21z.z15.db.model.LocationType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
