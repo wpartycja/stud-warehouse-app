@@ -83,4 +83,9 @@ public class ClientRepository {
     public List<Job> getJobs() {
         return getAll(Job.class);
     }
+
+    public List<Job> getJobsForPallet(Long palletId) {
+        TypedQuery<Job> query = session.createQuery(String.format("SELECT j FROM Job j WHERE j.pallet = '%s' AND j.status != 'COMPLETED'", palletId), Job.class);
+        return query.getResultList();
+    }
 }

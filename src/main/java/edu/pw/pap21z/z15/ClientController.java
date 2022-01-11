@@ -39,7 +39,7 @@ public class ClientController {
     @FXML
     private TableView<Job> orderHistory;
 
-    private final List<Long> usedIds = new ArrayList<>(); // chyba niepotrzebne to?
+    private List<Job> jobs = new ArrayList<>();
 
     @FXML
     private void initialize() {
@@ -103,13 +103,13 @@ public class ClientController {
         for (Pallet pallet : repo.getPallets()) {
             if (pallet.getOwnerUsername().getId().equals(App.account.getId()) && pallet.getLocation().getType() == LocationType.SHELF) {
                 pallets.add(pallet);
-                palletIds.add(pallet.getId());
                 palletDescriptions.add(pallet.getDescription());
+                List<Job> jobsForPallet = repo.getJobsForPallet(pallet.getId());
+                if (jobsForPallet.isEmpty()) {palletIds.add(pallet.getId());}
             }
         }
         var palletIdsObservable = FXCollections.observableArrayList(palletIds);
         itemId.setItems(palletIdsObservable);
-        itemId.getItems().removeAll(usedIds);
 
         var palletDescriptionsObservable = FXCollections.observableArrayList(palletDescriptions);
         palletDescription = new ComboBox<>();
@@ -119,27 +119,29 @@ public class ClientController {
     }
 
     private ObservableList<Job> getOrders() {
-        ObservableList<Job> jobs = FXCollections.observableArrayList();
+        ObservableList<Job> jobsObservable = FXCollections.observableArrayList();
         ObservableList<Job> jobsHistory = FXCollections.observableArrayList();
-        for (Job job : repo.getJobs()) {
+        jobs.clear();
+        jobs = repo.getJobs();
+        for (Job job : jobs) {
             if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() != JobStatus.COMPLETED) {
-                jobs.add(job);
+                jobsObservable.add(job);
             }
             if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() == JobStatus.COMPLETED) {
                 jobsHistory.add(job);
             }
         }
-        return jobs;
+        return jobsObservable;
     }
 
     private ObservableList<Job> getOrdersHistory() {
-        ObservableList<Job> jobs = FXCollections.observableArrayList();
+        ObservableList<Job> jobsObservable = FXCollections.observableArrayList();
         for (Job job : repo.getJobs()) {
             if (job.getOrder().getClient().getId().equals(App.account.getId())) {
-                jobs.add(job);
+                jobsObservable.add(job);
             }
         }
-        return jobs;
+        return jobsObservable;
     }
 
     private void createInOrder(String description) {
@@ -192,7 +194,6 @@ public class ClientController {
         if (ans) {
             createOutOrder(itemId.getValue());
         }
-        usedIds.add(id);
         initialize();
     }
 
