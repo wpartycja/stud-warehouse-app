@@ -69,7 +69,13 @@ public class WorkerController {
         tJob_id.setData("#"+job.getId().toString());
         tPallet_id.setData("#"+pallet.getId().toString());
         tDescription.setData(pallet.getDescription());
-        tOwner.setData(pallet.getOwnerUsername().getName() + " "+ pallet.getOwnerUsername().getSurname());
+        if (pallet.getOwnerUsername().getName() == null){
+            tOwner.setData(pallet.getOwnerUsername().getSurname());
+        } else if (pallet.getOwnerUsername().getSurname() == null){
+            tOwner.setData(pallet.getOwnerUsername().getName());
+        } else{
+            tOwner.setData(pallet.getOwnerUsername().getName() + " "+ pallet.getOwnerUsername().getSurname());
+        }
         if (location.getType() == LocationType.SHELF){
             tLoc1.setData(path[0]);
             tLoc2.setData(path[1]);
