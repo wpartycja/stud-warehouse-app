@@ -50,10 +50,6 @@ public class WorkerController {
             tJob_id, tPallet_id, tDescription, tOwner, tLoc1, tLoc2, tLoc3
     );
 
-    private final Image incomingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("down-right-arrow.png")));
-
-    private final Image outgoingIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("up-right-arrow.png")));
-
     private void emptyJobInfo(){
         propertiesCol.setCellValueFactory(new PropertyValueFactory<WorkerJobInfo, String>("property"));
         infoCol.setCellValueFactory(new PropertyValueFactory<WorkerJobInfo, String>("data"));
@@ -90,10 +86,10 @@ public class WorkerController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 String currentJobStr = jobsListView.getSelectionModel().getSelectedItem();
-                //int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#")+1));
-                //Job currentJob = repo.getJobById(job_id);
-                //selectedJob = currentJob;
-                //displayJobInfo(currentJob);
+                int job_id = Integer.parseInt(currentJobStr.substring(currentJobStr.lastIndexOf("#")+1));
+                Job currentJob = repo.getJobById(job_id);
+                selectedJob = currentJob;
+                displayJobInfo(currentJob);
             }
         }));
     }
@@ -101,8 +97,7 @@ public class WorkerController {
     @FXML
     private void displayJobView() throws IOException {
         if (selectedJob != null){
-            //selectedJob.setStatus(JobStatus.IN_PROGRESS);
-            //App.account.setCurrentJob(selectedJob);
+            repo.startJob(selectedJob, App.account.getId());
             App.setRoot("workerJob");
         }
     }

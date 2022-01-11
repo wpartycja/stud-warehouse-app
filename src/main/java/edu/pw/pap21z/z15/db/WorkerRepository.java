@@ -4,11 +4,9 @@ import edu.pw.pap21z.z15.db.model.Account;
 import edu.pw.pap21z.z15.db.model.Job;
 import edu.pw.pap21z.z15.db.model.JobStatus;
 import edu.pw.pap21z.z15.db.model.Location;
+import javafx.concurrent.Worker;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
@@ -27,23 +25,23 @@ public class WorkerRepository {
 
     public List<Job> getJobs(){ return getAll(Job.class); }
 
-//    public Job getJobById(long job_id) {
-//        Job job = (Job) session.find(Job.class, job_id);
-//        if (job == null) {
-//            throw new EntityNotFoundException("Can't find job Id: " + job_id);
-//        }
-//        return job;
-//    }
+    public Job getJobById(long job_id) {
+        Job job = (Job) session.find(Job.class, job_id);
+        if (job == null) {
+            throw new EntityNotFoundException("Can't find job Id: " + job_id);
+        }
+        return job;
+    }
 
-//    public Job getCurrentJob(Account worker, JobStatus jobStatus){
-//        TypedQuery<Job> query = session.createQuery("SELECT j FROM Job j WHERE j.status = edu.pw.pap21z.z15.db.model.JobStatus.IN_PROGRESS", Job.class);
-//        List<Job> jobs = query.getResultList();
-//        Job currentJob = null;
-//        for (Job job : jobs){
-//            if(job.getAssignedWorker() == worker){
-//                currentJob = job;
-//            }
-//        }
-//        return currentJob;
-//    }
+    public void startJob(Job job, String worker_id){
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.IN_PROGRESS);
+        Account worker = (Account) session.find(Account.class, worker_id);
+        if (worker == null) {
+            throw new EntityNotFoundException("Can't find worker Id: " + worker_id);
+        }
+        worker.setCurrentJob(job);
+        transaction.commit();
+    }
 }
