@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ManagerController {
 
@@ -93,13 +94,20 @@ public class ManagerController {
 
         var ordersRoot = new TreeItem<>();
         for (Order order : repo.getOrders()) {
-            var orderItem = new TreeItem<Object>(order);
-            ordersRoot.getChildren().add(orderItem);
-            orderItem.setExpanded(true);
-            for (Job job : order.getJobs()) {
-                TreeItem<Object> jobItem = new TreeItem<>(job);
-                orderItem.getChildren().add(jobItem);
-                jobItem.setExpanded(true);
+            var incompleteJobs = order.getJobs().stream()
+                    .filter(job -> job.getStatus() != JobStatus.COMPLETED)
+                    .collect(Collectors.toList());
+            if (!incompleteJobs.isEmpty()) {
+                var orderItem = new TreeItem<Object>(order);
+                ordersRoot.getChildren().add(orderItem);
+                orderItem.setExpanded(true);
+                for (Job job : order.getJobs()) {
+                    if (job.getStatus() != JobStatus.COMPLETED) {
+                        TreeItem<Object> jobItem = new TreeItem<>(job);
+                        orderItem.getChildren().add(jobItem);
+                        jobItem.setExpanded(true);
+                    }
+                }
             }
         }
 
@@ -122,39 +130,61 @@ public class ManagerController {
                 } else if (!empty && data instanceof Job) {
                     Job job = (Job) data;
                     ContextMenu menu = new ContextMenu();
-                    if (job.getStatus() == JobStatus.PLANNED) {
-                        for (Location dest : repo.getAvailableDestinations(job)) {
-                            MenuItem menuItem = new MenuItem("To " + dest.getPath());
-                            menuItem.setOnAction(actionEvent -> {
-                                        repo.scheduleJob(job, dest);
-                                        initialize();
+                    switch (job.getStatus()) {
+
+                        case PLANNED:
+
+                            for (Location dest : repo.getAvailableDestinations(job)) {
+                                MenuItem menuItem = new MenuItem("To " + dest.getPath());
+                                menuItem.setOnAction(actionEvent -> {
+                                            repo.scheduleJob(job, dest);
+                                            sessionRefresh();
+                                        }
+                                );
+                                menu.getItems().add(menuItem);
+                            }
+
+                            setText(String.format("Move pallet #%s to ???", job.getPallet().getId()));
+                            setContextMenu(menu);
+                            setStyle("-fx-background-color: LightPink");
+                            break;
+                        case PENDING:
+                            MenuItem resetMenuItem = new MenuItem("Reset destination");
+                            resetMenuItem.setOnAction(actionEvent -> {
+                                        repo.unscheduleJob(job);
+                                        sessionRefresh();
                                     }
                             );
-                            menu.getItems().add(menuItem);
-                        }
-                        setText(String.format("Move pallet #%s to ???", job.getPallet().getId()));
-                        setContextMenu(menu);
-                        setStyle("-fx-background-color: LightPink");
-                    } else {
-                        MenuItem resetMenuItem = new MenuItem("Reset destination");
-                        resetMenuItem.setOnAction(actionEvent -> {
-                                    repo.unscheduleJob(job);
-                                    initialize();
+
+                            if (job.getAssignedWorker() == null) {
+                                menu.getItems().add(resetMenuItem);
+                                for (Account worker : repo.getIdleWorkers()) {
+                                    MenuItem workerItem = new MenuItem("Assign to " + worker.getName() + " " + worker.getSurname());
+                                    workerItem.setOnAction(actionEvent -> {
+                                        repo.assignJobToWorker(job, worker);
+                                        sessionRefresh();
+                                    });
+                                    menu.getItems().add(workerItem);
                                 }
-                        );
-                        if (job.getAssignedWorker() == null) {
-                            menu.getItems().add(resetMenuItem);
-                            for (Account worker : repo.getIdleWorkers()) {
-                                MenuItem workerItem = new MenuItem("Assign to " + worker.getName() + " " + worker.getSurname());
-                                workerItem.setOnAction(actionEvent -> {
-                                    repo.assignJobToWorker(job, worker);
-                                    initialize();
-                                });
-                                menu.getItems().add(workerItem);
                             }
-                        }
-                        setContextMenu(menu);
-                        setText(String.format("Move pallet #%s to %s", job.getPallet().getId(), job.getDestination().getPath()));
+
+                            setStyle("-fx-background-color: PaleGoldenRod");
+                            setContextMenu(menu);
+                            setText(String.format("Move pallet #%s to %s", job.getPallet().getId(), job.getDestination().getPath()));
+                            break;
+                        case IN_PROGRESS:
+                            MenuItem unassignMenuItem = new MenuItem("Unassign worker");
+                            unassignMenuItem.setOnAction(actionEvent -> {
+                                        repo.unassignWorker(job);
+                                        sessionRefresh();
+                                    }
+                            );
+                            menu.getItems().add(unassignMenuItem);
+                            setContextMenu(menu);
+                            setText(String.format("Move pallet #%s to %s", job.getPallet().getId(), job.getDestination().getPath()));
+                            break;
+                        case COMPLETED:
+                            break;
                     }
                 } else if (!empty) {
                     throw new RuntimeException("Order list item of invalid type " + data);
@@ -169,6 +199,7 @@ public class ManagerController {
 
     @FXML
     private void sessionRefresh() {
+        repo.clear();
         initialize();
     }
 

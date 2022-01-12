@@ -53,18 +53,6 @@ public class ManagerRepository {
         return getWorkers().stream().filter(worker -> worker.getCurrentJob() == null).collect(Collectors.toList());
     }
 
-    public void assignJobToWorker(Job job, Account worker) {
-        try {
-            session.getTransaction().begin();
-            job.setStatus(JobStatus.IN_PROGRESS);
-            worker.setCurrentJob(job);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            e.printStackTrace();
-        }
-    }
-
     public void scheduleJob(Job job, Location dest) {
         EntityTransaction transaction = session.getTransaction();
         transaction.begin();
@@ -78,5 +66,31 @@ public class ManagerRepository {
         transaction.begin();
         job.setStatus(JobStatus.PLANNED);
         transaction.commit();
+    }
+
+
+    public void assignJobToWorker(Job job, Account worker) {
+        EntityTransaction transaction = session.getTransaction();
+        try {
+            transaction.begin();
+            job.setStatus(JobStatus.IN_PROGRESS);
+            job.setAssignedWorker(worker);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        }
+    }
+
+    public void unassignWorker(Job job) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.PENDING);
+        job.setAssignedWorker(null);
+        transaction.commit();
+    }
+
+    public void clear() {
+        session.clear();
     }
 }
