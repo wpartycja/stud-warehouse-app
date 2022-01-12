@@ -54,9 +54,9 @@ public class ClientController {
     @FXML
     private void setTables() {
         // orderMenu setup
-        TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
+        TableColumn<Job, String> idColumn = new TableColumn<>("ID");
         idColumn.setMinWidth(50);
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getOrder().getId().toString()));
 
         TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
         statusColumn.setMinWidth(140);
@@ -223,10 +223,6 @@ public class ClientController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Order history");
 
-        TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
-        idColumn.setMinWidth(50);
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-
         TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
         statusColumn.setMinWidth(80);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -254,7 +250,7 @@ public class ClientController {
         orderHistory = new TableView<>();
         orderHistory.setItems(getOrdersHistory());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn, palletColumn, descriptionColumn, locationColumn);
+        orderHistory.getColumns().addAll(orderIdColumn, statusColumn, orderColumn, palletColumn, descriptionColumn, locationColumn);
         orderHistory.setMaxWidth(610);
 
         Scene scene = new Scene(orderHistory);
