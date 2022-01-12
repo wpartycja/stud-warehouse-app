@@ -60,9 +60,15 @@ public class ManagerController {
 
     public ObservableList<WorkerEntry> getWorkersList() {
         ArrayList<WorkerEntry> workers = new ArrayList<>();
-        for (Account emp : repo.getWorkers()) {
-            String status = emp.getCurrentJob() == null ? "Idle" : emp.getCurrentJob().getId().toString();
-            workers.add(new WorkerEntry(emp.getName(), status));
+        for (Account worker : repo.getWorkers()) {
+            String status;
+            if (worker.getCurrentJob() == null) {
+                status = "Idle";
+            } else {
+                Job job = worker.getCurrentJob();
+                status = String.format("#%d: %s -> %s", job.getId(), job.getPallet().getDescription(), job.getDestination().getPath());
+            }
+            workers.add(new WorkerEntry(worker.getName() + " " + worker.getSurname(), status));
         }
         return FXCollections.observableArrayList(workers);
     }
