@@ -41,7 +41,7 @@ public class ManagerRepository {
             TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.SHELF", Location.class);
             var shelves = query.getResultList();
             return shelves.stream()
-                    .filter(s -> s.getPallets().isEmpty())
+                    .filter(s -> s.getPallets().isEmpty() && s.getJobs().isEmpty())
                     .collect(Collectors.toList());
         } else {
             TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.OUT_RAMP", Location.class);
@@ -51,18 +51,6 @@ public class ManagerRepository {
 
     public List<Account> getIdleWorkers() {
         return getWorkers().stream().filter(worker -> worker.getCurrentJob() == null).collect(Collectors.toList());
-    }
-
-    public void assignJobToWorker(Job job, Account worker) {
-        try {
-            session.getTransaction().begin();
-            job.setStatus(JobStatus.IN_PROGRESS);
-            worker.setCurrentJob(job);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            e.printStackTrace();
-        }
     }
 
     public void scheduleJob(Job job, Location dest) {
@@ -78,5 +66,35 @@ public class ManagerRepository {
         transaction.begin();
         job.setStatus(JobStatus.PLANNED);
         transaction.commit();
+    }
+
+
+    public void assignJobToWorker(Job job, Account worker) {
+        EntityTransaction transaction = session.getTransaction();
+        try {
+            transaction.begin();
+            job.setStatus(JobStatus.IN_PROGRESS);
+            job.setAssignedWorker(worker);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        }
+    }
+
+    public void unassignWorker(Job job) {
+        EntityTransaction transaction = session.getTransaction();
+        transaction.begin();
+        job.setStatus(JobStatus.PENDING);
+        job.setAssignedWorker(null);
+        transaction.commit();
+    }
+
+    public void clear() {
+        session.clear();
+    }
+
+    public List<Job> getJobs() {
+        return getAll(Job.class);
     }
 }

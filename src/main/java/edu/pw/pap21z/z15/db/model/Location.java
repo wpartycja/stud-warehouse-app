@@ -21,6 +21,13 @@ public class Location {
     @OneToMany(mappedBy = "location")
     private List<Pallet> pallets;
 
+    @OneToMany(mappedBy = "destination")
+    private List<Job> jobs;
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
     public String getPath() {
         return path;
     }
