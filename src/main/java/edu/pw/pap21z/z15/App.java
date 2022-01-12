@@ -6,12 +6,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.IOException;
+import java.util.Objects;
 
 public class App extends Application {
 
@@ -22,6 +24,8 @@ public class App extends Application {
     private static final EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("oracledb");
     public static final EntityManager dbSession = sessionFactory.createEntityManager();
 
+    private final Image warehouseIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("warehouse-icon.png")));
+
     @Override
     public void start(Stage primaryStage) throws IOException {
 
@@ -30,13 +34,15 @@ public class App extends Application {
         // configure stage
         stage = primaryStage;
         stage.setScene(scene);
-        stage.setTitle("PAP21Z-Z15");
+        stage.setTitle("Warehouse management app");
 
         // confirmation of X button
         stage.setOnCloseRequest(e -> {
             e.consume();
             closeProgram();
         });
+
+        stage.getIcons().add(warehouseIcon);
 
         stage.show();
     }
