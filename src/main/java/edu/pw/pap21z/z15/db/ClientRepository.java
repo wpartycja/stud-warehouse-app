@@ -27,26 +27,30 @@ public class ClientRepository {
 
     public void insertInJob(String clientUsername, String type, String description, String status) {
         EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
+        try {
+            transaction.begin();
 
-        insertOrder(clientUsername, type);
+            insertOrder(clientUsername, type);
 
-        TypedQuery<Location> getIN_RAMPLocation = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.IN_RAMP", Location.class);
-        Location destination = getIN_RAMPLocation.getSingleResult();
-        TypedQuery<Order> getOrderId = session.createQuery("SELECT o from Order o WHERE o.id = (SELECT MAX(o2.id) from Order o2)", Order.class);
-        Order order = getOrderId.getSingleResult();
+            TypedQuery<Location> getIN_RAMPLocation = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.IN_RAMP", Location.class);
+            Location destination = getIN_RAMPLocation.getSingleResult();
+            TypedQuery<Order> getOrderId = session.createQuery("SELECT o from Order o WHERE o.id = (SELECT MAX(o2.id) from Order o2)", Order.class);
+            Order order = getOrderId.getSingleResult();
 
-        insertPallet(description, clientUsername, destination.getId());
+            insertPallet(description, clientUsername, destination.getId());
 
-        TypedQuery<Pallet> getPalletId = session.createQuery("SELECT p from Pallet p WHERE p.id = (SELECT MAX(p2.id) from Pallet p2)", Pallet.class);
-        Pallet pallet = getPalletId.getSingleResult();
+            TypedQuery<Pallet> getPalletId = session.createQuery("SELECT p from Pallet p WHERE p.id = (SELECT MAX(p2.id) from Pallet p2)", Pallet.class);
+            Pallet pallet = getPalletId.getSingleResult();
 
-        insertJob(pallet.getId(), destination.getId(), order.getId(), status);
-        transaction.commit();
+            insertJob(pallet.getId(), destination.getId(), order.getId(), status);
+
+            transaction.commit();
+        } catch(Exception e) { transaction.rollback(); }
     }
 
     public void insertOutJob(String clientUsername, String type, long palletId, String status) {
         EntityTransaction transaction = session.getTransaction();
+        try {
         transaction.begin();
 
         insertOrder(clientUsername, type);
@@ -57,7 +61,9 @@ public class ClientRepository {
         Location destination = getOUT_RAMPLocation.getSingleResult();
 
         insertJob(palletId, destination.getId(), order.getId(), status);
+
         transaction.commit();
+        } catch(Exception e) { transaction.rollback(); }
     }
 
     public void insertOrder(String clientUsername, String type) {
@@ -82,5 +88,10 @@ public class ClientRepository {
 
     public List<Job> getJobs() {
         return getAll(Job.class);
+    }
+
+    public List<Job> getJobsForPallet(Long palletId) {
+        TypedQuery<Job> query = session.createQuery(String.format("SELECT j FROM Job j WHERE j.pallet = '%s' AND j.status != 'COMPLETED'", palletId), Job.class);
+        return query.getResultList();
     }
 }

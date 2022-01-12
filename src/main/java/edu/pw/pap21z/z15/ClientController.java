@@ -27,19 +27,19 @@ public class ClientController {
     private final ClientRepository repo = new ClientRepository(App.dbSession);
 
     @FXML
-    private Label logged;
+    private Label logged;                       // caption "Logged in as {name, surname}"
     @FXML
-    private TableView<Job> orderMenu;
+    private TableView<Job> orderMenu;           // Orders table (on the right)
     @FXML
-    private TableView<Pallet> itemMenu;
+    private TableView<Pallet> itemMenu;         // Stored items table (on the left)
     @FXML
-    private ChoiceBox<Long> itemId;
+    private ChoiceBox<Long> itemId;             // Ids of items that can be taken out
     @FXML
-    private ComboBox<String> palletDescription;
+    private ComboBox<String> palletDescription; // In create new order window (provides description of new pallet)
     @FXML
-    private TableView<Job> orderHistory;
+    private TableView<Job> orderHistory;        // In show order history window (table of all jobs from client)
 
-    private final List<Long> usedIds = new ArrayList<>(); // chyba niepotrzebne to?
+    private List<Job> jobs = new ArrayList<>(); // List of all jobs made by user
 
     @FXML
     private void initialize() {
@@ -47,8 +47,12 @@ public class ClientController {
         setTables();
     }
 
+    /*
+     Sets tableview for orders and pallets. Uses getPallets() and getOrders() to load data from database
+     */
     @FXML
     private void setTables() {
+        // orderMenu setup
         TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
         idColumn.setMinWidth(50);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -57,16 +61,16 @@ public class ClientController {
         statusColumn.setMinWidth(140);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order Id");
-        orderIdColumn.setMinWidth(50);
-        orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
+        TableColumn<Job, String> palletColumn = new TableColumn<>("Pallet ID");
+        palletColumn.setMinWidth(50);
+        palletColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<Long> call(TableColumn.CellDataFeatures<Job, Long> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getId());
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getId());
             }
         });
 
-        TableColumn<Job, String> orderColumn = new TableColumn<>("Order type");
+        TableColumn<Job, String> orderColumn = new TableColumn<>("Type");
         orderColumn.setMinWidth(50);
         orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
@@ -77,11 +81,9 @@ public class ClientController {
 
         orderMenu.setItems(getOrders());
         orderMenu.getColumns().clear();
-        orderMenu.getColumns().add(idColumn);
-        orderMenu.getColumns().add(orderColumn);
-        orderMenu.getColumns().add(orderIdColumn);
-        orderMenu.getColumns().add(statusColumn);
+        orderMenu.getColumns().addAll(idColumn, orderColumn, palletColumn, statusColumn);
 
+        // itemMenu setup
         TableColumn<Pallet, Long> palletIdColumn = new TableColumn<>("ID");
         palletIdColumn.setMinWidth(100);
         palletIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -92,10 +94,14 @@ public class ClientController {
 
         itemMenu.setItems(getPallets());
         itemMenu.getColumns().clear();
-        itemMenu.getColumns().add(palletIdColumn);
-        itemMenu.getColumns().add(descriptionColumn);
+        itemMenu.getColumns().addAll(palletIdColumn, descriptionColumn);
     }
 
+    /*
+     Returns observable list of pallets in storage for itemMenu table.
+     Sets itemId ChoiceBox values with ids of items that can be taken out.
+     Sets palletDescription ComboBox with proposed descriptions that are already in stock
+     */
     private ObservableList<Pallet> getPallets() {
         List<Long> palletIds = new ArrayList<>();
         Set<String> palletDescriptions = new HashSet<>();
@@ -103,13 +109,13 @@ public class ClientController {
         for (Pallet pallet : repo.getPallets()) {
             if (pallet.getOwnerUsername().getId().equals(App.account.getId()) && pallet.getLocation().getType() == LocationType.SHELF) {
                 pallets.add(pallet);
-                palletIds.add(pallet.getId());
                 palletDescriptions.add(pallet.getDescription());
+                List<Job> jobsForPallet = repo.getJobsForPallet(pallet.getId());
+                if (jobsForPallet.isEmpty()) {palletIds.add(pallet.getId());}
             }
         }
         var palletIdsObservable = FXCollections.observableArrayList(palletIds);
         itemId.setItems(palletIdsObservable);
-        itemId.getItems().removeAll(usedIds);
 
         var palletDescriptionsObservable = FXCollections.observableArrayList(palletDescriptions);
         palletDescription = new ComboBox<>();
@@ -118,38 +124,53 @@ public class ClientController {
         return pallets;
     }
 
+    /*
+     Returns observable list of not completed jobs for orderMenu table.
+     Sets jobs list.
+     */
     private ObservableList<Job> getOrders() {
-        ObservableList<Job> jobs = FXCollections.observableArrayList();
-        ObservableList<Job> jobsHistory = FXCollections.observableArrayList();
-        for (Job job : repo.getJobs()) {
+        ObservableList<Job> jobsObservable = FXCollections.observableArrayList();
+        jobs.clear();
+        jobs = repo.getJobs();
+        for (Job job : jobs) {
             if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() != JobStatus.COMPLETED) {
-                jobs.add(job);
-            }
-            if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() == JobStatus.COMPLETED) {
-                jobsHistory.add(job);
-            }
+                jobsObservable.add(job); }
         }
-        return jobs;
+        return jobsObservable;
     }
 
+    /*
+     Returns observable list of all jobs for orderMenu table. Sets jobs list.
+     */
     private ObservableList<Job> getOrdersHistory() {
-        ObservableList<Job> jobs = FXCollections.observableArrayList();
-        for (Job job : repo.getJobs()) {
+        ObservableList<Job> jobsObservable = FXCollections.observableArrayList();
+        for (Job job : jobs) {
             if (job.getOrder().getClient().getId().equals(App.account.getId())) {
-                jobs.add(job);
-            }
+                jobsObservable.add(job); }
         }
-        return jobs;
+        return jobsObservable;
     }
 
+    /*
+     Inserts new order, new pallet and new job to database.
+     Used while putting into the warehouse.
+     */
     private void createInOrder(String description) {
         repo.insertInJob(App.account.getId(), "IN", description, "PLANNED");
     }
 
+    /*
+     Inserts new order and new job to database.
+     Used while taking out from the warehouse.
+     */
     private void createOutOrder(Long palletId) {
         repo.insertOutJob(App.account.getId(), "OUT", palletId,  "PLANNED");
     }
 
+    /*
+    Shows new window for creating order on top of previous window.
+    User can create new order, put new item in warehouse.
+     */
     @FXML
     private void newOrder() {
         Stage stage = new Stage();
@@ -181,6 +202,9 @@ public class ClientController {
         initialize();
     }
 
+    /*
+    Creates new order, take out chosen item (in itemId box) from warehouse.
+     */
     @FXML
     private void takeOut() {
         if (itemId.getValue() == null) {
@@ -192,10 +216,12 @@ public class ClientController {
         if (ans) {
             createOutOrder(itemId.getValue());
         }
-        usedIds.add(id);
         initialize();
     }
 
+    /*
+    Shows orderHistory TableView with information from all jobs in new window.
+     */
     @FXML
     private void showHistory() {
         Stage stage = new Stage();
@@ -203,14 +229,14 @@ public class ClientController {
         stage.setTitle("Order history");
 
         TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
-        idColumn.setMaxWidth(50);
+        idColumn.setMinWidth(50);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
-        statusColumn.setMaxWidth(140);
+        statusColumn.setMinWidth(80);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order Id");
+        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setMinWidth(50);
         orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
             @Override
@@ -219,8 +245,8 @@ public class ClientController {
             }
         });
 
-        TableColumn<Job, String> orderColumn = new TableColumn<>("Order type");
-        orderColumn.setMaxWidth(50);
+        TableColumn<Job, String> orderColumn = new TableColumn<>("Type");
+        orderColumn.setMinWidth(50);
         orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
@@ -228,8 +254,17 @@ public class ClientController {
             }
         });
 
-        TableColumn<Job, String> descriptionColumn = new TableColumn<>("Pallet");
-        descriptionColumn.setMaxWidth(140);
+        TableColumn<Job, String> palletColumn = new TableColumn<>("Pallet ID");
+        palletColumn.setMinWidth(50);
+        palletColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getId());
+            }
+        });
+
+        TableColumn<Job, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setMinWidth(70);
         descriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
@@ -238,7 +273,7 @@ public class ClientController {
         });
 
         TableColumn<Job, String> locationColumn = new TableColumn<>("Destination");
-        locationColumn.setMinWidth(180);
+        locationColumn.setMinWidth(200);
         locationColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
                @Override
                public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobStringCellDataFeatures) {
@@ -249,22 +284,23 @@ public class ClientController {
         orderHistory = new TableView<>();
         orderHistory.setItems(getOrdersHistory());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn, descriptionColumn, locationColumn);
+        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn,palletColumn, descriptionColumn, locationColumn);
+        orderHistory.setMaxWidth(610);
 
         Scene scene = new Scene(orderHistory);
         stage.setScene(scene);
         stage.showAndWait();
     }
 
-    @FXML
-    private void logOut() throws IOException { App.setRoot("login"); }
+    // Menu buttons
     @FXML
     private void refresh() { initialize(); }
+    @FXML
+    private void logOut() throws IOException { App.setRoot("login"); }
     @FXML
     private void quit() { App.closeProgram(); }
     @FXML
     private void info() { LoginController.infoAccount(); }
     @FXML
     private void edit() { LoginController.editAccount(); }
-
 }

@@ -19,21 +19,25 @@ public class LoginRepository {
 
     public void insertAccount(String account_username, String password, String type, String name, String surname) {
         EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
-        session.createNativeQuery(String.format(
-                "INSERT INTO z15.accounts (account_username, password, type, name, surname) " +
-                        "VALUES ('%s', '%s', '%s', '%s', '%s')",
-                account_username, password, type, name, surname)).executeUpdate();
-        transaction.commit();
+        try {
+            transaction.begin();
+            session.createNativeQuery(String.format(
+                    "INSERT INTO z15.accounts (account_username, password, type, name, surname) " +
+                            "VALUES ('%s', '%s', '%s', '%s', '%s')",
+                    account_username, password, type, name, surname)).executeUpdate();
+            transaction.commit();
+        } catch(Exception e) { transaction.rollback(); }
     }
 
     public void updateAccount(String name, String surname, String account_username) {
         EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
-        session.createNativeQuery(String.format(
-                "UPDATE z15.accounts SET name = '%s', surname =  '%s' " +
-                        "WHERE account_username = '%s'",
-                name, surname, account_username)).executeUpdate();
-        transaction.commit();
+        try {
+            transaction.begin();
+            session.createNativeQuery(String.format(
+                    "UPDATE z15.accounts SET name = '%s', surname =  '%s' " +
+                            "WHERE account_username = '%s'",
+                    name, surname, account_username)).executeUpdate();
+            transaction.commit();
+        } catch(Exception e) { transaction.rollback(); }
     }
 }
