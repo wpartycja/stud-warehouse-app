@@ -177,10 +177,10 @@ public class WorkerController {
     private void sessionExit() { App.closeProgram(); }
 
     @FXML
-    private void accountInfo() { LoginController.infoAccount(); }
+    private void accountInfo() { App.infoAccount(); }
 
     @FXML
-    private void accountEdit() { LoginController.editAccount(); }
+    private void accountEdit() { App.editAccount(); }
 
 
     /**

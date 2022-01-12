@@ -183,7 +183,7 @@ public class ClientController {
             if (palletDescription.getValue() != null) {
                 createInOrder(palletDescription.getValue());
             } else {
-                LoginController.okBox("Order Error", "Wrong order input.");
+                App.okBox("Order Error", "Wrong order input.");
             }
             stage.close();
         });
@@ -208,11 +208,11 @@ public class ClientController {
     @FXML
     private void takeOut() {
         if (itemId.getValue() == null) {
-            LoginController.okBox("Take out error", "No pallet id selected to take out from warehouse.");
+            App.okBox("Take out error", "No pallet id selected to take out from warehouse.");
             return;
         }
         Long id = itemId.getValue();
-        boolean ans = LoginController.yesOrNoBox("Take out confirmation", "You sure you want to take out pallet " + id + "?");
+        boolean ans = App.yesOrNoBox("Take out confirmation", "You sure you want to take out pallet " + id + "?");
         if (ans) {
             createOutOrder(itemId.getValue());
         }
@@ -300,7 +300,7 @@ public class ClientController {
     @FXML
     private void quit() { App.closeProgram(); }
     @FXML
-    private void info() { LoginController.infoAccount(); }
+    private void info() { App.infoAccount(); }
     @FXML
-    private void edit() { LoginController.editAccount(); }
+    private void edit() { App.editAccount(); }
 }
