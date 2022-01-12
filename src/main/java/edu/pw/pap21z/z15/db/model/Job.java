@@ -10,7 +10,7 @@ public class Job {
     @Column(name = "JOB_ID", nullable = false)
     private Long id;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "DESTINATION_ID", nullable = false)
     private Location destination;
 

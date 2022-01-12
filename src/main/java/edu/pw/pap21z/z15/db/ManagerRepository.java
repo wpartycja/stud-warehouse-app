@@ -41,7 +41,7 @@ public class ManagerRepository {
             TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.SHELF", Location.class);
             var shelves = query.getResultList();
             return shelves.stream()
-                    .filter(s -> s.getPallets().isEmpty())
+                    .filter(s -> s.getPallets().isEmpty() && s.getJobs().isEmpty())
                     .collect(Collectors.toList());
         } else {
             TypedQuery<Location> query = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.OUT_RAMP", Location.class);
