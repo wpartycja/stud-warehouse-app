@@ -57,16 +57,16 @@ public class ClientController {
         statusColumn.setMinWidth(140);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order Id");
-        orderIdColumn.setMinWidth(50);
-        orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
+        TableColumn<Job, String> palletColumn = new TableColumn<>("Pallet ID");
+        palletColumn.setMinWidth(50);
+        palletColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<Long> call(TableColumn.CellDataFeatures<Job, Long> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getId());
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getId());
             }
         });
 
-        TableColumn<Job, String> orderColumn = new TableColumn<>("Order type");
+        TableColumn<Job, String> orderColumn = new TableColumn<>("Type");
         orderColumn.setMinWidth(50);
         orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
@@ -79,7 +79,7 @@ public class ClientController {
         orderMenu.getColumns().clear();
         orderMenu.getColumns().add(idColumn);
         orderMenu.getColumns().add(orderColumn);
-        orderMenu.getColumns().add(orderIdColumn);
+        orderMenu.getColumns().add(palletColumn);
         orderMenu.getColumns().add(statusColumn);
 
         TableColumn<Pallet, Long> palletIdColumn = new TableColumn<>("ID");
@@ -204,14 +204,14 @@ public class ClientController {
         stage.setTitle("Order history");
 
         TableColumn<Job, Long> idColumn = new TableColumn<>("ID");
-        idColumn.setMaxWidth(50);
+        idColumn.setMinWidth(50);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Job, JobStatus> statusColumn = new TableColumn<>("Status");
-        statusColumn.setMaxWidth(140);
+        statusColumn.setMinWidth(80);
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order Id");
+        TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setMinWidth(50);
         orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
             @Override
@@ -220,8 +220,8 @@ public class ClientController {
             }
         });
 
-        TableColumn<Job, String> orderColumn = new TableColumn<>("Order type");
-        orderColumn.setMaxWidth(50);
+        TableColumn<Job, String> orderColumn = new TableColumn<>("Type");
+        orderColumn.setMinWidth(50);
         orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
@@ -229,8 +229,17 @@ public class ClientController {
             }
         });
 
-        TableColumn<Job, String> descriptionColumn = new TableColumn<>("Pallet");
-        descriptionColumn.setMaxWidth(140);
+        TableColumn<Job, String> palletColumn = new TableColumn<>("Pallet ID");
+        palletColumn.setMinWidth(50);
+        palletColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
+                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getId());
+            }
+        });
+
+        TableColumn<Job, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setMinWidth(70);
         descriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
@@ -239,7 +248,7 @@ public class ClientController {
         });
 
         TableColumn<Job, String> locationColumn = new TableColumn<>("Destination");
-        locationColumn.setMinWidth(180);
+        locationColumn.setMinWidth(200);
         locationColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
                @Override
                public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobStringCellDataFeatures) {
@@ -250,22 +259,21 @@ public class ClientController {
         orderHistory = new TableView<>();
         orderHistory.setItems(getOrdersHistory());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn, descriptionColumn, locationColumn);
+        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn,palletColumn, descriptionColumn, locationColumn);
+        orderHistory.setMaxWidth(610);
 
         Scene scene = new Scene(orderHistory);
         stage.setScene(scene);
         stage.showAndWait();
     }
-
-    @FXML
-    private void logOut() throws IOException { App.setRoot("login"); }
     @FXML
     private void refresh() { initialize(); }
+    @FXML
+    private void logOut() throws IOException { App.setRoot("login"); }
     @FXML
     private void quit() { App.closeProgram(); }
     @FXML
     private void info() { LoginController.infoAccount(); }
     @FXML
     private void edit() { LoginController.editAccount(); }
-
 }
