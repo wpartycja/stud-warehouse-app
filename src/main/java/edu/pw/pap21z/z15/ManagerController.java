@@ -142,14 +142,16 @@ public class ManagerController {
                                     initialize();
                                 }
                         );
-                        menu.getItems().add(resetMenuItem);
-                        for (Account worker : repo.getIdleWorkers()) {
-                            MenuItem workerItem = new MenuItem("Assign to " + worker.getName() + " " + worker.getSurname());
-                            workerItem.setOnAction(actionEvent -> {
-                                repo.assignJobToWorker(job, worker);
-                                initialize();
-                            });
-                            menu.getItems().add(workerItem);
+                        if (job.getAssignedWorker() == null) {
+                            menu.getItems().add(resetMenuItem);
+                            for (Account worker : repo.getIdleWorkers()) {
+                                MenuItem workerItem = new MenuItem("Assign to " + worker.getName() + " " + worker.getSurname());
+                                workerItem.setOnAction(actionEvent -> {
+                                    repo.assignJobToWorker(job, worker);
+                                    initialize();
+                                });
+                                menu.getItems().add(workerItem);
+                            }
                         }
                         setContextMenu(menu);
                         setText(String.format("Move pallet #%s to %s", job.getPallet().getId(), job.getDestination().getPath()));
