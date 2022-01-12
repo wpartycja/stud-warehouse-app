@@ -93,4 +93,8 @@ public class ManagerRepository {
     public void clear() {
         session.clear();
     }
+
+    public List<Job> getJobs() {
+        return getAll(Job.class);
+    }
 }

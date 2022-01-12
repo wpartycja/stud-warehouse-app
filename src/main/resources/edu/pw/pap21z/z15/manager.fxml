@@ -1,44 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ManagerController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ManagerController">
     <top>
         <VBox BorderPane.alignment="CENTER">
             <MenuBar>
                 <Menu mnemonicParsing="false" text="Session">
-                    <MenuItem mnemonicParsing="false" onAction="#sessionRefresh" text="Refresh"/>
-                    <MenuItem mnemonicParsing="false" onAction="#sessionLogOut" text="Logout"/>
-                    <MenuItem mnemonicParsing="false" onAction="#sessionExit" text="Exit"/>
+                    <MenuItem mnemonicParsing="false" onAction="#sessionRefresh" text="Refresh" />
+                    <MenuItem mnemonicParsing="false" onAction="#sessionLogOut" text="Logout" />
+                    <MenuItem mnemonicParsing="false" onAction="#sessionExit" text="Exit" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="Account">
-                    <MenuItem mnemonicParsing="false" onAction="#accountInfo" text="Info"/>
-                    <MenuItem mnemonicParsing="false" onAction="#accountEdit" text="Edit"/>
+                    <MenuItem mnemonicParsing="false" onAction="#accountInfo" text="Info" />
+                    <MenuItem mnemonicParsing="false" onAction="#accountEdit" text="Edit" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
-                    <MenuItem mnemonicParsing="false" text="About"/>
+                    <MenuItem mnemonicParsing="false" text="About" />
                 </Menu>
             </MenuBar>
             <HBox spacing="10.0">
                 <padding>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </padding>
-                <Region maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="373.0" HBox.hgrow="ALWAYS"/>
-                <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="115.0"
-                       text="Logged in as:"/>
+                <Region maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="373.0" HBox.hgrow="ALWAYS" />
+                <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="115.0" text="Logged in as:" />
                 <Label fx:id="loggedLabel" prefHeight="18.0" prefWidth="160.0">
                     <HBox.margin>
-                        <Insets/>
+                        <Insets />
                     </HBox.margin>
                 </Label>
             </HBox>
@@ -72,6 +63,10 @@
             <VBox.margin>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </VBox.margin></TreeView>
+         <Button mnemonicParsing="false" onAction="#showHistory" text="Show order history">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin></Button>
             <Label text="Workers">
             <VBox.margin>
                <Insets left="10.0" />
