@@ -130,13 +130,21 @@ public class ManagerController {
                         setContextMenu(menu);
                         setStyle("-fx-background-color: LightPink");
                     } else {
-                        MenuItem menuItem = new MenuItem("Reset destination");
-                        menu.getItems().add(menuItem);
-                        menuItem.setOnAction(actionEvent -> {
+                        MenuItem resetMenuItem = new MenuItem("Reset destination");
+                        resetMenuItem.setOnAction(actionEvent -> {
                                     repo.unscheduleJob(job);
                                     initialize();
                                 }
                         );
+                        menu.getItems().add(resetMenuItem);
+                        for (Account worker : repo.getIdleWorkers()) {
+                            MenuItem workerItem = new MenuItem("Assign to " + worker.getName() + " " + worker.getSurname());
+                            workerItem.setOnAction(actionEvent -> {
+                                repo.assignJobToWorker(job, worker);
+                                initialize();
+                            });
+                            menu.getItems().add(workerItem);
+                        }
                         setContextMenu(menu);
                         setText(String.format("Move pallet #%s to %s", job.getPallet().getId(), job.getDestination().getPath()));
                     }

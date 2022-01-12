@@ -49,6 +49,22 @@ public class ManagerRepository {
         }
     }
 
+    public List<Account> getIdleWorkers() {
+        return getWorkers().stream().filter(worker -> worker.getCurrentJob() == null).collect(Collectors.toList());
+    }
+
+    public void assignJobToWorker(Job job, Account worker) {
+        try {
+            session.getTransaction().begin();
+            job.setStatus(JobStatus.IN_PROGRESS);
+            worker.setCurrentJob(job);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+    }
+
     public void scheduleJob(Job job, Location dest) {
         EntityTransaction transaction = session.getTransaction();
         transaction.begin();
