@@ -3,6 +3,7 @@ package edu.pw.pap21z.z15.db.model;
 import javax.persistence.*;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "ORDERS")
 public class Order {

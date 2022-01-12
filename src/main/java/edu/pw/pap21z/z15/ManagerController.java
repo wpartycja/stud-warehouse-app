@@ -152,19 +152,29 @@ public class ManagerController {
 
 
     @FXML
-    private void sessionRefresh(){ initialize(); }
+    private void sessionRefresh() {
+        initialize();
+    }
 
     @FXML
-    private void sessionLogOut() throws IOException { App.setRoot("login"); }
+    private void sessionLogOut() throws IOException {
+        App.setRoot("login");
+    }
 
     @FXML
-    private void sessionExit() { App.closeProgram(); }
+    private void sessionExit() {
+        App.closeProgram();
+    }
 
     @FXML
-    private void accountInfo() { App.infoAccount(); }
+    private void accountInfo() {
+        App.infoAccount();
+    }
 
     @FXML
-    private void accountEdit() { App.editAccount(); }
+    private void accountEdit() {
+        App.editAccount();
+    }
 
     @SuppressWarnings("unused")
     public static class WorkerEntry {

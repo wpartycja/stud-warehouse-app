@@ -6,9 +6,10 @@ import edu.pw.pap21z.z15.db.model.Job;
 import edu.pw.pap21z.z15.db.model.LocationType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+
 import java.io.IOException;
 
-public class WorkerJobController{
+public class WorkerJobController {
 
     @FXML
     Label jobIdLabel;
@@ -26,11 +27,10 @@ public class WorkerJobController{
     private Job currentJob;
 
 
-
     private final WorkerRepository repo = new WorkerRepository(App.dbSession);
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         App.stage.setFullScreen(true);
         currentWorker = App.account;
 
@@ -40,7 +40,7 @@ public class WorkerJobController{
         String[] path = currentJob.getDestination().getPath().split("/");
         firstLabel.setText(path[0]);
         secondLabel.setText(path[1]);
-        if (currentJob.getDestination().getType() == LocationType.SHELF){
+        if (currentJob.getDestination().getType() == LocationType.SHELF) {
             thirdLabel.setText(path[2]);
         }
     }

@@ -14,44 +14,35 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.ManagerController">
     <top>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
+        <VBox BorderPane.alignment="CENTER">
             <MenuBar>
-              <menus>
                 <Menu mnemonicParsing="false" text="Session">
-                  <items>
-                        <MenuItem mnemonicParsing="false" onAction="#sessionRefresh" text="Refresh" />
-                        <MenuItem mnemonicParsing="false" onAction="#sessionLogOut" text="Logout" />
-                    <MenuItem mnemonicParsing="false" onAction="#sessionExit" text="Exit" />
-                  </items>
+                    <MenuItem mnemonicParsing="false" onAction="#sessionRefresh" text="Refresh"/>
+                    <MenuItem mnemonicParsing="false" onAction="#sessionLogOut" text="Logout"/>
+                    <MenuItem mnemonicParsing="false" onAction="#sessionExit" text="Exit"/>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Account">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#accountInfo" text="Info" />
-                        <MenuItem mnemonicParsing="false" onAction="#accountEdit" text="Edit" />
-                  </items>
+                    <MenuItem mnemonicParsing="false" onAction="#accountInfo" text="Info"/>
+                    <MenuItem mnemonicParsing="false" onAction="#accountEdit" text="Edit"/>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
+                    <MenuItem mnemonicParsing="false" text="About"/>
                 </Menu>
-              </menus>
             </MenuBar>
-              <HBox spacing="10.0">
-                  <padding>
-                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                  </padding>
-                  <Region maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="373.0" HBox.hgrow="ALWAYS" />
-                  <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="115.0" text="Logged in as:" />
-               <Label fx:id="loggedLabel" prefHeight="18.0" prefWidth="160.0">
-                  <HBox.margin>
-                     <Insets />
-                  </HBox.margin>
-               </Label>
-              </HBox>
-         </children>
-      </VBox>
+            <HBox spacing="10.0">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <Region maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="373.0" HBox.hgrow="ALWAYS"/>
+                <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" prefHeight="18.0" prefWidth="115.0"
+                       text="Logged in as:"/>
+                <Label fx:id="loggedLabel" prefHeight="18.0" prefWidth="160.0">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Label>
+            </HBox>
+        </VBox>
     </top>
     <center>
         <VBox spacing="10.0" BorderPane.alignment="CENTER">

@@ -26,7 +26,9 @@ public class LoginRepository {
                             "VALUES ('%s', '%s', '%s', '%s', '%s')",
                     account_username, password, type, name, surname)).executeUpdate();
             transaction.commit();
-        } catch(Exception e) { transaction.rollback(); }
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 
     public void updateAccount(String name, String surname, String account_username) {
@@ -38,6 +40,8 @@ public class LoginRepository {
                             "WHERE account_username = '%s'",
                     name, surname, account_username)).executeUpdate();
             transaction.commit();
-        } catch(Exception e) { transaction.rollback(); }
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 }

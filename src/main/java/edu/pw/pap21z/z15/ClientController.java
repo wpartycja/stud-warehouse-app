@@ -1,9 +1,11 @@
 package edu.pw.pap21z.z15;
 
 import edu.pw.pap21z.z15.db.ClientRepository;
-import edu.pw.pap21z.z15.db.model.*;
+import edu.pw.pap21z.z15.db.model.Job;
+import edu.pw.pap21z.z15.db.model.JobStatus;
+import edu.pw.pap21z.z15.db.model.LocationType;
+import edu.pw.pap21z.z15.db.model.Pallet;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,7 +16,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class ClientController {
 
     @FXML
     private void initialize() {
-        logged.setText("Logged in as " + App.account.getName() + " "  + App.account.getSurname());
+        logged.setText("Logged in as " + App.account.getName() + " " + App.account.getSurname());
         setTables();
     }
 
@@ -63,21 +64,11 @@ public class ClientController {
 
         TableColumn<Job, String> palletColumn = new TableColumn<>("Pallet ID");
         palletColumn.setMinWidth(50);
-        palletColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getId());
-            }
-        });
+        palletColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getPallet().getId().toString()));
 
         TableColumn<Job, String> orderColumn = new TableColumn<>("Type");
         orderColumn.setMinWidth(50);
-        orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getType());
-            }
-        });
+        orderColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getOrder().getType().toString()));
 
         orderMenu.setItems(getOrders());
         orderMenu.getColumns().clear();
@@ -111,7 +102,9 @@ public class ClientController {
                 pallets.add(pallet);
                 palletDescriptions.add(pallet.getDescription());
                 List<Job> jobsForPallet = repo.getJobsForPallet(pallet.getId());
-                if (jobsForPallet.isEmpty()) {palletIds.add(pallet.getId());}
+                if (jobsForPallet.isEmpty()) {
+                    palletIds.add(pallet.getId());
+                }
             }
         }
         var palletIdsObservable = FXCollections.observableArrayList(palletIds);
@@ -134,7 +127,8 @@ public class ClientController {
         jobs = repo.getJobs();
         for (Job job : jobs) {
             if (job.getOrder().getClient().getId().equals(App.account.getId()) && job.getStatus() != JobStatus.COMPLETED) {
-                jobsObservable.add(job); }
+                jobsObservable.add(job);
+            }
         }
         return jobsObservable;
     }
@@ -146,7 +140,8 @@ public class ClientController {
         ObservableList<Job> jobsObservable = FXCollections.observableArrayList();
         for (Job job : jobs) {
             if (job.getOrder().getClient().getId().equals(App.account.getId())) {
-                jobsObservable.add(job); }
+                jobsObservable.add(job);
+            }
         }
         return jobsObservable;
     }
@@ -164,7 +159,7 @@ public class ClientController {
      Used while taking out from the warehouse.
      */
     private void createOutOrder(Long palletId) {
-        repo.insertOutJob(App.account.getId(), "OUT", palletId,  "PLANNED");
+        repo.insertOutJob(App.account.getId(), "OUT", palletId, "PLANNED");
     }
 
     /*
@@ -238,53 +233,28 @@ public class ClientController {
 
         TableColumn<Job, Long> orderIdColumn = new TableColumn<>("Order ID");
         orderIdColumn.setMinWidth(50);
-        orderIdColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, Long>, ObservableValue<Long>>() {
-            @Override
-            public ObservableValue<Long> call(TableColumn.CellDataFeatures<Job, Long> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getId());
-            }
-        });
+        orderIdColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getOrder().getId()));
 
         TableColumn<Job, String> orderColumn = new TableColumn<>("Type");
         orderColumn.setMinWidth(50);
-        orderColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getOrder().getType());
-            }
-        });
+        orderColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getOrder().getType().toString()));
 
         TableColumn<Job, String> palletColumn = new TableColumn<>("Pallet ID");
         palletColumn.setMinWidth(50);
-        palletColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getId());
-            }
-        });
+        palletColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getPallet().getId().toString()));
 
         TableColumn<Job, String> descriptionColumn = new TableColumn<>("Description");
         descriptionColumn.setMinWidth(70);
-        descriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobPalletCellDataFeatures) {
-                return new ReadOnlyObjectWrapper(jobPalletCellDataFeatures.getValue().getPallet().getDescription());
-            }
-        });
+        descriptionColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getPallet().getDescription()));
 
         TableColumn<Job, String> locationColumn = new TableColumn<>("Destination");
         locationColumn.setMinWidth(200);
-        locationColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Job, String>, ObservableValue<String>>() {
-               @Override
-               public ObservableValue<String> call(TableColumn.CellDataFeatures<Job, String> jobStringCellDataFeatures) {
-                   return new ReadOnlyObjectWrapper(jobStringCellDataFeatures.getValue().getDestination().getPath());
-               }
-           });
+        locationColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getDestination().getPath()));
 
         orderHistory = new TableView<>();
         orderHistory.setItems(getOrdersHistory());
         orderHistory.getColumns().clear();
-        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn,palletColumn, descriptionColumn, locationColumn);
+        orderHistory.getColumns().addAll(idColumn, statusColumn, orderColumn, orderIdColumn, palletColumn, descriptionColumn, locationColumn);
         orderHistory.setMaxWidth(610);
 
         Scene scene = new Scene(orderHistory);
@@ -294,13 +264,27 @@ public class ClientController {
 
     // Menu buttons
     @FXML
-    private void refresh() { initialize(); }
+    private void refresh() {
+        initialize();
+    }
+
     @FXML
-    private void logOut() throws IOException { App.setRoot("login"); }
+    private void logOut() throws IOException {
+        App.setRoot("login");
+    }
+
     @FXML
-    private void quit() { App.closeProgram(); }
+    private void quit() {
+        App.closeProgram();
+    }
+
     @FXML
-    private void info() { App.infoAccount(); }
+    private void info() {
+        App.infoAccount();
+    }
+
     @FXML
-    private void edit() { App.editAccount(); }
+    private void edit() {
+        App.editAccount();
+    }
 }

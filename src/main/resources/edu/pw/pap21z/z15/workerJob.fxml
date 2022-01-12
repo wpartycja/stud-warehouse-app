@@ -9,83 +9,78 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="workerJobView" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerJobController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pw.pap21z.z15.WorkerJobController">
    <top>
       <HBox alignment="CENTER">
-         <children>
-            <Label alignment="CENTER_RIGHT" text="You are doing job:   " HBox.hgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="70.0" />
-               </font>
-            </Label>
-            <Label fx:id="jobIdLabel" HBox.hgrow="ALWAYS">
-               <font>
-                  <Font size="70.0" />
-               </font>
-            </Label>
-         </children>
          <padding>
-            <Insets bottom="50.0" left="30.0" right="30.0" top="50.0" />
+            <Insets bottom="50.0" left="30.0" right="30.0" top="50.0"/>
          </padding>
+         <Label alignment="CENTER_RIGHT" text="You are doing job:   " HBox.hgrow="ALWAYS">
+            <font>
+               <Font name="System Bold" size="70.0"/>
+            </font>
+         </Label>
+         <Label fx:id="jobIdLabel" HBox.hgrow="ALWAYS">
+            <font>
+               <Font size="70.0"/>
+            </font>
+         </Label>
       </HBox>
    </top>
    <bottom>
       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="doneButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#confirmJob" text="Done">
-               <font>
-                  <Font size="40.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="40.0" right="50.0" top="40.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelJob" text="Cancel">
-               <font>
-                  <Font size="40.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="40.0" left="50.0" top="40.0" />
-               </HBox.margin>
-            </Button>
-         </children>
+         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                 onAction="#confirmJob" text="Done">
+            <font>
+               <Font size="40.0"/>
+            </font>
+            <HBox.margin>
+               <Insets bottom="40.0" right="50.0" top="40.0"/>
+            </HBox.margin>
+         </Button>
+         <Button mnemonicParsing="false" onAction="#cancelJob" text="Cancel">
+            <font>
+               <Font size="40.0"/>
+            </font>
+            <HBox.margin>
+               <Insets bottom="40.0" left="50.0" top="40.0"/>
+            </HBox.margin>
+         </Button>
       </HBox>
    </bottom>
    <center>
       <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="138.0" prefWidth="544.0" text="Go to: ">
-               <font>
-                  <Font name="System Italic" size="60.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="50.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-            </Label>
-            <Label fx:id="firstLabel" contentDisplay="CENTER">
-               <font>
-                  <Font size="70.0" />
-               </font>
-            </Label>
-            <Separator prefWidth="200.0" />
-            <Label fx:id="secondLabel" contentDisplay="CENTER">
-               <font>
-                  <Font size="70.0" />
-               </font>
-            </Label>
-            <Separator prefWidth="200.0" />
-            <Label fx:id="thirdLabel" contentDisplay="CENTER">
-               <font>
-                  <Font size="70.0" />
-               </font>
-            </Label>
-         </children>
          <BorderPane.margin>
-            <Insets left="50.0" right="50.0" />
+            <Insets left="50.0" right="50.0"/>
          </BorderPane.margin>
+         <Label prefHeight="138.0" prefWidth="544.0" text="Go to: ">
+            <font>
+               <Font name="System Italic" size="60.0"/>
+            </font>
+            <padding>
+               <Insets bottom="10.0" left="50.0"/>
+            </padding>
+            <VBox.margin>
+               <Insets bottom="10.0"/>
+            </VBox.margin>
+         </Label>
+         <Label fx:id="firstLabel" contentDisplay="CENTER">
+            <font>
+               <Font size="70.0"/>
+            </font>
+         </Label>
+         <Separator prefWidth="200.0"/>
+         <Label fx:id="secondLabel" contentDisplay="CENTER">
+            <font>
+               <Font size="70.0"/>
+            </font>
+         </Label>
+         <Separator prefWidth="200.0"/>
+         <Label fx:id="thirdLabel" contentDisplay="CENTER">
+            <font>
+               <Font size="70.0"/>
+            </font>
+         </Label>
       </VBox>
    </center>
 </BorderPane>

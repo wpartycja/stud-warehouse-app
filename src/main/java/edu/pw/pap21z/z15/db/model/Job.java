@@ -2,6 +2,7 @@ package edu.pw.pap21z.z15.db.model;
 
 import javax.persistence.*;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "JOBS")
 public class Job {
