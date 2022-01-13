@@ -197,7 +197,6 @@ public class ManagerController {
         });
         ordersList.setShowRoot(false);
         ordersList.setRoot(ordersRoot);
-
     }
 
     @FXML
@@ -258,7 +257,6 @@ public class ManagerController {
 
     @FXML
     private void sessionRefresh() {
-        repo.clear();
         initialize();
     }
 

@@ -74,6 +74,7 @@ public class ManagerRepository {
         try {
             transaction.begin();
             job.setStatus(JobStatus.IN_PROGRESS);
+            worker.setCurrentJob(job);
             job.setAssignedWorker(worker);
             transaction.commit();
         } catch (Exception e) {
@@ -84,14 +85,16 @@ public class ManagerRepository {
 
     public void unassignWorker(Job job) {
         EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
-        job.setStatus(JobStatus.PENDING);
-        job.setAssignedWorker(null);
-        transaction.commit();
-    }
-
-    public void clear() {
-        session.clear();
+        try {
+            transaction.begin();
+            job.setStatus(JobStatus.PENDING);
+            job.getAssignedWorker().setCurrentJob(null);
+            job.setAssignedWorker(null);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        }
     }
 
     public List<Job> getJobs() {
