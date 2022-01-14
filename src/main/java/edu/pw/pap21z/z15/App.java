@@ -40,7 +40,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         // set starting scene
-        scene = new Scene(loadFXML("login"), 640, 480);
+        scene = new Scene(loadFXML("login"), 800, 600);
         // configure stage
         stage = primaryStage;
         stage.setScene(scene);

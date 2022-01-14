@@ -36,7 +36,7 @@
         </VBox>
     </top>
     <center>
-        <VBox spacing="10.0" BorderPane.alignment="CENTER">
+        <VBox prefWidth="300.0" spacing="10.0" BorderPane.alignment="CENTER">
             <Label text="Warehouse contents">
             <VBox.margin>
                <Insets left="10.0" />
@@ -54,7 +54,7 @@
         </VBox>
     </center>
     <right>
-        <VBox prefWidth="400.0" spacing="10.0" BorderPane.alignment="CENTER">
+        <VBox prefWidth="500.0" spacing="10.0" BorderPane.alignment="CENTER">
             <Label text="Job queue">
             <VBox.margin>
                <Insets left="10.0" />
