@@ -118,10 +118,12 @@ public class ManagerController {
         }
 
         contentsTree.setRoot(rootItem);
+        contentsTree.refresh();
     }
 
     private void updateWorkersView() {
         workersList.setItems(FXCollections.observableArrayList(repo.getWorkers()));
+        workersList.refresh();
     }
 
     private void updateJobsView() {
@@ -141,6 +143,8 @@ public class ManagerController {
         }
 
         ordersList.setRoot(ordersRoot);
+        ordersList.refresh();
+
     }
 
     /**
