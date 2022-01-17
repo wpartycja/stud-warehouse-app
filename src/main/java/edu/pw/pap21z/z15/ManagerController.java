@@ -53,7 +53,7 @@ public class ManagerController {
 
         // set up workers view
         workersList.getColumns().setAll(
-                createTableColumn("Name", 100, worker -> worker.getName() + " " + worker.getSurname()),
+                createTableColumn("Name", 150, worker -> worker.getName() + " " + worker.getSurname()),
                 createTableColumn("Job", 300, worker -> {
                     var job = worker.getCurrentJob();
                     if (job == null) return "Idle";
@@ -68,6 +68,7 @@ public class ManagerController {
 
 
     /**
+     * Utility function to create a table column for TableView
      * @param name        Column header name
      * @param prefWidth   Prefered width of the column
      * @param contentFunc Function to extract value in this column for given row
