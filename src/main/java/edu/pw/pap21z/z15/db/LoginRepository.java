@@ -1,6 +1,7 @@
 package edu.pw.pap21z.z15.db;
 
 import edu.pw.pap21z.z15.db.model.Account;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -17,14 +18,22 @@ public class LoginRepository {
         return session.find(Account.class, username);
     }
 
+    public boolean checkCredentials(String username, String password) {
+        var account = getAccountByUsername(username);
+
+        if (account == null) return false;
+        else return BCrypt.checkpw(password, account.getPassword());
+    }
+
     public void insertAccount(String account_username, String password, String type, String name, String surname) {
         EntityTransaction transaction = session.getTransaction();
         try {
             transaction.begin();
             session.createNativeQuery(String.format(
-                    "INSERT INTO z15.accounts (account_username, password, type, name, surname) " +
-                            "VALUES ('%s', '%s', '%s', '%s', '%s')",
-                    account_username, password, type, name, surname)).executeUpdate();
+                            "INSERT INTO z15.accounts (account_username, password, type, name, surname) " +
+                                    "VALUES ('%s', '%s', '%s', '%s', '%s')",
+                            account_username, BCrypt.hashpw(password, BCrypt.gensalt()), type, name, surname))
+                    .executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

@@ -12,7 +12,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class LoginController {
 
@@ -25,24 +24,13 @@ public class LoginController {
 
     @FXML
     private void logIn() throws IOException {
-        var account = repo.getAccountByUsername(username.getText());
-
-        // wrong username
-        if (account == null) {
-            App.okBox("Login Error", "Wrong username!");
-            return;
+        if (!repo.checkCredentials(username.getText(), password.getText())) {
+            App.okBox("Login Error", "Username or password is incorrect");
+        } else {
+            // correct credentials, log in
+            App.okBox("Login Status", "You have logged in as: " + username.getText());
+            App.setAccount(repo.getAccountByUsername(username.getText()));
         }
-
-        // wrong password
-        if (!Objects.equals(account.getPassword(), password.getText())) {
-            App.okBox("Login Error", "Wrong password for username: " + username.getText());
-            return;
-        }
-
-        // correct credentials
-        App.okBox("Login Status", "You have logged in as: " + username.getText());
-        App.setAccount(account);
-
     }
 
     @FXML
@@ -64,15 +52,15 @@ public class LoginController {
 
         Button createAccount = new Button("Create Account");
         createAccount.setOnAction(e -> {
-            if (usr.getText() == null) {
+            if (usr.getText() == null || usr.getText().isBlank()) {
                 App.okBox("Account error", "Login can not be empty!");
             } else if (repo.getAccountByUsername(usr.getText()) != null) {
                 App.okBox("Account error", "Chosen username is already taken!");
-            } else if (psw1.getText() == null) {
+            } else if (psw1.getText() == null || psw1.getText().isBlank()) {
                 App.okBox("Account error", "Password can not be empty!");
-            } else if (name.getText() == null) {
+            } else if (name.getText() == null || name.getText().isBlank()) {
                 App.okBox("Account error", "Name can not be empty!");
-            } else if (surname.getText() == null) {
+            } else if (surname.getText() == null || surname.getText().isBlank()) {
                 App.okBox("Account error", "Surname can not be empty!");
             } else if (!psw1.getText().equals(psw2.getText())) {
                 App.okBox("Account error", "Password must be the same in both fields");
