@@ -74,17 +74,27 @@ public class ManagerRepository {
 
     public void scheduleJob(Job job, Location dest) {
         EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
-        job.setStatus(JobStatus.PENDING);
-        job.setDestination(dest);
-        transaction.commit();
+        try {
+            transaction.begin();
+            job.setStatus(JobStatus.PENDING);
+            job.setDestination(dest);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        }
     }
 
     public void unscheduleJob(Job job) {
         EntityTransaction transaction = session.getTransaction();
-        transaction.begin();
-        job.setStatus(JobStatus.PLANNED);
-        transaction.commit();
+        try {
+            transaction.begin();
+            job.setStatus(JobStatus.PLANNED);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        }
     }
 
 
