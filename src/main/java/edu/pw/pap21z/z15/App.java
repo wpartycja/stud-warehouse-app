@@ -117,7 +117,7 @@ public class App extends Application {
         layout.getChildren().addAll(label, ok);
         layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 250, 80);
+        Scene scene = new Scene(layout, 300, 80);
         stage.setScene(scene);
         stage.showAndWait();
     }
@@ -145,6 +145,7 @@ public class App extends Application {
         });
 
         VBox layoutTop = new VBox();
+        layoutTop.setPadding(new Insets(10, 10, 10, 10));
         layoutTop.getChildren().add(label);
         layoutTop.setAlignment(Pos.BOTTOM_CENTER);
         HBox layoutBot = new HBox(30);
@@ -155,7 +156,7 @@ public class App extends Application {
         borderpane.setTop(layoutTop);
         borderpane.setCenter(layoutBot);
 
-        Scene scene = new Scene(borderpane, 250, 80);
+        Scene scene = new Scene(borderpane, 300, 80);
         stage.setScene(scene);
         stage.showAndWait();
 

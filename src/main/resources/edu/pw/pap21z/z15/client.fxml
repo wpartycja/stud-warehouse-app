@@ -49,7 +49,7 @@
                 <HBox alignment="CENTER" prefHeight="40.0" prefWidth="299.0" spacing="90.0">
                     <Label alignment="CENTER" contentDisplay="CENTER" mouseTransparent="true"
                            text="Stored Items"/>
-                    <Label fx:id="logged" prefHeight="17.0" prefWidth="136.0" text="Logged in as"/>
+                    <Label fx:id="logged" prefHeight="17.0" prefWidth="200.0" text="Logged in as"/>
                 </HBox>
                 <TableView fx:id="itemMenu" prefHeight="398.0" prefWidth="299.0" VBox.vgrow="ALWAYS">
                     <columnResizePolicy>
