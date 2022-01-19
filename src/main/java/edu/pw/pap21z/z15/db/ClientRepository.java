@@ -29,19 +29,20 @@ public class ClientRepository {
         EntityTransaction transaction = session.getTransaction();
         try {
             transaction.begin();
-
+            // insert new order to database
             insertOrder(clientUsername, type);
-
+            // select location of type IN_RAMP
             TypedQuery<Location> getIN_RAMPLocation = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.IN_RAMP", Location.class);
             Location destination = getIN_RAMPLocation.getSingleResult();
+            // insert new pallet to database
+            insertPallet(description, clientUsername, destination.getId());
+            // select created order (to get id for creating job)
             TypedQuery<Order> getOrderId = session.createQuery("SELECT o from Order o WHERE o.id = (SELECT MAX(o2.id) from Order o2)", Order.class);
             Order order = getOrderId.getSingleResult();
-
-            insertPallet(description, clientUsername, destination.getId());
-
+            // select created pallet (to get id for creating job)
             TypedQuery<Pallet> getPalletId = session.createQuery("SELECT p from Pallet p WHERE p.id = (SELECT MAX(p2.id) from Pallet p2)", Pallet.class);
             Pallet pallet = getPalletId.getSingleResult();
-
+            // insert job to database
             insertJob(pallet.getId(), destination.getId(), order.getId(), status);
 
             transaction.commit();
@@ -54,14 +55,15 @@ public class ClientRepository {
         EntityTransaction transaction = session.getTransaction();
         try {
             transaction.begin();
-
+            // insert new order to database
             insertOrder(clientUsername, type);
-
+            // select created order (to get id for creating job)
             TypedQuery<Order> getOrderId = session.createQuery("SELECT o from Order o WHERE o.id = (SELECT MAX(o2.id) from Order o2)", Order.class);
             Order order = getOrderId.getSingleResult();
+            // select location of type OUT_RAMP (to get id for creating job)
             TypedQuery<Location> getOUT_RAMPLocation = session.createQuery("SELECT l from Location l where l.type = edu.pw.pap21z.z15.db.model.LocationType.OUT_RAMP", Location.class);
             Location destination = getOUT_RAMPLocation.getSingleResult();
-
+            // insert job to database
             insertJob(palletId, destination.getId(), order.getId(), status);
 
             transaction.commit();
