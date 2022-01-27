@@ -232,27 +232,27 @@ BEGIN
 END;
 /
 
-CREATE
-    OR
-    REPLACE TRIGGER order_history_add
+CREATE OR REPLACE TRIGGER order_history_add
     AFTER
         UPDATE OF status
     ON jobs
-    FOR EACH ROW
 DECLARE
     unfinished_jobs INTEGER;
-    client_username INTEGER;
 BEGIN
-    SELECT COUNT(*)
-    INTO unfinished_jobs
-    FROM jobs
-    WHERE jobs.order_id = :new.order_id
-      AND jobs.status <> 'COMPLETED';
-    IF unfinished_jobs = 0 THEN
-        SELECT orders.client_username INTO client_username FROM orders WHERE orders.order_id = :new.order_id;
-        INSERT INTO order_history (order_id, date_completed, client_id)
-        VALUES (:new.order_id, SYSDATE, client_username);
-    END IF;
+    FOR "ORDER" IN (SELECT * FROM orders)
+        LOOP
+            SELECT COUNT(*)
+            INTO unfinished_jobs
+            FROM jobs
+            WHERE jobs.order_id = "ORDER".order_id
+              AND jobs.status <> 'COMPLETED';
+
+            IF unfinished_jobs = 0 THEN
+                INSERT INTO order_history (order_id, date_completed, client_id)
+                VALUES ("ORDER".order_id, SYSDATE, "ORDER".client_username);
+            END IF;
+        END LOOP;
+
 END;
 /
 
