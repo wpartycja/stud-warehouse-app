@@ -146,7 +146,7 @@ BEGIN
     IF new_loc.type = 'SHELF' THEN
         SELECT COUNT(*) INTO pallet_count FROM pallets WHERE location_id = new_loc.location_id;
         IF pallet_count > 1 THEN
-            RAISE_APPLICATION_ERROR(-20000, 'Shelf cannot have more than 1 pallet');
+            RAISE_APPLICATION_ERROR(-20002, 'Shelf cannot have more than 1 pallet');
         END IF;
     END IF;
 END;
@@ -185,7 +185,7 @@ DECLARE
 BEGIN
     SELECT accounts.type INTO acc_type FROM accounts WHERE :new.client_username = accounts.account_username;
     IF acc_type <> 'CLIENT' THEN
-        RAISE_APPLICATION_ERROR(-20000, 'Only clients can make orders');
+        RAISE_APPLICATION_ERROR(-20001, 'Only clients can make orders');
     END IF;
 END;
 /
