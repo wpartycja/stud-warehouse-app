@@ -51,17 +51,17 @@ INSERT INTO z15.locations (location_id, type, path, shelf_type_id)
 VALUES (14, 'SHELF', 'Aisle C/Rack 2/Shelf 2', 3);
 
 INSERT INTO z15.accounts (account_username, password, type, name, surname)
-VALUES ('c1', 'pass', 'CLIENT', 'Karol', 'Kurka');
+VALUES ('m1', '$2a$10$cQzgg5n.svokEeE6Cwy4uuLDJY3LAidpSLD7CmGWZkt0yZ//lCkjy', 'MANAGER', 'Manager', 'Pierwszy');
 INSERT INTO z15.accounts (account_username, password, type, name, surname)
-VALUES ('c2', 'pass', 'CLIENT', 'Karolina', NULL);
+VALUES ('m2', '$2a$10$Lgb/TO8BL5asgGI.aUbH6eJ6UtPaIYS83NvcQBJ5Vj/74gQd7d2Ay', 'MANAGER', 'Manager', 'Drugi');
 INSERT INTO z15.accounts (account_username, password, type, name, surname)
-VALUES ('m1', 'pass', 'MANAGER', 'Michał', 'Malinowski');
+VALUES ('c1', '$2a$10$xcUjeymQj0sFdoSZkJhpOOVam5NYyknQLreYv4LrocGiWfwXMr7GO', 'CLIENT', 'Klient', 'Pierwszy');
 INSERT INTO z15.accounts (account_username, password, type, name, surname)
-VALUES ('m2', 'pass', 'MANAGER', 'Marcin', 'Modrzejewski');
+VALUES ('c2', '$2a$10$6p9yKMjvVYMhlmbBuDVaeOhMHWsqiIpFsl1sjYAWXyJSfP67gr0Cm', 'CLIENT', 'Klient', 'Drugi');
 INSERT INTO z15.accounts (account_username, password, type, name, surname)
-VALUES ('w1', 'pass', 'WORKER', 'Wiesław', 'Wrona');
+VALUES ('w1', '$2a$10$QNB3ksLJ5jwiXIlnc8/5M.VP5R4yfkrWskhWoW3wzPyJdyTfJIGUy', 'WORKER', 'Pracownik', 'Pierwszy');
 INSERT INTO z15.accounts (account_username, password, type, name, surname)
-VALUES ('w2', 'pass', 'WORKER', 'Wojciech', 'Wysocki');
+VALUES ('w2', '$2a$10$Jvqy17S/HNJm/KzVePQp8OKJIgng.hGn5qOrEJuDQ795dLgPyVJBG', 'WORKER', 'Pracownik', 'Drugi');
 
 INSERT INTO z15.pallets (pallet_id, description, owner_username, location_id)
 VALUES (1, 'Krzesła', 'c1', 2);
