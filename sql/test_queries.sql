@@ -1,4 +1,7 @@
--- test trigger order_history_add
+
+-- WYZWALACZE
+
+-- trigger order_history_add
 SAVEPOINT before_test;
 
 SELECT *
@@ -16,7 +19,7 @@ FROM order_history;
 
 ROLLBACK TO before_test;
 
--- test trigger check_worker_assigned_to_job
+-- trigger check_shelf_has_one_pallet
 SAVEPOINT before_test;
 DECLARE
     expected EXCEPTION;
@@ -30,10 +33,9 @@ EXCEPTION
     WHEN expected THEN dbms_output.put_line('test 2 passed');
     WHEN OTHERS THEN RAISE ;
 END;
-
 ROLLBACK TO before_test;
 
--- test trigger check_client_assigned_to_order
+-- trigger check_client_assigned_to_order
 SAVEPOINT before_test;
 DECLARE
     expected EXCEPTION;
@@ -47,54 +49,11 @@ EXCEPTION
     WHEN expected THEN dbms_output.put_line('test 3 passed');
     WHEN OTHERS THEN RAISE ;
 END;
-
 ROLLBACK TO before_test;
 
 SAVEPOINT before_test;
 
---TEST PROCEDUR DODAWANIA JOBÓW
-SELECT *
-FROM jobs;
-SELECT *
-FROM orders;
-SELECT *
-FROM pallets;
-
-EXEC create_job('c1', 'IN', 'Pomidory', 'PLANNED');
-EXEC create_job_out('c1', 'OUT', 1, 'PLANNED');
-
-SELECT *
-FROM jobs;
-SELECT *
-FROM orders;
-SELECT *
-FROM pallets;
-
---TEST PRZYDZIELANIA JOBÓW DO WORKERA
-SELECT *
-FROM jobs;
-EXEC assign_worker('w1', 7);
-SELECT *
-FROM jobs;
-EXEC unasssign_worker(7);
-SELECT *
-FROM jobs;
-
---TEST 2
-SELECT p.description, l.path
-FROM pallets p
-         JOIN locations l USING (location_id)
-WHERE l.path LIKE 'Aisle B%';
-
--- TEST 3
-SELECT a.account_username, COUNT(p.pallet_id) AS number_of_pallets
-FROM accounts a
-         JOIN pallets p ON (a.account_username = p.owner_username)
-GROUP BY a.account_username;
-
-ROLLBACK TO before_test;
-
--- TESTY FUNKCJE
+-- FUNKCJE
 
 -- Dla każdego zamówienia wypisz imię i nazwisko zamawiajacego,
 -- oraz caość do zaplacenia za dane zamówienie
@@ -124,11 +83,40 @@ FROM accounts a
 WHERE a.type LIKE 'MANAGER';
 
 
--- TESTY PROCEDURY
+-- PROCEDURY
 
+-- create_job, create_job_out
+SELECT *
+FROM jobs;
+SELECT *
+FROM orders;
+SELECT *
+FROM pallets;
 
---complete_job -> zmienia status w Jobie na 'COMPLETED',
---zmienia przypisanego workera na NULL, zmienia lokacje palety na docelowa
+EXEC create_job('c1', 'IN', 'Pomidory', 'PLANNED');
+EXEC create_job_out('c1', 'OUT', 1, 'PLANNED');
+
+SELECT *
+FROM jobs;
+SELECT *
+FROM orders;
+SELECT *
+FROM pallets;
+
+-- assign_worker, unassign_worker
+SELECT *
+FROM jobs;
+EXEC assign_worker('w1', 7);
+SELECT *
+FROM jobs;
+EXEC unasssign_worker(7);
+SELECT *
+FROM jobs;
+
+ROLLBACK TO before_test;
+
+-- complete_job -> zmienia status w Jobie na 'COMPLETED',
+-- zmienia przypisanego workera na NULL, zmienia lokacje palety na docelowa
 SAVEPOINT before_test_complete_job;
 
 SELECT j.*, p.location_id
@@ -145,5 +133,20 @@ WHERE job_id = 1;
 
 ROLLBACK TO before_test_complete_job;
 
---procedura wypisania sumy jaka  dany klient ma do zaplacenia
+-- procedura wypisania sumy jaka  dany klient ma do zaplacenia
 EXEC show_clients_payments;
+
+-- PRZYKŁADOWE ZAPYTANIA
+
+-- Wyświetl wszystkie palety w alejce B
+SELECT p.description, l.path
+FROM pallets p
+         JOIN locations l USING (location_id)
+WHERE l.path LIKE 'Aisle B%';
+
+-- Wyświetl klientów i liczbę palet które posiada w magazynie
+SELECT a.account_username, COUNT(p.pallet_id) AS number_of_pallets
+FROM accounts a
+         JOIN pallets p ON (a.account_username = p.owner_username)
+WHERE a.type = 'CLIENT'
+GROUP BY a.account_username;

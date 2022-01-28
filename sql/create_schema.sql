@@ -134,6 +134,8 @@ CREATE TABLE order_history
         CONSTRAINT client_hist_fk REFERENCES accounts (account_username)
 );
 
+-- TRIGGERS --
+
 CREATE OR REPLACE TRIGGER check_shelf_has_one_pallet
     BEFORE INSERT OR UPDATE OF location_id
     ON pallets
@@ -172,9 +174,7 @@ BEGIN
 END;
 /
 
-CREATE
-    OR
-    REPLACE TRIGGER check_client_assigned_to_order
+CREATE OR REPLACE TRIGGER check_client_assigned_to_order
     BEFORE
         INSERT OR
         UPDATE OF client_username
@@ -187,48 +187,6 @@ BEGIN
     IF acc_type <> 'CLIENT' THEN
         RAISE_APPLICATION_ERROR(-20001, 'Only clients can make orders');
     END IF;
-END;
-/
-
-CREATE OR REPLACE FUNCTION order_price(p_order_id INTEGER)
-    RETURN NUMBER AS
-    v_order_price         NUMBER(10, 2);
-    v_jobs_number         INTEGER;
-    c_threshold1 CONSTANT NUMBER(2, 2) := 50;
-    c_threshold2 CONSTANT NUMBER(2, 2) := 30;
-
-BEGIN
-
-    SELECT COUNT(*)
-    INTO v_jobs_number
-    FROM jobs
-    WHERE order_id = p_order_id;
-
-    IF v_jobs_number < 10 THEN
-        v_order_price := c_threshold1 * v_jobs_number;
-    ELSE
-        v_order_price := c_threshold2 * v_jobs_number;
-    END IF;
-
-    RETURN v_order_price;
-END;
-/
-
-CREATE OR REPLACE FUNCTION manager_bonus(p_man_id INTEGER)
-    RETURN NUMBER AS
-    v_workers_number INTEGER;
-    v_bonus          NUMBER(10, 2);
-
-BEGIN
-
-    SELECT COUNT(*)
-    INTO v_workers_number
-    FROM employees
-    WHERE manager_id = p_man_id;
-
-    v_bonus := v_workers_number * 20;
-
-    RETURN v_bonus;
 END;
 /
 
@@ -255,6 +213,54 @@ BEGIN
 
 END;
 /
+
+-- FUNCTIONS --
+
+CREATE OR REPLACE FUNCTION order_price (p_order_id INTEGER)
+    RETURN NUMBER
+AS
+    v_order_price NUMBER(10,2);
+    v_jobs_number INTEGER := 0;
+
+    c_threshold1 CONSTANT NUMBER(3) := 50;
+    c_threshold2 CONSTANT NUMBER(3) := 30;
+
+BEGIN
+
+    SELECT COUNT(job_id)
+    INTO v_jobs_number
+    FROM jobs
+    WHERE order_id = p_order_id;
+
+    IF v_jobs_number < 10 THEN
+        v_order_price := c_threshold1 * v_jobs_number;
+    ELSE
+        v_order_price := c_threshold2 * v_jobs_number;
+    END IF;
+
+RETURN v_order_price;
+END;
+/
+
+CREATE OR REPLACE FUNCTION manager_bonus(p_man_id INTEGER)
+    RETURN NUMBER AS
+    v_workers_number INTEGER;
+    v_bonus          NUMBER(10, 2);
+
+BEGIN
+
+    SELECT COUNT(*)
+    INTO v_workers_number
+    FROM employees
+    WHERE manager_id = p_man_id;
+
+    v_bonus := v_workers_number * 20;
+
+    RETURN v_bonus;
+END;
+/
+
+-- PROCEDURES --
 
 CREATE OR REPLACE PROCEDURE create_job_out(username VARCHAR, order_type VARCHAR,
                                            job_pallet_id INTEGER, job_status VARCHAR)
