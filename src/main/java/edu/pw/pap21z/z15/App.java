@@ -40,11 +40,12 @@ public class App extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         // set starting scene
-        scene = new Scene(loadFXML("login"), 800, 600);
+        scene = new Scene(loadFXML("login"), 800, 531);
         // configure stage
         stage = primaryStage;
         stage.setScene(scene);
         stage.setTitle("Warehouse management app");
+        stage.setResizable(false);
 
         // confirmation of X button
         stage.setOnCloseRequest(e -> {
@@ -63,6 +64,7 @@ public class App extends Application {
      * @param fxml file name without .fxml
      */
     static void setRoot(String fxml) throws IOException {
+        stage.setResizable(true);
         scene.setRoot(loadFXML(fxml));
     }
 
